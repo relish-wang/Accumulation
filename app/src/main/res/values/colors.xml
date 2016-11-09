@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#1588D8</color>
+    <color name="colorPrimaryDark">#0255A5</color>
+    <color name="colorAccent">@color/green</color>
+
+    <color name="title_bg_color">#1588D8</color><!-- 标题背景颜色 -->
+    <color name="title_bg_color_dark">#0255A5</color><!-- 标题上按钮点击后颜色 -->
+
+    <color name="aty_bg_color">#FAFAFA</color><!-- activity背景颜色 -->
+    <color name="aty_bg_color_dark">#A5A5A5</color><!-- activity上text被点击后颜色 -->
+
+    <color name="title_text_color">#343434</color><!-- 标题文字颜色（非ActionBar） -->
+    <color name="content_text_color">#858687</color><!-- 内容文字颜色 -->
+    <color name="hint_text_color">#cbcccd</color><!-- 输入框提示字体颜色 -->
+    <color name="light_red">#f2634b</color>
+    <color name="dark_red">#d02913</color>
+    <color name="green">#48AF4B</color>
+    <color name="line_color">#e0e0e0</color>
+    <color name="shadow">#858687</color>
+    <color name="white">#ffffff</color>
+    <color name="btn_disable_color">#888888</color>
+</resources>
