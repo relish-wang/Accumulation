@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">积累</string>
+    <string name="email">邮箱</string>
+    <string name="pwd">密码（必填）</string>
+    <string name="action_sign_in_short">登录</string>
+    <string name="action_sign_in">登录或注册</string>
+    <string name="email_not_be_null">邮箱不得为空</string>
+    <string name="pwd_not_be_null">密码不得为空</string>
+    <string name="email_format_error">邮箱格式错误</string>
+    <string name="login_failed">登录失败</string>
+    <string name="loading">加载中&#8230;</string>
+    <string name="navigation_drawer_open">drawer open</string>
+    <string name="navigation_drawer_close">drawer close</string>
+    <string name="pic">picture</string>
+    <string name="other">其他</string>
+    <string name="setting">设置</string>
+    <string name="about">关于</string>
+    <string name="goal">目标</string>
+    <string name="statistics">统计</string>
+    <string name="login">登录</string>
+    <string name="logining">正在登录&#8230;</string>
+</resources>

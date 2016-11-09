@@ -1,0 +1,27 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="cn.studyjams.s1.contest.accumulation">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:name="cn.studyjams.s1.contest.accumulation.App"
+        android:allowBackup="true"
+        android:icon="@mipmap/icon"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+        <activity android:name="cn.studyjams.s1.contest.accumulation.ui.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="cn.studyjams.s1.contest.accumulation.ui.MainActivity" />
+        <activity android:name="cn.studyjams.s1.contest.accumulation.ui.SettingActivity" />
+        <activity android:name="cn.studyjams.s1.contest.accumulation.ui.AboutActivity" />
+    </application>
+
+</manifest>
