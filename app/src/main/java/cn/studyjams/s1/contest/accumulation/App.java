@@ -1,10 +1,12 @@
 package cn.studyjams.s1.contest.accumulation;
 
 import android.app.Activity;
-import android.app.Application;
 
 import com.firebase.client.Firebase;
 import com.squareup.leakcanary.LeakCanary;
+
+import org.litepal.LitePal;
+import org.litepal.LitePalApplication;
 
 import java.util.WeakHashMap;
 
@@ -12,7 +14,7 @@ import java.util.WeakHashMap;
  * App应用管理类
  * Created by Relish on 2016/11/4.
  */
-public class App extends Application {
+public class App extends LitePalApplication {
 
 
     private static WeakHashMap<String, Activity> mActivities;
@@ -23,6 +25,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         LeakCanary.install(this);
+        LitePal.initialize(this);
         Firebase.setAndroidContext(this);
 
         CONTEXT = this;

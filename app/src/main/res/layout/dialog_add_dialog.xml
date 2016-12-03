@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.TextInputLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/et_goal_name"
+        style="@style/EditText"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_gravity="start"
+        android:gravity="start"
+        android:hint="@string/goal_name" />
+
+</android.support.design.widget.TextInputLayout>

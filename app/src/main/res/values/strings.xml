@@ -19,4 +19,14 @@
     <string name="statistics">统计</string>
     <string name="login">登录</string>
     <string name="logining">正在登录&#8230;</string>
+    <string name="mine">个人中心</string>
+    <string name="switch_user">切换用户</string>
+    <string name="head_pic">头像</string>
+    <string name="name">名字</string>
+    <string name="phone">手机</string>
+    <string name="unsetting">未设置</string>
+    <string name="cancel">取消</string>
+    <string name="ensure">确认</string>
+    <string name="add_goal">添加目标</string>
+    <string name="goal_name">目标名</string>
 </resources>

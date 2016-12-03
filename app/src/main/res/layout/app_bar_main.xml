@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="cn.studyjams.s1.contest.accumulation.ui.MainActivity">
+    tools:context="cn.studyjams.s1.contest.accumulation.ui.activity.MainActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -30,5 +30,6 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         app:srcCompat="@mipmap/icon_transparent" />
+    <!--app:layout_behavior="cn.studyjams.s1.contest.accumlation.ui.activity.FABBehavior"-->
 
 </android.support.design.widget.CoordinatorLayout>

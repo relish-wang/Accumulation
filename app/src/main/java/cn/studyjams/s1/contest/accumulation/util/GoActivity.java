@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import cn.studyjams.s1.contest.accumulation.App;
 import cn.studyjams.s1.contest.accumulation.base.BaseFragment;
 
 
@@ -33,7 +34,7 @@ public class GoActivity {
      * <p></p>
      * 配合{@link Activity#onActivityResult(int, int, Intent)}使用
      */
-    private int mRequestCode;
+    private int mRequestCode = -1;
 
     /**
      * 跳转后是否关闭当前页面
@@ -54,9 +55,12 @@ public class GoActivity {
      */
     private BaseFragment mFragment;
 
-    private GoActivity(Context context, Class<?> clazz) {
-        mContext = context;
+    private GoActivity(Class<?> clazz) {
+        mContext = App.CONTEXT;
         mClass = clazz;
+    }
+    public static Builder obtain(Class cla){
+        return new Builder(cla);
     }
 
     private Intent getIntent() throws Exception {
@@ -124,7 +128,7 @@ public class GoActivity {
          * <p></p>
          * 配合{@link Activity#onActivityResult(int, int, Intent)}使用
          */
-        private int mRequestCode;
+        private int mRequestCode = -1;
 
         /**
          * 跳转后是否关闭当前页面
@@ -145,8 +149,8 @@ public class GoActivity {
          */
         private BaseFragment mFragment;
 
-        public Builder(Context context, Class<?> clazz) {
-            this.mContext = context;
+        public Builder( Class<?> clazz) {
+            this.mContext = App.CONTEXT;
             this.mClass = clazz;
         }
 
@@ -181,8 +185,12 @@ public class GoActivity {
             return this;
         }
 
+        public void act(){
+            build().act();
+        }
+
         public GoActivity build() {
-            GoActivity bean = new GoActivity(mContext, mClass);
+            GoActivity bean = new GoActivity(mClass);
             bean.mBundle = mBundle;
             bean.mRequestCode = mRequestCode;
             bean.isClose = isClose;
