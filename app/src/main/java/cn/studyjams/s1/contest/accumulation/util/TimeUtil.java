@@ -117,19 +117,17 @@ public class TimeUtil {
         return now - ((now + 8 * 60 * 60 * 1000) % oneDay);
     }
 
-    /**
-     * 当前时间是否是星期一的八点
-     *
-     * @return
-     */
-    public static boolean isMon8Clock() {
-        long now = System.currentTimeMillis();
-        long zero = getTodayZeroLong();
-        //TODO 测试
-        long eightHours = 11 * 60 * 60 * 1000;
-        //TODO 测试
-        return dayForWeek() == 1 && now - zero >= eightHours && now - zero <= eightHours + 1000 * 60;
-    }
+//    /**
+//     * 当前时间是否是星期一的八点
+//     *
+//     * @return
+//     */
+//    public static boolean isMon8Clock() {
+//        long now = System.currentTimeMillis();
+//        long zero = getTodayZeroLong();
+//        long eightHours = 11 * 60 * 60 * 1000;
+//        return dayForWeek() == 1 && now - zero >= eightHours && now - zero <= eightHours + 1000 * 60;
+//    }
 
 //    public static boolean isTaskOver3Days(TaskEntity task) {
 //        return System.currentTimeMillis() - dateTimeToLong(task.getuTime()) >= 3 * 24 * 60 * 60 * 1000;
