@@ -31,7 +31,7 @@ public abstract class BaseFragment extends Fragment implements BaseView {
     /**
      * 初始化
      */
-    protected abstract void initViews();
+    protected abstract void initViews(View contentView);
 
     private boolean isLoading;
     private View loadingView;
@@ -52,7 +52,7 @@ public abstract class BaseFragment extends Fragment implements BaseView {
             contentViewAnimator.setDuration(500);
             flRoot.addView(contentView);
 
-            initViews();
+            initViews(contentView);
 
             return flRoot;
         } else {
@@ -62,7 +62,7 @@ public abstract class BaseFragment extends Fragment implements BaseView {
 
     @Override
     public void goActivity(Class<?> clazz) {
-        new GoActivity.Builder(getActivity(), clazz).build().act();
+        new GoActivity.Builder(clazz).build().act();
     }
 
 

@@ -12,16 +12,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name="cn.studyjams.s1.contest.accumulation.ui.LoginActivity">
+        <activity android:name="cn.studyjams.s1.contest.accumulation.ui.activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="cn.studyjams.s1.contest.accumulation.ui.MainActivity" />
-        <activity android:name="cn.studyjams.s1.contest.accumulation.ui.SettingActivity" />
-        <activity android:name="cn.studyjams.s1.contest.accumulation.ui.AboutActivity" />
+        <activity android:name="cn.studyjams.s1.contest.accumulation.ui.activity.MainActivity" />
+        <activity android:name="cn.studyjams.s1.contest.accumulation.ui.activity.SettingActivity" />
+        <activity android:name="cn.studyjams.s1.contest.accumulation.ui.activity.AboutActivity" />
+        <activity android:name=".ui.activity.MineActivity" />
     </application>
 
 </manifest>

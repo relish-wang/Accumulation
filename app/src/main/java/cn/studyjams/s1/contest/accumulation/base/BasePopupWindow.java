@@ -1,4 +1,4 @@
-package cn.studyjams.s1.contest.accumulation.base.view;
+package cn.studyjams.s1.contest.accumulation.base;
 
 import android.app.Activity;
 import android.content.Context;

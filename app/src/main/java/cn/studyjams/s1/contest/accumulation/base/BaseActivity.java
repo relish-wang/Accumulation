@@ -18,10 +18,10 @@ import android.widget.Toast;
 
 import cn.studyjams.s1.contest.accumulation.App;
 import cn.studyjams.s1.contest.accumulation.R;
-import cn.studyjams.s1.contest.accumulation.base.view.LoadingWindow;
 import cn.studyjams.s1.contest.accumulation.util.AppLog;
 import cn.studyjams.s1.contest.accumulation.util.BarUtil;
 import cn.studyjams.s1.contest.accumulation.util.GoActivity;
+import cn.studyjams.s1.contest.accumulation.ui.view.LoadingDialog;
 
 /**
  * Activity基础类
@@ -40,7 +40,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
      * 初始化Toolbar
      *
      * @param savedInstanceState 数据
-     * @param mToolbar            标题栏
+     * @param mToolbar           标题栏
      */
     protected abstract void initToolbar(Bundle savedInstanceState, Toolbar mToolbar);
 
@@ -55,7 +55,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
 
     protected Toolbar mToolbar;
 
-    private LoadingWindow loadingWindow = null;
+    private LoadingDialog loadingDialog = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,6 +90,13 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
                 // 初始化自定义ActionBar,下面的顺序很重要
                 initToolbar(savedInstanceState, mToolbar);
                 setSupportActionBar(mToolbar);
+                if (isBtnBackEnable()) {
+                    ActionBar actionBar = getSupportActionBar();
+                    if (actionBar != null) {
+                        actionBar.setHomeButtonEnabled(true);
+                        actionBar.setDisplayHomeAsUpEnabled(true);
+                    }
+                }
             }
 
             //Activity入栈
@@ -162,41 +169,41 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
 
     public void showLoading(Object msg) {
         String str;
-        if(msg instanceof Integer){
+        if (msg instanceof Integer) {
             str = getString((Integer) msg);
-        }else if(msg instanceof String){
+        } else if (msg instanceof String) {
             str = (String) msg;
-        }else{
+        } else {
             showLoading(true);
             return;
         }
-        if (loadingWindow == null) {
-            loadingWindow = new LoadingWindow(this);
+        if (loadingDialog == null) {
+            loadingDialog = LoadingDialog.getInstance(str);
         }
-        if (!loadingWindow.isShowing()) {
-            loadingWindow.onShow(str);
+        if (!loadingDialog.isShowing()) {
+            loadingDialog.show(getSupportFragmentManager(),str);
         }
     }
 
     @Override
     public void showLoading(boolean isShown) {
-        if (loadingWindow == null) {
-            loadingWindow = new LoadingWindow(this);
+        if (loadingDialog == null) {
+            loadingDialog = LoadingDialog.getInstance("");
         }
         if (isShown) {
-            if (!loadingWindow.isShowing()) {
-                loadingWindow.onShow();
+            if (!loadingDialog.isShowing()) {
+                loadingDialog.show(getSupportFragmentManager(),"");
             }
         } else {
-            if (loadingWindow.isShowing()) {
-                loadingWindow.dismiss();
+            if (loadingDialog.isShowing()) {
+                loadingDialog.dismiss();
             }
         }
     }
 
     @Override
     public void goActivity(Class<?> clazz) {
-        new GoActivity.Builder(getActivity(), clazz).build().act();
+        new GoActivity.Builder(clazz).build().act();
     }
 
     @Override

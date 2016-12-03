@@ -1,4 +1,4 @@
-package cn.studyjams.s1.contest.accumulation.ui;
+package cn.studyjams.s1.contest.accumulation.ui.activity;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
