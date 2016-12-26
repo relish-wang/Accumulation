@@ -1,6 +1,8 @@
 package cn.studyjams.s1.contest.accumulation.base;
 
 import android.animation.ObjectAnimator;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -103,5 +105,23 @@ public abstract class BaseFragment extends Fragment implements BaseView {
 
     public void showData() {
         noMoreDataView.setVisibility(View.INVISIBLE);
+    }
+
+
+    @Override
+    public void goBrowser(String url) {
+        if(url==null){
+            showMessage(R.string.url_is_null);
+            return;
+        }
+
+        if ((!url.startsWith("http://")) && (!url.startsWith("https://"))) {
+            url = "http://" + url;
+        }
+        Intent intent = new Intent();
+        intent.setAction("android.intent.action.VIEW");
+        Uri content_url = Uri.parse(url);
+        intent.setData(content_url);
+        startActivity(intent);
     }
 }

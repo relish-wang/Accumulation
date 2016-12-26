@@ -20,4 +20,6 @@ public interface BaseView {
      * @param clazz 跳转到的Activity
      */
     void goActivity(Class<?> clazz);
+
+    void goBrowser(String url);
 }

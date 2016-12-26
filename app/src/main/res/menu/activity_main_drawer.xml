@@ -15,7 +15,7 @@
     <item android:title="@string/other">
         <menu>
             <item
-                android:id="@+id/nav_setting"
+                android:id="@+id/feedback"
                 android:icon="@drawable/ic_menu_setting"
                 android:title="@string/setting" />
             <item

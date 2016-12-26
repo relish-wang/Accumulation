@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -38,7 +37,6 @@ public class LoginActivity extends BaseActivity implements FirebaseAuth.AuthStat
 
     }
 
-    ProgressBar pbLogin;
     AutoCompleteTextView etEmail;
     EditText etPwd;
     Button btnLogin;
@@ -60,7 +58,6 @@ public class LoginActivity extends BaseActivity implements FirebaseAuth.AuthStat
         }
 
         mAuth = FirebaseAuth.getInstance();
-        pbLogin = (ProgressBar) findViewById(R.id.pbLogin);
         etEmail = (AutoCompleteTextView) findViewById(R.id.etEmail);
         etPwd = (EditText) findViewById(R.id.etPwd);
 
@@ -111,7 +108,12 @@ public class LoginActivity extends BaseActivity implements FirebaseAuth.AuthStat
             return;
         }
         showLoading(R.string.logining);
+        login(email,pwd);//// TODO: 2016/12/4 firebase的用户信息验证不好用
         mAuth.signInWithEmailAndPassword(email, pwd);
+    }
+
+    private void login(String email, String pwd) {
+
     }
 
     private static final String TAG = "LoginActivity";

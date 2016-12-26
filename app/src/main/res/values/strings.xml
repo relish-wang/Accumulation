@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">Accumulation</string>
+    <string name="app_name">积累</string>
     <string name="email">邮箱</string>
     <string name="pwd">密码（必填）</string>
     <string name="action_sign_in_short">登录</string>
-    <string name="action_sign_in">登录或注册</string>
+    <string name="action_sign_in">登录</string>
     <string name="email_not_be_null">邮箱不得为空</string>
     <string name="pwd_not_be_null">密码不得为空</string>
     <string name="email_format_error">邮箱格式错误</string>
@@ -29,4 +29,15 @@
     <string name="ensure">确认</string>
     <string name="add_goal">添加目标</string>
     <string name="goal_name">目标名</string>
+    <string name="propaganda">积累，让努力看得见。</string>
+    <string name="all_right">All Right Reserved.</string>
+    <string name="copyright">Copyright ©2016–2017 Relish</string>
+    <string name="feedback">反馈</string>
+    <string name="url_is_null">网址为空！</string>
+    <string name="no_google_play">您的手机上未安装GooglePlay！</string>
+    <string name="comment">评价</string>
+    <string name="feedback_subject">来自【%s】的用户反馈</string>
+    <string name="feedback_text">请问您对本应用【%s】有什么意见或建议呢？\\n</string>
+    <string name="forget_password">忘记密码</string>
+    <string name="new_user">新用户注册</string>
 </resources>
