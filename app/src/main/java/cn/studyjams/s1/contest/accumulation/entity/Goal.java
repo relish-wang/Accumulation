@@ -1,15 +1,15 @@
 package cn.studyjams.s1.contest.accumulation.entity;
 
+import android.database.Cursor;
+
 import org.litepal.crud.DataSupport;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 
 import cn.studyjams.s1.contest.accumulation.util.AppLog;
-import cn.studyjams.s1.contest.accumulation.util.MD5;
 
 /**
  * 目标
@@ -19,13 +19,12 @@ public class Goal extends DataSupport implements Serializable {
 
     private static final String TAG = "Goal";
 
-    private String goalId;
+    private long id;
     private String name;
-    private Long time;
+    private long time;
     private List<Record> records;
 
     public Goal() {
-        goalId = MD5.md5(new Random().nextLong()+"");
         records = new ArrayList<>();
     }
 
@@ -44,12 +43,12 @@ public class Goal extends DataSupport implements Serializable {
     }
 
 
-    public String getGoalId() {
-        return goalId;
+    public long getId() {
+        return id;
     }
 
-    public void setGoalId(String goalId) {
-        this.goalId = goalId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -95,5 +94,27 @@ public class Goal extends DataSupport implements Serializable {
             time += record.getTime();
         }
         return time;
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    public static List<Goal> findAll() {
+        Cursor cursor = DataSupport.findBySQL("select * from goal");
+        if (cursor == null) {
+            return new ArrayList<>();
+        }
+        List<Goal> goals = new ArrayList<>();
+        if (cursor.moveToFirst()) {
+            do {
+                Goal goal = new Goal();
+                goal.setId(cursor.getLong(cursor.getColumnIndex("id")));
+                goal.setName(cursor.getString(cursor.getColumnIndex("name")));
+                goal.setTime(cursor.getLong(cursor.getColumnIndex("time")));
+
+                List<Record> records = Record.findRecordsByGoalId(goal.getId());
+                goal.setRecords(records == null ? new ArrayList<>() : records);
+                goals.add(goal);
+            } while (cursor.moveToNext());
+        }
+        return goals;
     }
 }

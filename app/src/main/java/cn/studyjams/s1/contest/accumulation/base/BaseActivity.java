@@ -2,6 +2,8 @@ package cn.studyjams.s1.contest.accumulation.base;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,10 +20,10 @@ import android.widget.Toast;
 
 import cn.studyjams.s1.contest.accumulation.App;
 import cn.studyjams.s1.contest.accumulation.R;
+import cn.studyjams.s1.contest.accumulation.ui.view.LoadingDialog;
 import cn.studyjams.s1.contest.accumulation.util.AppLog;
 import cn.studyjams.s1.contest.accumulation.util.BarUtil;
 import cn.studyjams.s1.contest.accumulation.util.GoActivity;
-import cn.studyjams.s1.contest.accumulation.ui.view.LoadingDialog;
 
 /**
  * Activity基础类
@@ -181,7 +183,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
             loadingDialog = LoadingDialog.getInstance(str);
         }
         if (!loadingDialog.isShowing()) {
-            loadingDialog.show(getSupportFragmentManager(),str);
+            loadingDialog.show(getSupportFragmentManager(), str);
         }
     }
 
@@ -192,7 +194,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
         }
         if (isShown) {
             if (!loadingDialog.isShowing()) {
-                loadingDialog.show(getSupportFragmentManager(),"");
+                loadingDialog.show(getSupportFragmentManager(), "");
             }
         } else {
             if (loadingDialog.isShowing()) {
@@ -209,5 +211,22 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
     @Override
     public Activity getActivity() {
         return this;
+    }
+
+    @Override
+    public void goBrowser(String url) {
+        if(url==null){
+            showMessage(R.string.url_is_null);
+            return;
+        }
+
+        if ((!url.startsWith("http://")) && (!url.startsWith("https://"))) {
+            url = "http://" + url;
+        }
+        Intent intent = new Intent();
+        intent.setAction("android.intent.action.VIEW");
+        Uri content_url = Uri.parse(url);
+        intent.setData(content_url);
+        startActivity(intent);
     }
 }

@@ -123,13 +123,15 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         openFragment(GOAL);//默认打开【目标页】
     }
 
+    /**
+     * 点击fab后添加目标
+     * @param goalName 目标名
+     */
     private void addGoal(String goalName) {
         Goal goal = new Goal();
         goal.setName(goalName);
+        goal.setTime(System.currentTimeMillis());
         goal.save();
-
-        mDatabase.child(mUser.getEmail()).child(goal.getGoalId()).setValue(goal);
-
     }
 
     @Override
@@ -150,7 +152,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             openFragment(GOAL);
         } else if (id == R.id.nav_statistics) {
             openFragment(STATISTICS);
-        } else if (id == R.id.nav_setting) {
+        } else if (id == R.id.feedback) {
             goActivity(SettingActivity.class);
         } else if (id == R.id.nav_about) {
             goActivity(AboutActivity.class);
