@@ -6,6 +6,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
 import com.firebase.client.Firebase;
+import com.orhanobut.logger.Logger;
 import com.squareup.leakcanary.LeakCanary;
 
 import org.litepal.LitePal;
@@ -34,6 +35,11 @@ public class App extends LitePalApplication {
         LeakCanary.install(this);
         LitePal.initialize(this);
         Firebase.setAndroidContext(this);
+        //日志打印工具
+        Logger.init(TAG).methodCount(10) // 方法栈打印的个数，默认是 2
+                .hideThreadInfo() // // 隐藏线程信息，默认显示
+                .methodOffset(0); // 设置调用堆栈的函数偏移值，默认是 0
+        //.logAdapter(new AndroidLogAdapter()); // 自定义一个打印适配器;
 
         CONTEXT = this;
         mActivities = new WeakHashMap<>();

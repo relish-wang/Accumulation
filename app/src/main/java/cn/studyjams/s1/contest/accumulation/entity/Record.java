@@ -22,6 +22,15 @@ public class Record extends DataSupport implements Serializable {
     private String createTime;
     private String startTime;
     private String endTime;
+    private String updateTime;
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
+    }
 
     public long getId() {
         return id;
@@ -90,7 +99,7 @@ public class Record extends DataSupport implements Serializable {
 
     @SuppressWarnings("ConstantConditions")
     public static List<Record> findRecordsByGoalId(long goalId) {
-        Cursor cursor = DataSupport.findBySQL("select * from record where goalId = ?", goalId + "");
+        Cursor cursor = DataSupport.findBySQL("select * from record where id = ?", goalId + "");
         if (cursor == null) {
             return new ArrayList<>();
         }

@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Locale;
 
 import cn.studyjams.s1.contest.accumulation.util.AppLog;
+import cn.studyjams.s1.contest.accumulation.util.TimeUtil;
 
 /**
  * 目标
@@ -23,6 +24,7 @@ public class Goal extends DataSupport implements Serializable {
     private String name;
     private long time;
     private List<Record> records;
+    private String updateTime;
 
     public Goal() {
         records = new ArrayList<>();
@@ -65,6 +67,15 @@ public class Goal extends DataSupport implements Serializable {
 
     public void setTime(Long time) {
         this.time = time;
+        this.updateTime = TimeUtil.longToDateTime(time);
+    }
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
     }
 
     public List<Record> getRecords() {
@@ -117,4 +128,5 @@ public class Goal extends DataSupport implements Serializable {
         }
         return goals;
     }
+
 }
