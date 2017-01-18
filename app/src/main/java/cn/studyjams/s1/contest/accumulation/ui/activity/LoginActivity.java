@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
@@ -32,9 +33,13 @@ public class LoginActivity extends BaseActivity implements FirebaseAuth.AuthStat
     }
 
     @Override
+    protected boolean isBtnBackEnable() {
+        return false;
+    }
+
+    @Override
     protected void initToolbar(Bundle savedInstanceState, Toolbar mToolbar) {
         mToolbar.setTitle(R.string.login);
-
     }
 
     AutoCompleteTextView etEmail;
@@ -108,7 +113,7 @@ public class LoginActivity extends BaseActivity implements FirebaseAuth.AuthStat
             return;
         }
         showLoading(R.string.logining);
-        login(email,pwd);//// TODO: 2016/12/4 firebase的用户信息验证不好用
+        login(email, pwd);//// TODO: 2016/12/4 firebase的用户信息验证不好用
         mAuth.signInWithEmailAndPassword(email, pwd);
     }
 

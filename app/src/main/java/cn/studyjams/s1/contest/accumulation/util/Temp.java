@@ -19,7 +19,7 @@ public class Temp {
         List<Goal> goals = new ArrayList<>();
         for (int i = 0; i < random; i++) {
             Goal goal = new Goal();
-            goal.setGoalId(i + 1+"");
+//            goal.setId(i + 1+"");
             goal.setName("Goal" + (i + 1));
             goal.setRecords(getRecords());
             goals.add(goal);

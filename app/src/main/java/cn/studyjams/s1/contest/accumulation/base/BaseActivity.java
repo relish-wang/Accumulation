@@ -82,7 +82,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
                         ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                 setContentView(clRoot);
                 //沉浸式状态栏
-                BarUtil.setBarTransparent(this);
+                BarUtil.setStatusBarTransparent(this);
                 // 初始化Toolbar
                 mToolbar = (Toolbar) clRoot.findViewById(R.id.toolbar);
                 //透明状态栏
