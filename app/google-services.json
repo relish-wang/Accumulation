@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:615195366345:android:04fb28518945e4a8",
+        "mobilesdk_app_id": "1:615195366345:android:ba30b13c430953d6",
         "android_client_info": {
-          "package_name": "cn.studyjams.s1.contest.accumulation"
+          "package_name": "com.qyt.accumulation"
         }
       },
       "oauth_client": [

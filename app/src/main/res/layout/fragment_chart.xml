@@ -68,7 +68,7 @@
         android:layout_height="wrap_content"
         android:text="本周努力时间公布" />
 
-    <cn.studyjams.s1.contest.accumulation.ui.view.chart.Chart
+    <com.qyt.accumulation.ui.view.chart.Chart
         android:id="@+id/chart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
