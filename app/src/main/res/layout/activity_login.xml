@@ -8,7 +8,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:scrollbars="none"
-    tools:context="cn.studyjams.s1.contest.accumulation.ui.activity.LoginActivity">
+    tools:context="com.qyt.accumulation.ui.activity.LoginActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"

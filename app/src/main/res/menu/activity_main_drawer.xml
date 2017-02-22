@@ -6,10 +6,6 @@
             android:id="@+id/nav_goal"
             android:icon="@drawable/ic_menu_goal"
             android:title="@string/goal" />
-        <item
-            android:id="@+id/nav_statistics"
-            android:icon="@drawable/ic_menu_statistics"
-            android:title="@string/statistics" />
     </group>
 
     <item android:title="@string/other">

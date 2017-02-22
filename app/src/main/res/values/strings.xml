@@ -40,4 +40,19 @@
     <string name="feedback_text">请问您对本应用【%s】有什么意见或建议呢？\\n</string>
     <string name="forget_password">忘记密码</string>
     <string name="new_user">新用户注册</string>
+    <string name="delete">删除</string>
+    <string name="delete_goal_message">是否删除【%s】及其全部记录？</string>
+    <string name="add_record">添加记录</string>
+    <string name="delete_record_message">是否删除记录【%s】？</string>
+
+    <array name="goal_long_click">
+        <item>添加记录</item>
+        <item>删除目标</item>
+        <item>取消</item>
+    </array>
+    <array name="record_long_click">
+        <item>查看记录</item>
+        <item>删除记录</item>
+        <item>取消</item>
+    </array>
 </resources>

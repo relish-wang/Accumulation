@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="cn.studyjams.s1.contest.accumulation">
+    package="com.qyt.accumulation">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -24,6 +24,7 @@
         <activity android:name=".ui.activity.AboutActivity" />
         <activity android:name=".ui.activity.MineActivity" />
         <activity android:name=".ui.activity.ForgetPwdActivity" />
+        <activity android:name=".ui.activity.RecordActivity" />
     </application>
 
 </manifest>
