@@ -8,18 +8,18 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import com.qyt.accumulation.App;
 import com.qyt.accumulation.R;
 import com.qyt.accumulation.base.BaseFragment;
 import com.qyt.accumulation.entity.Goal;
 import com.qyt.accumulation.entity.Record;
-import com.qyt.accumulation.util.Temp;
-import com.qyt.accumulation.util.TimeUtil;
 import com.qyt.accumulation.ui.view.chart.Chart;
 import com.qyt.accumulation.ui.view.chart.Pillar;
+import com.qyt.accumulation.util.Temp;
+import com.qyt.accumulation.util.TimeUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Relish on 2016/11/13.
@@ -80,7 +80,7 @@ public class ChartFragment extends BaseFragment {
 
     private static List<Pillar> getPillarsTemp(List<Record> records) {
         List<Pillar> pillars = new ArrayList<>();
-        String[] day = {"星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"};
+        String[] day = App.CONTEXT.getResources().getStringArray(R.array.week);
         long[] values = {0, 0, 0, 0, 0, 0, 0};
         for (Record r : records) {
             values[TimeUtil.dayForWeek(r.getCreateTime())] = r.getTime();
@@ -93,7 +93,7 @@ public class ChartFragment extends BaseFragment {
 
     private static List<Pillar> getPillars(Goal goal) {
         List<Pillar> pillars = new ArrayList<>();
-        String[] day = {"星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"};
+        String[] day = App.CONTEXT.getResources().getStringArray(R.array.week);
         long[] values = {0, 0, 0, 0, 0, 0, 0};
         List<Record> records = goal.getRecords();
         for (Record r : records) {

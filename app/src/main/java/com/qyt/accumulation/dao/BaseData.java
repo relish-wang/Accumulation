@@ -1,6 +1,7 @@
 package com.qyt.accumulation.dao;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.qyt.accumulation.App;
@@ -10,12 +11,9 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
 
-/**
- * Created by wangxina on 2017/2/22.
- */
-
 public abstract class BaseData {
 
+    @SuppressWarnings({"unchecked", "Convert2streamapi"})
     public void save() {
         try {
             DBHelper helper = DBHelper.getInstance(App.CONTEXT);
@@ -29,17 +27,17 @@ public abstract class BaseData {
                 String key = field.getName();
                 String value = "";
                 Object oValue = field.get(this);
-                if(oValue!=null){
-                    if(oValue instanceof List) {//List
-                        if(((List)oValue).size()>0){
-                            if(((List)oValue).get(0) instanceof BaseData){
+                if (oValue != null) {
+                    if (oValue instanceof List) {//List
+                        if (((List) oValue).size() > 0) {
+                            if (((List) oValue).get(0) instanceof BaseData) {
                                 for (BaseData data : ((List<BaseData>) oValue)) {
                                     data.save();
                                 }
                             }
                         }
-                    }else {
-                        value = field.get(this)+"";
+                    } else {
+                        value = field.get(this) + "";
                         cv.put(key, value);
                     }
                 }

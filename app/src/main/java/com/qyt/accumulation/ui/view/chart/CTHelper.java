@@ -14,10 +14,10 @@ public class CTHelper {
 
     public static final int PADDING = 5;
 
-    public static final int TEXT_SIZE = 12;
+    public static final int TEXT_SIZE = 16;
     public static final int TEXT_HEIGHT = getFontHeight(TEXT_SIZE);
 
-    public static final int LINE_WIDTH = 2;
+    public static final int LINE_WIDTH = 4;
 
     public static final int SIDE = 10;
 

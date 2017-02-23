@@ -59,9 +59,15 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
 
     private LoadingDialog loadingDialog = null;
 
+    protected void parseIntent(Intent intent){
+
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        parseIntent(getIntent());
 
         int resId = layoutId();
         if (resId != 0) {

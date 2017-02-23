@@ -49,7 +49,6 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
         ivHead.setImageResource(R.mipmap.icon);//// TODO: 2016/12/3 网络加载
         tvName.setText(checkNull(mUser.getName()));
         tvMobile.setText(checkNull(mUser.getMobile()));
-        tvEmail.setText(checkNull(mUser.getEmail()));
     }
 
     @Override

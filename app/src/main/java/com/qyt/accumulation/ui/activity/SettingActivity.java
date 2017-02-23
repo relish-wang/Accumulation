@@ -18,12 +18,12 @@ public class SettingActivity extends BaseActivity {
 
     @Override
     protected int layoutId() {
-        return 0;
+        return R.layout.activity_setting;
     }
 
     @Override
     protected void initToolbar(Bundle savedInstanceState, Toolbar mToolbar) {
-
+        mToolbar.setTitle(R.string.setting);
     }
 
     @Override
@@ -31,10 +31,4 @@ public class SettingActivity extends BaseActivity {
 
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setting);
-
-    }
 }

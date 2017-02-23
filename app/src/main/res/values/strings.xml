@@ -4,9 +4,9 @@
     <string name="pwd">密码（必填）</string>
     <string name="action_sign_in_short">登录</string>
     <string name="action_sign_in">登录</string>
-    <string name="email_not_be_null">邮箱不得为空</string>
+    <string name="mobile_not_be_null">手机号不得为空</string>
     <string name="pwd_not_be_null">密码不得为空</string>
-    <string name="email_format_error">邮箱格式错误</string>
+    <string name="mobile_format_error">手机格式错误</string>
     <string name="login_failed">登录失败</string>
     <string name="loading">加载中&#8230;</string>
     <string name="navigation_drawer_open">drawer open</string>
@@ -44,6 +44,15 @@
     <string name="delete_goal_message">是否删除【%s】及其全部记录？</string>
     <string name="add_record">添加记录</string>
     <string name="delete_record_message">是否删除记录【%s】？</string>
+    <string name="record_name">记录名</string>
+    <string name="account_or_password_is_not_collect">账号或密码不正确</string>
+    <string name="register">注册</string>
+    <string name="mobile">手机</string>
+    <string name="verification_code">验证码</string>
+    <string name="password">密码</string>
+    <string name="repeat_password">重复密码</string>
+    <string name="save">注册</string>
+    <string name="permission_denied_message">拒绝权限将无法使用此软件</string>
 
     <array name="goal_long_click">
         <item>添加记录</item>
@@ -55,4 +64,18 @@
         <item>删除记录</item>
         <item>取消</item>
     </array>
+    <array name="week">
+        <item>星期日</item>
+        <item>星期一</item>
+        <item>星期二</item>
+        <item>星期三</item>
+        <item>星期四</item>
+        <item>星期五</item>
+        <item>星期六</item>
+    </array>
+    <string-array name="set_head_click">
+        <item>拍照</item>
+        <item>选择照片</item>
+        <item>取消</item>
+    </string-array>
 </resources>
