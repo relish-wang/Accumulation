@@ -15,9 +15,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -85,14 +87,22 @@ public class MainActivity extends BaseActivity implements
             @SuppressLint("InflateParams")
             View v = getLayoutInflater().inflate(R.layout.dialog_add_dialog, null);
             EditText etGoalName = (EditText) v.findViewById(R.id.et_goal_name);
-            new AlertDialog.Builder(this)
-                    .setView(v)
+            etGoalName.setHint(R.string.goal_name);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            AlertDialog dialog = builder.setView(v)
                     .setTitle(R.string.add_goal)
                     .setNegativeButton(R.string.cancel, null)
-                    .setPositiveButton(R.string.ensure, (DialogInterface dialog, int i) -> {
+                    .setPositiveButton(R.string.ensure, (DialogInterface dialogInterface, int i) -> {
                         String goalName = etGoalName.getText().toString();
                         addGoal(goalName);
-                    }).create().show();
+                    }).create();
+            WindowManager m = getWindowManager();
+            Display d = m.getDefaultDisplay();  //为获取屏幕宽、高
+            android.view.WindowManager.LayoutParams p = dialog.getWindow().getAttributes();  //获取对话框当前的参数值
+            p.height = (int) (d.getHeight() * 0.3);   //高度设置为屏幕的0.3
+            p.width = (int) (d.getWidth() * 0.5);    //宽度设置为屏幕的0.5
+            dialog.getWindow().setAttributes(p);     //设置生效
+            dialog.show();
         });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -112,7 +122,6 @@ public class MainActivity extends BaseActivity implements
         ivHead.setImageResource(R.mipmap.icon);
 
         tvName.setText(mUser.getName());
-        tvEmail.setText(mUser.getEmail());
         ivHead.setOnClickListener(view -> goActivity(MineActivity.class));
         tvName.setOnClickListener(view -> goActivity(MineActivity.class));
         tvEmail.setOnClickListener(view -> goActivity(MineActivity.class));
@@ -150,15 +159,24 @@ public class MainActivity extends BaseActivity implements
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_statistics:
+                Intent intent = new Intent(this, StatisticsActivity.class);
+                startActivity(intent);
+                break;
+            default:
+        }
+        return true;
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.nav_goal) {
             openFragment(GOAL);
-        } else if (id == R.id.menu_statistics) {
-            Intent intent = new Intent(this, StatisticsActivity.class);
-            startActivity(intent);
         } else if (id == R.id.feedback) {
             goActivity(SettingActivity.class);
         } else if (id == R.id.nav_about) {

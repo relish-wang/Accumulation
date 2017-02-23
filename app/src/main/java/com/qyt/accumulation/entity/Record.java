@@ -128,6 +128,7 @@ public class Record extends BaseData implements Serializable {
                 record.setStar(cursor.getInt(cursor.getColumnIndex("star")));
                 record.setNote(cursor.getString(cursor.getColumnIndex("note")));
                 record.setTime(cursor.getLong(cursor.getColumnIndex("time")));
+                record.setUpdateTime(cursor.getString(cursor.getColumnIndex("updateTime")));
                 record.setCreateTime(cursor.getString(cursor.getColumnIndex("createTime")));
                 record.setStartTime(cursor.getString(cursor.getColumnIndex("startTime")));
                 record.setEndTime(cursor.getString(cursor.getColumnIndex("endTime")));
@@ -157,5 +158,9 @@ public class Record extends BaseData implements Serializable {
         SQLiteDatabase db = helper.getReadableDatabase();
         db.delete("record", "id = ?", new String[]{record.getId() + ""});
         db.close();
+    }
+
+    public Goal getParent() {
+        return Goal.findById(goalId);
     }
 }

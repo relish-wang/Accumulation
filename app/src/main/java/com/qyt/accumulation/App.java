@@ -10,6 +10,7 @@ import android.view.WindowManager;
 
 import com.firebase.client.Firebase;
 import com.orhanobut.logger.Logger;
+import com.qyt.accumulation.entity.User;
 import com.qyt.accumulation.util.AppLog;
 
 import java.util.WeakHashMap;
@@ -19,6 +20,8 @@ import java.util.WeakHashMap;
  * Created by Relish on 2016/11/4.
  */
 public class App extends Application {
+
+    public static User USER;
 
     public static final String GOOGLE_PLAY = "com.android.vending";
     private static final String TAG = "App";

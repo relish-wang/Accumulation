@@ -69,7 +69,12 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
     @Override
     public boolean onChildClick(ExpandableListView parent, View v,
                                 int groupPosition, int childPosition, long id) {
-
+        Record record = mGoals.get(groupPosition).getRecords().get(childPosition);
+        Intent intent = new Intent(getActivity(), RecordActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("record", record);
+        intent.putExtras(bundle);
+        getActivity().startActivity(intent);
         return false;
     }
 
@@ -124,7 +129,7 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
                         View v = getActivity().getLayoutInflater().inflate(
                                 R.layout.dialog_add_dialog, null);
                         EditText etRecordName = (EditText) v.findViewById(R.id.et_goal_name);
-                        etRecordName.setHint(R.string.add_record);
+                        etRecordName.setHint(R.string.record_name);
                         new AlertDialog.Builder(getActivity())
                                 .setView(v)
                                 .setTitle(R.string.add_record)
@@ -166,6 +171,7 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
         record.setUpdateTime(TimeUtil.longToDateTime(System.currentTimeMillis()));
         record.setCreateTime(TimeUtil.longToDateTime(System.currentTimeMillis()));
         record.setTime(0L);
+        record.setStar(0);
         record.save();
         update();
     }
@@ -380,7 +386,7 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
 
         @Override
         public boolean isChildSelectable(int groupPosition, int childPosition) {
-            return false;
+            return true;
         }
     }
 }

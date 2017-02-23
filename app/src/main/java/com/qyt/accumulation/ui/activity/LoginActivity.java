@@ -1,8 +1,8 @@
 package com.qyt.accumulation.ui.activity;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -10,24 +10,19 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import android.widget.TextView;
 
 import com.qyt.accumulation.App;
 import com.qyt.accumulation.R;
 import com.qyt.accumulation.base.BaseActivity;
 import com.qyt.accumulation.entity.User;
-import com.qyt.accumulation.util.AppLog;
-import com.qyt.accumulation.util.GoActivity;
 import com.qyt.accumulation.util.SPUtil;
 
 /**
  * 登录页
  * Created by Relish on 2016/11/4.
  */
-public class LoginActivity extends BaseActivity implements FirebaseAuth.AuthStateListener,
-        View.OnClickListener {
+public class LoginActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected int layoutId() {
         return R.layout.activity_login;
@@ -43,17 +38,16 @@ public class LoginActivity extends BaseActivity implements FirebaseAuth.AuthStat
         mToolbar.setTitle(R.string.login);
     }
 
-    AutoCompleteTextView etEmail;
+    AutoCompleteTextView etMobile;
     EditText etPwd;
     Button btnLogin;
 
     User mUser;
 
-    private FirebaseAuth mAuth;
-
-    private FirebaseUser user;
-
     private boolean isLogout = false;
+
+
+    TextView tv_forget_pwd, tv_register;
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
@@ -63,22 +57,22 @@ public class LoginActivity extends BaseActivity implements FirebaseAuth.AuthStat
             mUser = SPUtil.getUser();
         }
 
-        mAuth = FirebaseAuth.getInstance();
-        etEmail = (AutoCompleteTextView) findViewById(R.id.etEmail);
+        etMobile = (AutoCompleteTextView) findViewById(R.id.etEmail);
         etPwd = (EditText) findViewById(R.id.etPwd);
+        tv_forget_pwd = (TextView) findViewById(R.id.tv_forget_pwd);
+        tv_register = (TextView) findViewById(R.id.tv_register);
 
-        etEmail.setText("relish.wang@gmail.com");
+        tv_forget_pwd.setOnClickListener(this);
+        tv_register.setOnClickListener(this);
+
+        etMobile.setText("relish.wang@gmail.com");
         etPwd.setText("qytadwx8023");
 
         btnLogin = (Button) findViewById(R.id.btnLogin);
         btnLogin.setOnClickListener(this);
 
-        if (mUser.isEmpty()) {
-            if (user != null) {
-                etEmail.setText(user.getEmail());
-            }
-        } else {
-            etEmail.setText(mUser.getEmail());
+        if (!mUser.isEmpty()) {
+            etMobile.setText(mUser.getMobile());
             etPwd.setText(mUser.getPassword());
         }
     }
@@ -88,68 +82,66 @@ public class LoginActivity extends BaseActivity implements FirebaseAuth.AuthStat
         super.onStart();
         if (isLogout) {
             isLogout = false;
-            return;
         }
-//        mAuth.addAuthStateListener(this);//这玩意儿会自动登录
     }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-//        mAuth.removeAuthStateListener(this);
-    }
-
 
     @Override
     public void onClick(View v) {
-        String email = etEmail.getText().toString().trim();
+        switch (v.getId()) {
+            case R.id.btnLogin:
+                login(v);
+                break;
+            case R.id.tv_forget_pwd:
+                Intent intent = new Intent(this, ForgetPwdActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.tv_register:
+                Intent intent1 = new Intent(this, RegisterActivity.class);
+                startActivity(intent1);
+                break;
+        }
+    }
+
+    private void login(View v) {
+        String mobile = etMobile.getText().toString().trim();
         String pwd = etPwd.getText().toString().trim();
-        if (TextUtils.isEmpty(email)) {
-            Snackbar.make(v, R.string.email_not_be_null, Snackbar.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(mobile)) {
+            Snackbar.make(v, R.string.mobile_not_be_null, Snackbar.LENGTH_SHORT).show();
             return;
         }
-        if (email.matches("^[a-z0-9]+@[a-z0-9]+\\.[a-z]+$")) {
-            Snackbar.make(v, R.string.email_format_error, Snackbar.LENGTH_SHORT).show();
+        if (mobile.matches("^1[0-9]{10}$")) {
+            Snackbar.make(v, R.string.mobile_format_error, Snackbar.LENGTH_SHORT).show();
             return;
         }
         if (TextUtils.isEmpty(pwd)) {
             Snackbar.make(v, R.string.pwd_not_be_null, Snackbar.LENGTH_SHORT).show();
             return;
         }
-//        showLoading(R.string.logining);
-        login(email, pwd);//// TODO: 2016/12/4 firebase的用户信息验证不好用
-//        mAuth.signInWithEmailAndPassword(email, pwd);
+        showLoading(R.string.logining);
+        login(mobile, pwd);
     }
 
-    private void login(String email, String pwd) {
-        startActivity(new Intent(this,MainActivity.class));
-        finish();
-    }
+    private void login(String mobile, String pwd) {
+        new AsyncTask<String, Void, User>() {
 
-    private static final String TAG = "LoginActivity";
+            @Override
+            protected User doInBackground(String... params) {
+                return User.login(params[0], params[1]);
+            }
 
-    @Override
-    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-        user = firebaseAuth.getCurrentUser();
-        if (user != null) {
-            // User is signed in
-            AppLog.d(TAG, "onAuthStateChanged", "signed_in:" + user.getUid());
-            showLoading(false);
-            String email = etEmail.getText().toString().trim();
-            String pwd = etPwd.getText().toString().trim();
-            User user = new User();
-            user.setPassword(pwd);
-            user.setEmail(email);
-            user.save();
-            SPUtil.saveUser(user);
-            goActivity(MainActivity.class);
-            finish();
-        } else {
-            // User is signed out
-            AppLog.d(TAG, "onAuthStateChanged", "signed_out");
-            showLoading(false);
-            showMessage(R.string.login_failed);
-        }
-
+            @Override
+            protected void onPostExecute(User user) {
+                super.onPostExecute(user);
+                if (user == null) {
+                    showMessage(R.string.account_or_password_is_not_collect);
+                    showLoading(false);
+                } else {
+                    SPUtil.saveUser(user);
+                    App.USER = user;
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    finish();
+                }
+            }
+        }.execute(mobile, pwd);
     }
 }

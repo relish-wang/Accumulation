@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.qyt.accumulation.App;
+import com.qyt.accumulation.R;
 import com.qyt.accumulation.util.DensityUtil;
 
 /**
@@ -239,8 +241,11 @@ public class Chart extends View {
             paint.setColor(Color.GRAY);
             canvas.drawLine(ovals.get(i).centerX(), yScaleHeight / 2, ovals.get(i).centerX(), this.height - CTHelper.LINE_WIDTH - xAxisHeight, paint);
             if (i < ovals.size() - 1) {
-                paint.setColor(Color.GREEN);
+                paint.setColor(ContextCompat.getColor(getContext(),R.color.colorAccent));
+                float w = paint.getStrokeWidth();
+                paint.setStrokeWidth(10);
                 canvas.drawLine(ovals.get(i).centerX(), ovals.get(i).centerY(), ovals.get(i + 1).centerX(), ovals.get(i + 1).centerY(), paint);
+                paint.setStrokeWidth(w);
             }
         }
         paint.setStrokeWidth(CTHelper.LINE_WIDTH);

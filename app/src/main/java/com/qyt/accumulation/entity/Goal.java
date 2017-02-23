@@ -23,8 +23,8 @@ public class Goal extends BaseData implements Serializable  {
     private long id;
     private String name;
     private long time;
-    private List<Record> records;
     private String updateTime;
+    private List<Record> records;
 
     public Goal() {
         records = new ArrayList<>();
@@ -186,5 +186,22 @@ public class Goal extends BaseData implements Serializable  {
             db.close();
         }
         return max;
+    }
+
+    public static Goal findById(long id){
+        DBHelper helper = DBHelper.getInstance(App.CONTEXT);
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select * from Goal where id = ?", new String[]{id + ""});
+        Goal goal = null;
+        if(cursor!=null&&cursor.moveToFirst()){
+            goal = new Goal();
+            goal.setId(cursor.getLong(cursor.getColumnIndex("id")));
+            goal.setName(cursor.getString(cursor.getColumnIndex("name")));
+            goal.setUpdateTime(cursor.getString(cursor.getColumnIndex("updateTime")));
+            goal.setTime(cursor.getLong(cursor.getColumnIndex("time")));
+            cursor.close();
+            db.close();
+        }
+        return goal;
     }
 }

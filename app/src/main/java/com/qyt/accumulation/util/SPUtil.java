@@ -25,7 +25,6 @@ public class SPUtil {
         user.setName(checkNull("name", user.getName()));
         user.setPassword(checkNull("password", user.getPassword()));
         user.setPhoto(checkNull("photo", user.getPhoto()));
-        user.setEmail(checkNull("email", user.getEmail()));
         user.setMobile(checkNull("mobile", user.getMobile()));
         return user;
     }
@@ -39,7 +38,6 @@ public class SPUtil {
         save("name", user.getName());
         save("photo", user.getPhoto());
         save("password", user.getPassword());
-        save("email", user.getEmail());
         save("mobile", user.getMobile());
     }
 
