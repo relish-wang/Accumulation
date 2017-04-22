@@ -2,7 +2,6 @@ package com.qyt.accumulation.ui.activity;
 
 import android.Manifest;
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentUris;
 import android.content.Intent;
@@ -14,11 +13,12 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
@@ -33,6 +33,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.qyt.accumulation.App;
 import com.qyt.accumulation.R;
 import com.qyt.accumulation.base.BaseActivity;
@@ -47,6 +48,14 @@ import java.util.Random;
 
 
 public class RegisterActivity extends BaseActivity implements View.OnClickListener {
+
+    private static final String PHOTO = "photo";
+    private static final String NAME = "name";
+    private static final String MOBILE = "mobile";
+    private static final String VERIFY_CODE = "verify_code";
+    private static final String PASSWORD = "password";
+    private static final String REPEAT_PWD = "repeat_pwd";
+
     @Override
     protected int layoutId() {
         return R.layout.activity_register;
@@ -64,10 +73,23 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     EditText et_name, et_mobile, et_code, et_pwd, et_repeat_pwd;
     Button btn_get_verify_code;
 
-    String photo = null;
-    String verify_code = "";
+    private String photo = null;
+    private String mobile;
+    private String name;
+    private String verify_code = "";
+    private String password;
+    private String repeat_pwd;
 
-    Handler handler = new Handler();
+    @Override
+    protected void parseIntent(Intent intent) {
+        super.parseIntent(intent);
+        photo = checkStringNull(intent.getStringExtra(PHOTO));
+        name = checkStringNull(intent.getStringExtra(NAME));
+        mobile = checkStringNull(intent.getStringExtra(MOBILE));
+        verify_code = checkStringNull(intent.getStringExtra(VERIFY_CODE));
+        password = checkStringNull(intent.getStringExtra(PASSWORD));
+        repeat_pwd = checkStringNull(intent.getStringExtra(REPEAT_PWD));
+    }
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
@@ -80,6 +102,14 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         et_pwd = (EditText) findViewById(R.id.et_pwd);
         et_repeat_pwd = (EditText) findViewById(R.id.et_repeat_pwd);
         btn_get_verify_code = (Button) findViewById(R.id.btn_get_verify_code);
+        if (TextUtils.isEmpty(photo)) {
+            Glide.with(this).load(photo);
+        }
+        et_name.setText(name);
+        et_mobile.setText(mobile);
+        et_code.setText(verify_code);
+        et_pwd.setText(password);
+        et_repeat_pwd.setText(repeat_pwd);
 
         rl_head.setOnClickListener(this);
         btn_get_verify_code.setOnClickListener(this);
@@ -101,8 +131,8 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             case R.id.btn_get_verify_code:
                 if (!TextUtils.isEmpty(et_mobile.getText().toString().trim())) {
                     if (et_mobile.getText().toString().trim().length() == 11) {
-                        iPhone = et_mobile.getText().toString().trim();
-                        if (iPhone.matches(PhoneUtils.MOBILE_PATTERN)) {
+                        mobile = et_mobile.getText().toString().trim();
+                        if (mobile.matches(PhoneUtils.MOBILE_PATTERN)) {
                             verify_code = generateCode();
                             if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
                                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, 2);
@@ -126,11 +156,8 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     }
 
 
-    private String iPhone;
-
     private void sendSms() {
         sendNotification("新消息", getString(R.string.send_verfiy_code_message, verify_code));
-//        PhoneUtils.sendSmsSilent(this, iPhone, getString(R.string.send_verfiy_code_message, verify_code));
     }
 
 
@@ -202,7 +229,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 if (resultCode == RESULT_OK) {
                     //将拍摄的照片显示出来
                     try {
-                        photo = getImagePath(uri, null);
+                        photo = uri.getPath();
                         Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri));
                         runOnUiThread(() -> {
                             iv_head.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -339,7 +366,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     }
 
 
-    class RegisterTask extends AsyncTask<User, Void, User> {
+    private class RegisterTask extends AsyncTask<User, Void, User> {
 
         @Override
         protected User doInBackground(User... params) {
@@ -396,19 +423,46 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
 
     protected void sendNotification(String title, String message) {
-        Notification.Builder builder = new Notification.Builder(getActivity());
-        builder.setSmallIcon(R.mipmap.icon_transparent)
-                .setContentText(message)
-                .setContentTitle(title)
-                .setTicker("新消息")
-                .setAutoCancel(true)
-                .setPriority(Notification.PRIORITY_MAX)
-                .setWhen(System.currentTimeMillis());
-        Intent intent = new Intent(getActivity(), MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        builder.setContentIntent(pendingIntent);
-        Notification notification = builder.build();
-        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        manager.notify(1, notification);
+        new Thread(() -> {
+            runOnUiThread(() -> showMessage("发送验证码成功！"));
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity());
+            builder.setSmallIcon(R.mipmap.icon_transparent)
+                    .setContentText(message)
+                    .setContentTitle(title)
+                    .setTicker("新消息")
+                    .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_LIGHTS)
+                    .setAutoCancel(true)
+                    .setPriority(Notification.PRIORITY_MAX)
+                    .setOnlyAlertOnce(true)
+                    .setShowWhen(true)
+                    .setWhen(System.currentTimeMillis());
+            Intent intent = new Intent(getActivity(), RegisterActivity.class);
+            String name = et_name.getText().toString();
+            String mobile = et_mobile.getText().toString();
+            String password = et_pwd.getText().toString();
+            String repeat_pwd = et_repeat_pwd.getText().toString();
+            intent.putExtra(PHOTO, photo);
+            intent.putExtra(NAME, name);
+            intent.putExtra(MOBILE, mobile);
+            intent.putExtra(VERIFY_CODE, verify_code);
+            intent.putExtra(PASSWORD, password);
+            intent.putExtra(REPEAT_PWD, repeat_pwd);
+            PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            builder.setContentIntent(pendingIntent);
+            Notification notification = builder.build();
+            NotificationManagerCompat manager = NotificationManagerCompat.from(this);
+            manager.notify(1, notification);
+            runOnUiThread(() -> et_code.setText(verify_code));
+        }).start();
+    }
+
+    private static String checkStringNull(String str) {
+        return TextUtils.isEmpty(str) ? "" : str;
     }
 }

@@ -14,11 +14,11 @@
 
     <ImageView
         android:id="@+id/ivHead"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="16dp"
-        app:srcCompat="@mipmap/head_default"
-        android:contentDescription="@string/pic" />
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:contentDescription="@string/pic"
+        android:scaleType="centerInside"
+        app:srcCompat="@mipmap/head_default" />
 
     <TextView
         android:id="@+id/tvName"

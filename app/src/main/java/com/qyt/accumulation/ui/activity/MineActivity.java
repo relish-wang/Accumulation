@@ -1,5 +1,6 @@
 package com.qyt.accumulation.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -8,10 +9,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.qyt.accumulation.App;
 import com.qyt.accumulation.R;
 import com.qyt.accumulation.base.BaseActivity;
 import com.qyt.accumulation.entity.User;
-import com.qyt.accumulation.util.GoActivity;
 import com.qyt.accumulation.util.SPUtil;
 
 /**
@@ -73,9 +74,10 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
 
                 break;
             case R.id.btn_logout:
-                Bundle bundle = new Bundle();
-                bundle.putBoolean("logout",true);
-                GoActivity.obtain(LoginActivity.class).setBundle(bundle).act();
+                App.exitApp();
+                Intent intent = new Intent(this, LoginActivity.class);
+                intent.putExtra("logout", true);
+                startActivity(intent);
                 break;
         }
     }

@@ -14,7 +14,7 @@ import java.util.List;
 public abstract class BaseData {
 
     @SuppressWarnings({"unchecked", "Convert2streamapi"})
-    public void save() {
+    public long save() {
         try {
             DBHelper helper = DBHelper.getInstance(App.CONTEXT);
             SQLiteDatabase db = helper.getReadableDatabase();
@@ -42,9 +42,10 @@ public abstract class BaseData {
                     }
                 }
             }
-            db.insert(getClass().getSimpleName().toLowerCase(), null, cv);
+            return db.insert(getClass().getSimpleName().toLowerCase(), null, cv);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
+            return -1;
         }
     }
 
