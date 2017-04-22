@@ -18,9 +18,10 @@ import java.util.Locale;
  * 目标
  * Created by Relish on 2016/11/10.
  */
-public class Goal extends BaseData implements Serializable  {
+public class Goal extends BaseData implements Serializable {
 
     private long id;
+    private String mobile;
     private String name;
     private long time;
     private String updateTime;
@@ -61,6 +62,18 @@ public class Goal extends BaseData implements Serializable  {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
     }
 
     public String getName() {
@@ -156,6 +169,7 @@ public class Goal extends BaseData implements Serializable  {
             do {
                 Goal goal = new Goal();
                 goal.setId(cursor.getLong(cursor.getColumnIndex("id")));
+                goal.setMobile(cursor.getString(cursor.getColumnIndex("mobile")));
                 goal.setName(cursor.getString(cursor.getColumnIndex("name")));
                 goal.setTime(cursor.getLong(cursor.getColumnIndex("time")));
 
@@ -175,12 +189,13 @@ public class Goal extends BaseData implements Serializable  {
         db.execSQL("delete from record where goalId = ?", new String[]{group.getId() + ""});
         db.execSQL("delete from goal where id = ?", new String[]{group.getId() + ""});
     }
+
     public static long getMaxId() {
         DBHelper helper = DBHelper.getInstance(App.CONTEXT);
         SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("select max(id) from goal",new String[]{});
+        Cursor cursor = db.rawQuery("select max(id) from goal", new String[]{});
         long max = 1;
-        if(cursor!=null&&cursor.moveToFirst()){
+        if (cursor != null && cursor.moveToFirst()) {
             max = cursor.getLong(0);
             cursor.close();
             db.close();
@@ -188,15 +203,16 @@ public class Goal extends BaseData implements Serializable  {
         return max;
     }
 
-    public static Goal findById(long id){
+    public static Goal findById(long id) {
         DBHelper helper = DBHelper.getInstance(App.CONTEXT);
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor cursor = db.rawQuery("select * from Goal where id = ?", new String[]{id + ""});
         Goal goal = null;
-        if(cursor!=null&&cursor.moveToFirst()){
+        if (cursor != null && cursor.moveToFirst()) {
             goal = new Goal();
             goal.setId(cursor.getLong(cursor.getColumnIndex("id")));
             goal.setName(cursor.getString(cursor.getColumnIndex("name")));
+            goal.setMobile(cursor.getString(cursor.getColumnIndex("mobile")));
             goal.setUpdateTime(cursor.getString(cursor.getColumnIndex("updateTime")));
             goal.setTime(cursor.getLong(cursor.getColumnIndex("time")));
             cursor.close();

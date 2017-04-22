@@ -1,6 +1,9 @@
 package com.qyt.accumulation.ui.activity;
 
 import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,7 +15,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -35,13 +37,14 @@ import com.qyt.accumulation.App;
 import com.qyt.accumulation.R;
 import com.qyt.accumulation.base.BaseActivity;
 import com.qyt.accumulation.entity.User;
+import com.qyt.accumulation.util.PhoneUtils;
+import com.qyt.accumulation.util.SPUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Random;
 
-import cn.smssdk.EventHandler;
-import cn.smssdk.SMSSDK;
 
 public class RegisterActivity extends BaseActivity implements View.OnClickListener {
     @Override
@@ -62,7 +65,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     Button btn_get_verify_code;
 
     String photo = null;
-    String verify_code = null;
+    String verify_code = "";
 
     Handler handler = new Handler();
 
@@ -80,19 +83,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
         rl_head.setOnClickListener(this);
         btn_get_verify_code.setOnClickListener(this);
-
-        SMSSDK.initSDK(this, "<1b908e47149a3>", "<3c4fe351b4e0998958c19f1fa4351f5e>");
-        EventHandler eh = new EventHandler() {
-            @Override
-            public void afterEvent(int event, int result, Object data) {
-                Message msg = new Message();
-                msg.arg1 = event;
-                msg.arg2 = result;
-                msg.obj = data;
-                handler.sendMessage(msg);
-            }
-        };
-        SMSSDK.registerEventHandler(eh);
     }
 
     @Override
@@ -109,29 +99,54 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 }
                 break;
             case R.id.btn_get_verify_code:
-                //// TODO: 2017/2/23 获取验证码
                 if (!TextUtils.isEmpty(et_mobile.getText().toString().trim())) {
                     if (et_mobile.getText().toString().trim().length() == 11) {
-                        String iPhone = et_mobile.getText().toString().trim();
-                        SMSSDK.getVerificationCode("86", iPhone);
-                        et_code.requestFocus();
-                        btn_get_verify_code.setVisibility(View.GONE);
+                        iPhone = et_mobile.getText().toString().trim();
+                        if (iPhone.matches(PhoneUtils.MOBILE_PATTERN)) {
+                            verify_code = generateCode();
+                            if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, 2);
+                            } else {
+                                sendSms();
+                            }
+                        } else {
+                            Toast.makeText(this, R.string.phone_number_error, Toast.LENGTH_LONG).show();
+                            et_mobile.requestFocus();
+                        }
                     } else {
-                        Toast.makeText(this, "请输入完整电话号码", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, R.string.phone_number_error, Toast.LENGTH_LONG).show();
                         et_mobile.requestFocus();
                     }
                 } else {
-                    Toast.makeText(this, "请输入您的电话号码", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, R.string.phone_number_empty, Toast.LENGTH_LONG).show();
                     et_mobile.requestFocus();
                 }
                 break;
         }
     }
 
+
+    private String iPhone;
+
+    private void sendSms() {
+        sendNotification("新消息", getString(R.string.send_verfiy_code_message, verify_code));
+//        PhoneUtils.sendSmsSilent(this, iPhone, getString(R.string.send_verfiy_code_message, verify_code));
+    }
+
+
+    private static String generateCode() {
+        StringBuilder sb = new StringBuilder();
+        Random r = new Random();
+        for (int i = 0; i < 4; i++) {
+            sb.append(r.nextInt(10));
+        }
+        return sb.toString();
+    }
+
     private static Uri uri;
 
     private void setHeadPhoto() {
-        AlertDialog dialog = new AlertDialog.Builder(this)
+        new AlertDialog.Builder(this)
                 .setItems(R.array.set_head_click, (d, which) -> {
                     switch (which) {
                         case 0:
@@ -145,8 +160,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                             break;
                     }
                 })
-                .create();
-        dialog
+                .create()
                 .show();
 
     }
@@ -191,6 +205,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                         photo = getImagePath(uri, null);
                         Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri));
                         runOnUiThread(() -> {
+                            iv_head.setScaleType(ImageView.ScaleType.CENTER_CROP);
                             iv_head.setImageBitmap(bitmap);
                             iv_camera.setVisibility(View.GONE);
                         });
@@ -243,15 +258,18 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case 1:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            switch (requestCode) {
+                case 1:
                     openAlbum();
-                } else {
-                    showMessage(R.string.permission_denied_message);
-                }
-                break;
-            default:
+                    break;
+                case 2:
+                    sendSms();
+                    break;
+            }
+        } else {
+            showMessage(R.string.permission_denied_message);
         }
     }
 
@@ -279,7 +297,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                     showMessage("手机号不得为空");
                     return false;
                 }
-                if (!mobile.matches("^[\\+86|]1[0-9]{10}$")) {
+                if (!mobile.matches(PhoneUtils.MOBILE_PATTERN)) {
                     showMessage("请填写正确的手机号码");
                     return false;
                 }
@@ -288,27 +306,17 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                     return false;
                 }
                 if (!TextUtils.equals(code, verify_code)) {
-                    boolean flag;
-
                     if (et_code.getText().toString().trim().length() == 4) {
-
                         String iCord = et_code.getText().toString().trim();
-
-                        SMSSDK.submitVerificationCode("86", mobile, iCord);
-
-                        flag = false;
-
+                        if (!TextUtils.equals(verify_code, iCord)) {
+                            Toast.makeText(this, R.string.verify_code_error, Toast.LENGTH_LONG).show();
+                            return false;
+                        }
                     } else {
-
-                        Toast.makeText(this, "请输入完整验证码", Toast.LENGTH_LONG).show();
-
+                        Toast.makeText(this, R.string.please_input_correct_verify_code, Toast.LENGTH_LONG).show();
                         et_code.requestFocus();
-
                     }
 
-
-                    showMessage("请填写正确的验证码");
-                    return false;
                 }
                 if (TextUtils.isEmpty(pwd)) {
                     showMessage("密码不得为空");
@@ -343,6 +351,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         protected void onPostExecute(User user) {
             super.onPostExecute(user);
             if (user != null) {
+                SPUtil.putString("mobile", user.getMobile());
                 new AlertDialog.Builder(RegisterActivity.this)
                         .setTitle("注册成功")
                         .setMessage("恭喜用户【" + user.getName() + "】注册成功！")
@@ -377,10 +386,29 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     private void displayImage(String imagePath) {
         if (!TextUtils.isEmpty(imagePath)) {
             Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+            iv_head.setScaleType(ImageView.ScaleType.CENTER_CROP);
             iv_head.setImageBitmap(bitmap);
             iv_camera.setVisibility(View.GONE);
         } else {
             Toast.makeText(this, "设置头像失败，请重试", Toast.LENGTH_SHORT).show();
         }
+    }
+
+
+    protected void sendNotification(String title, String message) {
+        Notification.Builder builder = new Notification.Builder(getActivity());
+        builder.setSmallIcon(R.mipmap.icon_transparent)
+                .setContentText(message)
+                .setContentTitle(title)
+                .setTicker("新消息")
+                .setAutoCancel(true)
+                .setPriority(Notification.PRIORITY_MAX)
+                .setWhen(System.currentTimeMillis());
+        Intent intent = new Intent(getActivity(), MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        builder.setContentIntent(pendingIntent);
+        Notification notification = builder.build();
+        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        manager.notify(1, notification);
     }
 }

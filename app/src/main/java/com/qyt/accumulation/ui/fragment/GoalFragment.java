@@ -26,7 +26,6 @@ import com.qyt.accumulation.util.TimeUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BooleanSupplier;
 
 /**
  * 目标
@@ -189,8 +188,8 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
 
     @Override
     public void onSendMessage(Object object) {
-        if(object instanceof Boolean){
-            if((Boolean) object){
+        if (object instanceof Boolean) {
+            if ((Boolean) object) {
                 update();
             }
         }

@@ -9,6 +9,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.qyt.accumulation.App;
 import com.qyt.accumulation.R;
 import com.qyt.accumulation.base.BaseActivity;
 import com.qyt.accumulation.util.BarUtil;
@@ -50,12 +51,16 @@ public class SplashActivity extends BaseActivity {
             public void onAnimationEnd(Animation animation) {
                 boolean autoLogin = SPUtil.getBoolean("autoLogin", false);
                 if (autoLogin) {
-                    String username = SPUtil.getString("account");
-                    String password = SPUtil.getString("password");
-                    //// TODO: 2017/2/23 自动登录
-                    Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
+                    App.USER = SPUtil.getUser();
+                    if (App.USER != null && !App.USER.isEmpty()) {
+                        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
                 } else {
                     Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
                     startActivity(intent);

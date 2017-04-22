@@ -16,6 +16,7 @@ import com.qyt.accumulation.App;
 import com.qyt.accumulation.R;
 import com.qyt.accumulation.base.BaseActivity;
 import com.qyt.accumulation.entity.User;
+import com.qyt.accumulation.util.PhoneUtils;
 import com.qyt.accumulation.util.SPUtil;
 
 /**
@@ -23,6 +24,9 @@ import com.qyt.accumulation.util.SPUtil;
  * Created by Relish on 2016/11/4.
  */
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
+
+    private static final int REGISTER = 0x101;
+
     @Override
     protected int layoutId() {
         return R.layout.activity_login;
@@ -65,16 +69,16 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         tv_forget_pwd.setOnClickListener(this);
         tv_register.setOnClickListener(this);
 
-        etMobile.setText("relish.wang@gmail.com");
-        etPwd.setText("qytadwx8023");
+        User user = SPUtil.getUser();
+        if (user != null && !user.isEmpty()) {
+            App.USER = user;
+
+            etMobile.setText(App.USER.getMobile());
+            etPwd.setText(App.USER.getPassword());
+        }
 
         btnLogin = (Button) findViewById(R.id.btnLogin);
         btnLogin.setOnClickListener(this);
-
-        if (!mUser.isEmpty()) {
-            etMobile.setText(mUser.getMobile());
-            etPwd.setText(mUser.getPassword());
-        }
     }
 
     @Override
@@ -97,7 +101,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 break;
             case R.id.tv_register:
                 Intent intent1 = new Intent(this, RegisterActivity.class);
-                startActivity(intent1);
+                startActivityForResult(intent1, REGISTER);
                 break;
         }
     }
@@ -109,7 +113,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             Snackbar.make(v, R.string.mobile_not_be_null, Snackbar.LENGTH_SHORT).show();
             return;
         }
-        if (mobile.matches("^1[0-9]{10}$")) {
+        if (!mobile.matches(PhoneUtils.MOBILE_PATTERN)) {
             Snackbar.make(v, R.string.mobile_format_error, Snackbar.LENGTH_SHORT).show();
             return;
         }
@@ -138,10 +142,20 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 } else {
                     SPUtil.saveUser(user);
                     App.USER = user;
+                    SPUtil.putBoolean("autoLogin", true);
                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
                     finish();
                 }
             }
         }.execute(mobile, pwd);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REGISTER && resultCode == RESULT_OK) {
+            etMobile.setText(App.USER.getMobile());
+            etPwd.setText("");
+        }
     }
 }

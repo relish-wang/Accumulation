@@ -3,6 +3,7 @@ package com.qyt.accumulation;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.util.DisplayMetrics;
@@ -11,6 +12,7 @@ import android.view.WindowManager;
 import com.firebase.client.Firebase;
 import com.orhanobut.logger.Logger;
 import com.qyt.accumulation.entity.User;
+import com.qyt.accumulation.receiver.MessageReceiver;
 import com.qyt.accumulation.util.AppLog;
 
 import java.util.WeakHashMap;

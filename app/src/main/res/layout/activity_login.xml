@@ -36,7 +36,7 @@
                     android:id="@+id/etEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/email"
+                    android:hint="@string/mobile"
                     android:inputType="textEmailAddress"
                     android:maxLines="1" />
 
