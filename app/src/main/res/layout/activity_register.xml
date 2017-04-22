@@ -72,6 +72,7 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
+                android:inputType="number"
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
                 android:hint="@string/mobile" />
@@ -98,7 +99,8 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
-                android:hint="@string/verification_code" />
+                android:hint="@string/verification_code"
+                android:inputType="number" />
 
 
             <Button
@@ -135,7 +137,8 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="8dp"
-                android:hint="@string/password" />
+                android:hint="@string/password"
+                android:inputType="textPassword" />
         </LinearLayout>
 
         <LinearLayout
@@ -159,7 +162,8 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
-                android:hint="@string/repeat_password" />
+                android:hint="@string/repeat_password"
+                android:inputType="textPassword" />
 
         </LinearLayout>
     </LinearLayout>

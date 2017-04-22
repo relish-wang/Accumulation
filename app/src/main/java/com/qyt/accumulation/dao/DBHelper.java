@@ -15,6 +15,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_GOAL =
             "CREATE TABLE goal (" +
                     "id integer primary key autoincrement," +
+                    "mobile varchar(15) not null," +
                     "updateTime text," +
                     "name text, time integer);";
 
@@ -29,11 +30,11 @@ public class DBHelper extends SQLiteOpenHelper {
                     "note text, " +
                     "star integer, " +
                     "startTime text, " +
-                    "goalId integer);";
+                    "goalId integer not null);";
 
     private static final String SQL_CREATE_USER =
             "CREATE TABLE user (" +
-                    "mobile text," +
+                    "mobile varchar(15)," +
                     "name text, " +
                     "password text, " +
                     "photo text);";

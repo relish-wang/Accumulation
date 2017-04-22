@@ -24,6 +24,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.qyt.accumulation.R;
 import com.qyt.accumulation.base.BaseActivity;
 import com.qyt.accumulation.base.IOnExchangeDataListener;
@@ -117,14 +118,20 @@ public class MainActivity extends BaseActivity implements
         View v = navigationView.getHeaderView(0);
         ImageView ivHead = (ImageView) v.findViewById(R.id.ivHead);
         TextView tvName = (TextView) v.findViewById(R.id.tvName);
-        TextView tvEmail = (TextView) v.findViewById(R.id.tvEmail);
+        TextView tvMobile = (TextView) v.findViewById(R.id.tvMobile);
         //// TODO: 2016/11/13 设置个人信息
-        ivHead.setImageResource(R.mipmap.icon);
-
+        Glide.with(this)
+                .load(mUser.getPhoto())
+                .centerCrop()
+                .placeholder(R.mipmap.icon)
+                .crossFade()
+                .into(ivHead);
         tvName.setText(mUser.getName());
+        tvMobile.setText(mUser.getMobile());
+
         ivHead.setOnClickListener(view -> goActivity(MineActivity.class));
         tvName.setOnClickListener(view -> goActivity(MineActivity.class));
-        tvEmail.setOnClickListener(view -> goActivity(MineActivity.class));
+        tvMobile.setOnClickListener(view -> goActivity(MineActivity.class));
 
         openFragment(GOAL);//默认打开【目标页】
     }

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.qyt.accumulation.R;
 import com.qyt.accumulation.base.BaseActivity;
 import com.qyt.accumulation.entity.User;
@@ -46,7 +47,12 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
         tvMobile = (TextView) findViewById(R.id.tv_mobile);
         tvEmail = (TextView) findViewById(R.id.tv_email);
 
-        ivHead.setImageResource(R.mipmap.icon);//// TODO: 2016/12/3 网络加载
+        Glide.with(this)
+                .load(mUser.getPhoto())
+                .centerCrop()
+                .placeholder(R.mipmap.icon)
+                .crossFade()
+                .into(ivHead);
         tvName.setText(checkNull(mUser.getName()));
         tvMobile.setText(checkNull(mUser.getMobile()));
     }

@@ -1,5 +1,6 @@
 package com.qyt.accumulation.util;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
@@ -17,15 +18,15 @@ public class SPUtil {
     private static SharedPreferences settings;
 
     static {
-        settings = App.CONTEXT.getSharedPreferences("android_preference", 0);
+        settings = App.CONTEXT.getSharedPreferences("user", Context.MODE_PRIVATE);
     }
 
     public static User getUser() {
         User user = new User();
-        user.setName(checkNull("name", user.getName()));
-        user.setPassword(checkNull("password", user.getPassword()));
-        user.setPhoto(checkNull("photo", user.getPhoto()));
-        user.setMobile(checkNull("mobile", user.getMobile()));
+        user.setName(getString("name",""));
+        user.setPassword(getString("password",""));
+        user.setPhoto(getString("photo", ""));
+        user.setMobile(getString("mobile", ""));
         return user;
     }
 

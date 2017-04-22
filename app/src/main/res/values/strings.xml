@@ -53,6 +53,11 @@
     <string name="repeat_password">重复密码</string>
     <string name="save">注册</string>
     <string name="permission_denied_message">拒绝权限将无法使用此软件</string>
+    <string name="verify_code_error">验证码不正确</string>
+    <string name="please_input_correct_verify_code">请输入完整验证码</string>
+    <string name="send_verfiy_code_message">【积累】验证码：%s。切勿将验证码泄漏于他人。</string>
+    <string name="phone_number_error">请输入完整电话号码</string>
+    <string name="phone_number_empty">请输入您的电话号码</string>
 
     <array name="goal_long_click">
         <item>添加记录</item>
