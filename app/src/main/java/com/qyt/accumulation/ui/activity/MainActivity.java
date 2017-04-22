@@ -3,6 +3,7 @@ package com.qyt.accumulation.ui.activity;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -25,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.qyt.accumulation.App;
 import com.qyt.accumulation.R;
 import com.qyt.accumulation.base.BaseActivity;
 import com.qyt.accumulation.base.IOnExchangeDataListener;
@@ -32,6 +34,7 @@ import com.qyt.accumulation.entity.Goal;
 import com.qyt.accumulation.entity.User;
 import com.qyt.accumulation.ui.fragment.GoalFragment;
 import com.qyt.accumulation.util.SPUtil;
+import com.qyt.accumulation.util.TimeUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -119,7 +122,8 @@ public class MainActivity extends BaseActivity implements
         ImageView ivHead = (ImageView) v.findViewById(R.id.ivHead);
         TextView tvName = (TextView) v.findViewById(R.id.tvName);
         TextView tvMobile = (TextView) v.findViewById(R.id.tvMobile);
-        //// TODO: 2016/11/13 设置个人信息
+
+        // 2016/11/13 设置个人信息
         Glide.with(this)
                 .load(mUser.getPhoto())
                 .centerCrop()
@@ -142,12 +146,30 @@ public class MainActivity extends BaseActivity implements
      * @param goalName 目标名
      */
     private void addGoal(String goalName) {
-        Goal goal = new Goal();
-        goal.setId(Goal.getMaxId() + 1);
-        goal.setName(goalName);
-        goal.setTime(System.currentTimeMillis());
-        goal.save();
-        mListener.onSendMessage(true);
+        new AsyncTask<Void, Void, Long>() {
+
+            @Override
+            protected Long doInBackground(Void... params) {
+                long timestamp = System.currentTimeMillis();
+                Goal goal = new Goal();
+                goal.setMobile(App.USER.getMobile());
+                goal.setId(Goal.getMaxId() + 1);
+                goal.setName(goalName);
+                goal.setUpdateTime(TimeUtil.longToDateTime(timestamp));
+                goal.setTime(timestamp);
+                return goal.save();
+            }
+
+            @Override
+            protected void onPostExecute(Long aVoid) {
+                super.onPostExecute(aVoid);
+                if (aVoid > -1) {
+                    mListener.onSendMessage(aVoid > -1);
+                } else {
+                    showMessage("创建目标失败");
+                }
+            }
+        }.execute();
     }
 
     @Override
@@ -156,7 +178,12 @@ public class MainActivity extends BaseActivity implements
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            new AlertDialog.Builder(this)
+                    .setTitle("退出【积累】")
+                    .setMessage("是否退出App？")
+                    .setPositiveButton("退出", ((dialog, which) -> super.onBackPressed()))
+                    .setNegativeButton("取消", null)
+                    .create().show();
         }
     }
 

@@ -33,8 +33,8 @@ public class RecordActivity extends BaseActivity {
 
     @Override
     protected void initToolbar(Bundle savedInstanceState, Toolbar mToolbar) {
-        mToolbar.setTitle(mRecord.getName());
-        mToolbar.setSubtitle(mRecord.getParent().getName());
+        mToolbar.setTitle(mRecord.getParent().getName());
+        mToolbar.setSubtitle(mRecord.getName());
     }
 
     @Override

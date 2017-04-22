@@ -3,7 +3,6 @@ package com.qyt.accumulation;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.util.DisplayMetrics;
@@ -12,7 +11,6 @@ import android.view.WindowManager;
 import com.firebase.client.Firebase;
 import com.orhanobut.logger.Logger;
 import com.qyt.accumulation.entity.User;
-import com.qyt.accumulation.receiver.MessageReceiver;
 import com.qyt.accumulation.util.AppLog;
 
 import java.util.WeakHashMap;
@@ -85,8 +83,12 @@ public class App extends Application {
      * 退出Activity
      */
     public static void exitApp() {
-        String[] allActivityNames = (String[]) mActivities.keySet().toArray();
-        removeActivities(allActivityNames);
+        Object[] allActivityNames = mActivities.keySet().toArray();
+        String[] names = new String[allActivityNames.length];
+        for (int i = 0; i < names.length; i++) {
+            names[i] = allActivityNames[i].toString();
+        }
+        removeActivities(names);
     }
 
 

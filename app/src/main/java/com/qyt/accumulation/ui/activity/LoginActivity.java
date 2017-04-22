@@ -96,8 +96,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 login(v);
                 break;
             case R.id.tv_forget_pwd:
-                Intent intent = new Intent(this, ForgetPwdActivity.class);
-                startActivity(intent);
+                String mobile = etMobile.getText().toString().trim();
+                ForgetPwdActivity.open(this,mobile);
                 break;
             case R.id.tv_register:
                 Intent intent1 = new Intent(this, RegisterActivity.class);
