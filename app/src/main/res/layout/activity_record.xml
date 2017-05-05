@@ -1,14 +1,202 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_name"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="雷当我是浮夸吧"
-        android:textSize="18sp" />
+        android:orientation="vertical">
 
-</LinearLayout>
+        <include layout="@layout/include_line" />
+
+        <RelativeLayout
+            android:id="@+id/rl_start_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/simple_click_selector">
+
+            <TextView
+                style="@style/ContentText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_margin="16dp"
+                android:text="起始时间："
+                tools:ignore="RelativeOverlap" />
+
+            <TextView
+                android:id="@+id/tv_start_time"
+                style="@style/ContentText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="16dp"
+                android:text="2017年4月20日 11:11:11"
+                tools:ignore="RelativeOverlap" />
+
+        </RelativeLayout>
+
+        <include layout="@layout/include_line" />
+
+
+        <RelativeLayout
+            android:id="@+id/rl_end_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/simple_click_selector">
+
+            <TextView
+                style="@style/ContentText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_margin="16dp"
+                android:text="结束时间："
+                tools:ignore="RelativeOverlap" />
+
+            <TextView
+                android:id="@+id/tv_end_time"
+                style="@style/ContentText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="16dp"
+                android:text="2017年4月20日 11:11:11"
+                android:textColor="@color/content_hint_color"
+                tools:ignore="RelativeOverlap" />
+
+        </RelativeLayout>
+
+        <include layout="@layout/include_line" />
+
+
+        <RelativeLayout
+            android:id="@+id/rl_hard_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                style="@style/ContentText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_margin="16dp"
+                android:text="努力时间："
+                tools:ignore="RelativeOverlap" />
+
+            <TextView
+                android:id="@+id/tv_hard_time"
+                style="@style/ContentText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="16dp"
+                android:text="00:00:00"
+                android:textColor="@color/content_hint_color"
+                tools:ignore="RelativeOverlap" />
+
+        </RelativeLayout>
+
+        <include layout="@layout/include_line" />
+
+        <RelativeLayout
+            android:id="@+id/rl_effective"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/simple_click_selector">
+
+            <TextView
+                style="@style/ContentText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_margin="16dp"
+                android:text="自评效率："
+                tools:ignore="RelativeOverlap" />
+
+            <android.support.v7.widget.AppCompatRatingBar
+                android:id="@+id/rating_bar"
+                style="@style/Widget.AppCompat.RatingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:numStars="5"
+                android:focusable="false"
+                android:isIndicator="true"
+                android:rating="2"
+                android:stepSize="1"
+                app:colorControlActivated="@color/colorAccent"
+                app:colorControlNormal="@color/gray" />
+
+        </RelativeLayout>
+
+        <include layout="@layout/include_line" />
+
+        <LinearLayout
+            android:id="@+id/rl_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/ContentText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="16dp"
+                    android:layout_weight="1"
+                    android:text="备注："
+                    tools:ignore="RelativeOverlap" />
+
+                <ImageView
+                    android:id="@+id/v_edit"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center_vertical|end"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_edit" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/et_info"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:padding="8dp"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/edittext_bg_selector"
+                android:enabled="false"
+                android:gravity="top|start"
+                android:hint="好记性不如烂笔头。记点心得吧，骚年~"
+                android:textColor="@color/content_text_color"
+                android:textColorHint="@color/content_hint_color"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <include layout="@layout/include_line" />
+    </LinearLayout>
+
+</ScrollView>

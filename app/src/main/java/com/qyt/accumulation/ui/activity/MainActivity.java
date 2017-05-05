@@ -1,12 +1,8 @@
 package com.qyt.accumulation.ui.activity;
 
-import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,25 +12,20 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.qyt.accumulation.App;
 import com.qyt.accumulation.R;
 import com.qyt.accumulation.base.BaseActivity;
 import com.qyt.accumulation.base.IOnExchangeDataListener;
-import com.qyt.accumulation.entity.Goal;
 import com.qyt.accumulation.entity.User;
 import com.qyt.accumulation.ui.fragment.GoalFragment;
+import com.qyt.accumulation.ui.fragment.UntitledFragment;
 import com.qyt.accumulation.util.SPUtil;
-import com.qyt.accumulation.util.TimeUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,11 +54,14 @@ public class MainActivity extends BaseActivity implements
 //    Firebase mDatabase;
 
     private static final int GOAL = 0x0;
-    FloatingActionButton fab;
+    private static final int UNTITLED = 0x1;
+
     Toolbar toolbar;
     FragmentManager mManager;
     List<Fragment> mFragments;
     GoalFragment goalFgm;
+    UntitledFragment untitledFgm;
+
     int mCurrentTab = 0;//默认为【目标】页
     private User mUser;
     private IOnExchangeDataListener mListener;
@@ -82,32 +76,13 @@ public class MainActivity extends BaseActivity implements
 
         mManager = getSupportFragmentManager();
         goalFgm = new GoalFragment();
+        untitledFgm = new UntitledFragment();
+
         mListener = goalFgm;
         mFragments = new ArrayList<>();
         mFragments.add(goalFgm);
+        mFragments.add(untitledFgm);
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(view -> {
-            @SuppressLint("InflateParams")
-            View v = getLayoutInflater().inflate(R.layout.dialog_add_dialog, null);
-            EditText etGoalName = (EditText) v.findViewById(R.id.et_goal_name);
-            etGoalName.setHint(R.string.goal_name);
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            AlertDialog dialog = builder.setView(v)
-                    .setTitle(R.string.add_goal)
-                    .setNegativeButton(R.string.cancel, null)
-                    .setPositiveButton(R.string.ensure, (DialogInterface dialogInterface, int i) -> {
-                        String goalName = etGoalName.getText().toString();
-                        addGoal(goalName);
-                    }).create();
-            WindowManager m = getWindowManager();
-            Display d = m.getDefaultDisplay();  //为获取屏幕宽、高
-            android.view.WindowManager.LayoutParams p = dialog.getWindow().getAttributes();  //获取对话框当前的参数值
-            p.height = (int) (d.getHeight() * 0.3);   //高度设置为屏幕的0.3
-            p.width = (int) (d.getWidth() * 0.5);    //宽度设置为屏幕的0.5
-            dialog.getWindow().setAttributes(p);     //设置生效
-            dialog.show();
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -138,38 +113,7 @@ public class MainActivity extends BaseActivity implements
         tvMobile.setOnClickListener(view -> goActivity(MineActivity.class));
 
         openFragment(GOAL);//默认打开【目标页】
-    }
-
-    /**
-     * 点击fab后添加目标
-     *
-     * @param goalName 目标名
-     */
-    private void addGoal(String goalName) {
-        new AsyncTask<Void, Void, Long>() {
-
-            @Override
-            protected Long doInBackground(Void... params) {
-                long timestamp = System.currentTimeMillis();
-                Goal goal = new Goal();
-                goal.setMobile(App.USER.getMobile());
-                goal.setId(Goal.getMaxId() + 1);
-                goal.setName(goalName);
-                goal.setUpdateTime(TimeUtil.longToDateTime(timestamp));
-                goal.setTime(timestamp);
-                return goal.save();
-            }
-
-            @Override
-            protected void onPostExecute(Long aVoid) {
-                super.onPostExecute(aVoid);
-                if (aVoid > -1) {
-                    mListener.onSendMessage(aVoid > -1);
-                } else {
-                    showMessage("创建目标失败");
-                }
-            }
-        }.execute();
+        toolbar.setTitle("目标");
     }
 
     @Override
@@ -211,7 +155,11 @@ public class MainActivity extends BaseActivity implements
         int id = item.getItemId();
         if (id == R.id.nav_goal) {
             openFragment(GOAL);
-        } else if (id == R.id.feedback) {
+            toolbar.setTitle("目标");
+        }else if(id == R.id.nav_untitle){
+            openFragment(UNTITLED);
+            toolbar.setTitle("未分类");
+        }else if (id == R.id.feedback) {
             goActivity(SettingActivity.class);
         } else if (id == R.id.nav_about) {
             goActivity(AboutActivity.class);

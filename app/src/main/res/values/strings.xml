@@ -58,6 +58,7 @@
     <string name="send_verfiy_code_message">【积累】验证码：%s。切勿将验证码泄漏于他人。</string>
     <string name="phone_number_error">请输入完整电话号码</string>
     <string name="phone_number_empty">请输入您的电话号码</string>
+    <string name="untitle">未分类</string>
 
     <array name="goal_long_click">
         <item>添加记录</item>

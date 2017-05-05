@@ -36,7 +36,7 @@
             android:id="@+id/tvHour"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="44"
+            android:text="00"
             android:textColor="@color/colorPrimary"
             android:textSize="50sp" />
 
@@ -51,7 +51,7 @@
             android:id="@+id/tvMinute"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="33"
+            android:text="00"
             android:textColor="@color/colorPrimary"
             android:textSize="24sp" />
 

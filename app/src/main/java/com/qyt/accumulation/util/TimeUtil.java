@@ -1,6 +1,8 @@
 package com.qyt.accumulation.util;
 
 
+import android.text.TextUtils;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -32,6 +34,7 @@ public class TimeUtil {
      * @return long类型时间
      */
     public static long dateTimeToLong(String datetime) {
+        if (TextUtils.isEmpty(datetime)) return 0;
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
         try {
             Date d = formatter.parse(datetime);
@@ -115,6 +118,19 @@ public class TimeUtil {
         long oneDay = 24 * 60 * 60 * 1000; // 每天的毫秒数
         long now = dateTimeToLong(date);// 从1970-1-1 8点开始的毫秒数
         return now - ((now + 8 * 60 * 60 * 1000) % oneDay);
+    }
+
+    /**
+     * long类型转00:00:00类型
+     *
+     * @param hardTime long
+     * @return string
+     */
+    public static String getHardTime(long hardTime) {
+        long hour = hardTime / 60 / 60 / 1000;
+        long min = hardTime / 60 / 1000 % 60;
+        long sec = hardTime / 1000 % 60;
+        return String.format(Locale.CHINA, "%02d:%02d:%02d", hour, min, sec);
     }
 
 //    /**
