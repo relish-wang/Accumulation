@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.qyt.accumulation.App;
 import com.qyt.accumulation.dao.BaseData;
 import com.qyt.accumulation.dao.DBHelper;
+import com.qyt.accumulation.util.TimeUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -15,9 +16,8 @@ import java.util.List;
  * 记录
  * Created by Relish on 2016/11/10.
  */
-public class Record extends BaseData implements Serializable {
+public class Record extends BaseData {
 
-    private long id;
     private long goalId;
     private String name;
     private Integer star;
@@ -27,6 +27,18 @@ public class Record extends BaseData implements Serializable {
     private String startTime;
     private String endTime;
     private String updateTime;
+
+    public Record() {
+        id = findMaxId()+1;
+        goalId = -1;//未分类
+        name = "[未命名]";
+        star = 1;
+        note = "";
+        time = 0L;
+        createTime = TimeUtil.getNowTime();
+        startTime = createTime;
+        updateTime = createTime;
+    }
 
     public String getCreateTime() {
         return createTime;
@@ -42,14 +54,6 @@ public class Record extends BaseData implements Serializable {
 
     public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public long getGoalId() {
@@ -85,6 +89,11 @@ public class Record extends BaseData implements Serializable {
     }
 
     public Long getTime() {
+        if (time <= 0) {
+            long et = TimeUtil.dateTimeToLong(endTime);
+            long st = TimeUtil.dateTimeToLong(startTime);
+            return et - st;
+        }
         return time;
     }
 
@@ -162,5 +171,56 @@ public class Record extends BaseData implements Serializable {
 
     public Goal getParent() {
         return Goal.findById(goalId);
+    }
+
+    public String getHardTime() {
+        return TimeUtil.getHardTime(getTime());
+    }
+
+    @Override
+    public long save() {
+        return super.save();
+    }
+
+    public static long findMaxIdWhereGoalIdIs(int goalId) {
+        DBHelper helper = DBHelper.getInstance(App.CONTEXT);
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select max(id) from record where goalId = ?", new String[]{goalId + ""});
+        int max = 0;
+        if (cursor != null && cursor.moveToFirst()) {
+            max = cursor.getInt(0);
+            cursor.close();
+            db.close();
+        }
+        return max;
+    }
+
+    public static List<Record> findAllUntitled() {
+        DBHelper helper = DBHelper.getInstance(App.CONTEXT);
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select * from record where goalId = ?", new String[]{"0"});
+        if (cursor == null) {
+            return new ArrayList<>();
+        }
+        List<Record> records = new ArrayList<>();
+        if (cursor.moveToFirst()) {
+            do {
+                Record record = new Record();
+                record.setId(cursor.getLong(cursor.getColumnIndex("id")));
+                record.setGoalId(cursor.getLong(cursor.getColumnIndex("goalId")));
+                record.setName(cursor.getString(cursor.getColumnIndex("name")));
+                record.setStar(cursor.getInt(cursor.getColumnIndex("star")));
+                record.setNote(cursor.getString(cursor.getColumnIndex("note")));
+                record.setTime(cursor.getLong(cursor.getColumnIndex("time")));
+                record.setUpdateTime(cursor.getString(cursor.getColumnIndex("updateTime")));
+                record.setCreateTime(cursor.getString(cursor.getColumnIndex("createTime")));
+                record.setStartTime(cursor.getString(cursor.getColumnIndex("startTime")));
+                record.setEndTime(cursor.getString(cursor.getColumnIndex("endTime")));
+                records.add(record);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return records;
     }
 }

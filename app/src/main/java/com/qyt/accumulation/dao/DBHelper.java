@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    private static final int VERSION = 2;
+    private static final int VERSION = 4;
 
     private static final String SQL_CREATE_GOAL =
             "CREATE TABLE goal (" +
@@ -34,6 +34,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_USER =
             "CREATE TABLE user (" +
+                    "id integer primary key autoincrement," +
                     "mobile varchar(15)," +
                     "name text, " +
                     "password text, " +

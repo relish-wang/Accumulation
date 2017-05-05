@@ -6,12 +6,23 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.qyt.accumulation.App;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
 
-public abstract class BaseData {
+public abstract class BaseData implements Serializable{
+
+    protected long id;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     @SuppressWarnings({"unchecked", "Convert2streamapi"})
     public long save() {
@@ -42,12 +53,27 @@ public abstract class BaseData {
                     }
                 }
             }
-            return db.insert(getClass().getSimpleName().toLowerCase(), null, cv);
+            if (isExist()) {
+                return db.update(getClass().getSimpleName().toLowerCase(), cv, "id = ?", new String[]{id + ""});
+            } else {
+                return db.insert(getClass().getSimpleName().toLowerCase(), null, cv);
+            }
         } catch (IllegalAccessException e) {
             e.printStackTrace();
             return -1;
         }
     }
+
+    private boolean isExist() {
+        DBHelper helper = DBHelper.getInstance(App.CONTEXT);
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select * from " + getClass().getSimpleName().toLowerCase() +
+                " where id = ?", new String[]{id + ""});
+        boolean isExist = cursor != null && cursor.getCount() > 0;
+        if (cursor != null) cursor.close();
+        return isExist;
+    }
+
 
     /**
      * 获得泛型类型

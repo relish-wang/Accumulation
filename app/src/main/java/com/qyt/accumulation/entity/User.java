@@ -14,7 +14,7 @@ import java.io.Serializable;
  * 用户实体类
  * Created by Relish on 2016/12/3.
  */
-public class User extends BaseData implements Serializable {
+public class User extends BaseData{
 
     private String name;
     private String password;

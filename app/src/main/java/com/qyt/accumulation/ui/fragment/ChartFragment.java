@@ -1,5 +1,5 @@
 package com.qyt.accumulation.ui.fragment;
-
+//123
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,7 +15,6 @@ import com.qyt.accumulation.entity.Goal;
 import com.qyt.accumulation.entity.Record;
 import com.qyt.accumulation.ui.view.chart.Chart;
 import com.qyt.accumulation.ui.view.chart.Pillar;
-import com.qyt.accumulation.util.Temp;
 import com.qyt.accumulation.util.TimeUtil;
 
 import java.util.ArrayList;
@@ -52,13 +51,17 @@ public class ChartFragment extends BaseFragment {
     @Override
     protected void initViews(View contentView) {
         Bundle bundle = getArguments();
-        //// TODO: 2016/11/13 获取数据 
         if (bundle != null) {
             mGoal = (Goal) bundle.getSerializable("goal");
         }
         tvGoalName = (TextView) contentView.findViewById(R.id.tvGoalName);
         tvHour = (TextView) contentView.findViewById(R.id.tvHour);
         tvMinute = (TextView) contentView.findViewById(R.id.tvMinute);
+
+        tvGoalName.setText(mGoal.getName());
+        tvHour.setText(String.valueOf(mGoal.getHardHour()));
+        tvMinute.setText(String.valueOf(mGoal.getHardMinute()));
+
         chart = (Chart) contentView.findViewById(R.id.chart);
         chart.setPillars(getPillars(mGoal));
         rvRecords = (RecyclerView) contentView.findViewById(R.id.rvRecords);
@@ -71,9 +74,8 @@ public class ChartFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        //// TODO: 2016/11/13 获取records，更新列表
         //测试数据
-        mRecords = Temp.getRecords();
+        mRecords = mGoal.getRecords();
         adapter.setNewData(mRecords);
         chart.setPillars(getPillarsTemp(mRecords));
     }
@@ -105,9 +107,9 @@ public class ChartFragment extends BaseFragment {
         return pillars;
     }
 
-    class ChildAdapter extends BaseQuickAdapter<Record> {
+    private class ChildAdapter extends BaseQuickAdapter<Record> {
 
-        public ChildAdapter(int layoutResId, List<Record> data) {
+        ChildAdapter(int layoutResId, List<Record> data) {
             super(layoutResId, data);
         }
 

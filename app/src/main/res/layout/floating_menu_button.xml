@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.qyt.accumulation.ui.view.fab.MultiFloatingActionButton xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/floating_button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:animationMode="scale"
+    app:backgroundColor="@color/no_pic"
+    app:switchFabColor="@color/light_red"
+    app:switchFabIcon="@drawable/ic_add">
+
+    <com.qyt.accumulation.ui.view.fab.TagFabLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:tagText="添加目标">
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add"
+            app:backgroundTint="@color/green"
+            app:fabSize="mini" />
+    </com.qyt.accumulation.ui.view.fab.TagFabLayout>
+
+    <com.qyt.accumulation.ui.view.fab.TagFabLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:tagText="开始积累">
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/icon_transparent"
+            app:backgroundTint="@color/green"
+            app:fabSize="mini" />
+    </com.qyt.accumulation.ui.view.fab.TagFabLayout>
+</com.qyt.accumulation.ui.view.fab.MultiFloatingActionButton>

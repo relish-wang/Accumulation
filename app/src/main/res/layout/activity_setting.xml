@@ -5,21 +5,172 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:background="@color/gray" />
+
     <include layout="@layout/include_line" />
 
+
     <RelativeLayout
+        android:id="@+id/rl_sync"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:padding="16dp">
+        android:background="@drawable/simple_click_selector">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_margin="16dp"
+            android:text="同步"
+            android:textColor="@color/content_text_color"
+            android:textSize="16sp"
+            tools:ignore="RelativeOverlap" />
+
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/st_sync"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:checked="false"
+            android:focusableInTouchMode="false" />
+
+    </RelativeLayout>
+
+    <include layout="@layout/include_line" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:background="@color/gray" />
+
+    <include layout="@layout/include_line" />
+
+    <RelativeLayout
+        android:id="@+id/rl_weekly_remind"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/simple_click_selector">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="16dp"
+            android:text="每周统计提醒"
+            android:textColor="@color/content_text_color"
+            android:textSize="16sp"
+            tools:ignore="RelativeOverlap" />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/st_weekly_remind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:focusableInTouchMode="false" />
+
+    </RelativeLayout>
+
+    <include layout="@layout/include_line" />
+
+    <RelativeLayout
+        android:id="@+id/rl_undo_remind"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/simple_click_selector">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="16dp"
+            android:text="未完成任务提醒"
+            android:textColor="@color/content_text_color"
+            android:textSize="16sp"
+            tools:ignore="RelativeOverlap" />
+
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/st_undo_remind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:focusableInTouchMode="false" />
+
+    </RelativeLayout>
+
+    <include layout="@layout/include_line" />
+
+    <RelativeLayout
+        android:id="@+id/rl_goal_remind"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/simple_click_selector">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="16dp"
+            android:text="重要目标提醒"
+            android:textColor="@color/content_text_color"
+            android:textSize="16sp"
+            tools:ignore="RelativeOverlap" />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/st_goal_remind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:focusableInTouchMode="false" />
+
+    </RelativeLayout>
+
+    <include layout="@layout/include_line" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:background="@color/gray" />
+
+    <include layout="@layout/include_line" />
+
+    <RelativeLayout
+
+        android:id="@+id/rl_voice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/simple_click_selector">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="16dp"
             android:text="声音"
             android:textColor="@color/content_text_color"
-            android:textSize="18sp"
+            android:textSize="16sp"
             tools:ignore="RelativeOverlap" />
 
 
@@ -29,25 +180,30 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true" />
+            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:focusableInTouchMode="false" />
 
     </RelativeLayout>
 
     <include layout="@layout/include_line" />
 
     <RelativeLayout
+        android:id="@+id/rl_vibrate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:padding="16dp">
+        android:background="@drawable/simple_click_selector">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_margin="16dp"
             android:text="震动"
             android:textColor="@color/content_text_color"
-            android:textSize="18sp"
+            android:textSize="16sp"
             tools:ignore="RelativeOverlap" />
 
         <android.support.v7.widget.SwitchCompat
@@ -55,7 +211,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true" />
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:focusableInTouchMode="false" />
 
     </RelativeLayout>
 

@@ -18,9 +18,8 @@ import java.util.Locale;
  * 目标
  * Created by Relish on 2016/11/10.
  */
-public class Goal extends BaseData implements Serializable {
+public class Goal extends BaseData {
 
-    private long id;
     private String mobile;
     private String name;
     private long time;
@@ -53,15 +52,6 @@ public class Goal extends BaseData implements Serializable {
         }
         AppLog.e("Goal", "getRecord(int)", "RecordID[" + recordId + "] NOT found.");
         return null;
-    }
-
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getMobile() {
@@ -137,6 +127,18 @@ public class Goal extends BaseData implements Serializable {
         if (records == null || records.size() == 0)
             this.records = new ArrayList<>();
         this.records = records;
+    }
+
+    public int getHardHour() {
+        Long time = getHardTimeLong();
+        time /= 1000;
+        return (int) (time / 3600);
+    }
+
+    public int getHardMinute() {
+        Long time = getHardTimeLong();
+        time /= 1000;
+        return (int) (time % 3600 / 60);
     }
 
     public String getHardTime() {

@@ -15,7 +15,7 @@ public class Temp {
 
     public static List<Goal> getGoals() {
         Random r = new Random();
-        int random = r.nextInt(5) + 3;
+        int random = r.nextInt(30) + 3;
         List<Goal> goals = new ArrayList<>();
         for (int i = 0; i < random; i++) {
             Goal goal = new Goal();

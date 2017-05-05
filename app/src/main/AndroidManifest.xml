@@ -25,17 +25,37 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activity.LoginActivity" />
-        <activity android:name=".ui.activity.MainActivity" />
-        <activity android:name=".ui.activity.SettingActivity" />
-        <activity android:name=".ui.activity.AboutActivity" />
-        <activity android:name=".ui.activity.MineActivity" />
-        <activity android:name=".ui.activity.ForgetPwdActivity" />
-        <activity android:name=".ui.activity.RecordActivity" />
+        <activity
+            android:name=".ui.activity.LoginActivity"
+            android:windowSoftInputMode="stateHidden|stateUnchanged" />
+        <activity
+            android:name=".ui.activity.MainActivity"
+            android:windowSoftInputMode="stateHidden|stateUnchanged" />
+        <activity
+            android:name=".ui.activity.SettingActivity"
+            android:windowSoftInputMode="stateHidden|stateUnchanged" />
+        <activity
+            android:name=".ui.activity.AboutActivity"
+            android:windowSoftInputMode="stateHidden|stateUnchanged" />
+        <activity
+            android:name=".ui.activity.MineActivity"
+            android:windowSoftInputMode="stateHidden|stateUnchanged" />
+        <activity
+            android:name=".ui.activity.ForgetPwdActivity"
+            android:windowSoftInputMode="stateHidden|stateUnchanged" />
+        <activity
+            android:name=".ui.activity.RecordActivity"
+            android:windowSoftInputMode="stateHidden|stateUnchanged" />
         <activity
             android:name=".ui.activity.RegisterActivity"
-            android:launchMode="singleTop" />
-        <activity android:name=".ui.activity.StatisticsActivity" />
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="stateHidden|stateUnchanged" />
+        <activity
+            android:name=".ui.activity.StatisticsActivity"
+            android:windowSoftInputMode="stateHidden|stateUnchanged" />
+        <activity
+            android:name=".ui.activity.AccumulationActivity"
+            android:windowSoftInputMode="stateHidden|stateUnchanged" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

@@ -1,12 +1,19 @@
 package com.qyt.accumulation.ui.fragment;
 
+import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.util.TypedValue;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.widget.AdapterView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.EditText;
@@ -21,7 +28,11 @@ import com.qyt.accumulation.base.BaseFragment;
 import com.qyt.accumulation.base.IOnExchangeDataListener;
 import com.qyt.accumulation.entity.Goal;
 import com.qyt.accumulation.entity.Record;
+import com.qyt.accumulation.ui.activity.AccumulationActivity;
 import com.qyt.accumulation.ui.activity.RecordActivity;
+import com.qyt.accumulation.ui.view.fab.MultiFloatingActionButton;
+import com.qyt.accumulation.ui.view.fab.TagFabLayout;
+import com.qyt.accumulation.util.Temp;
 import com.qyt.accumulation.util.TimeUtil;
 
 import java.util.ArrayList;
@@ -32,7 +43,8 @@ import java.util.List;
  * Created by Relish on 2016/11/10.
  */
 public class GoalFragment extends BaseFragment implements ExpandableListView.OnChildClickListener,
-        ExpandableListView.OnGroupClickListener, AdapterView.OnItemLongClickListener, IOnExchangeDataListener {
+        ExpandableListView.OnGroupClickListener, AdapterView.OnItemLongClickListener, IOnExchangeDataListener,
+        MultiFloatingActionButton.OnFabItemClickListener{
 
 
     @Override
@@ -40,13 +52,19 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
         return R.layout.fragment_goal;
     }
 
+    MultiFloatingActionButton mMultiFloatingActionButton;
     private ExpandableListView mListView;
     private GoalAdapter mAdapter;
-    private List<Goal> mGoals;
+    private List<Goal> mGoals = new ArrayList<>();
 
     @Override
     protected void initViews(View contentView) {
-        mGoals = new ArrayList<>();//Temp.getGoals();//// TODO: 2016/11/10 临时数据
+
+        mMultiFloatingActionButton = (MultiFloatingActionButton) contentView.findViewById(R.id.floating_button);
+        mMultiFloatingActionButton.setOnFabItemClickListener(this);
+        checkFloatingItemsStyle();
+
+        mGoals = new ArrayList<>();
         mAdapter = new GoalAdapter();
         mListView = (ExpandableListView) contentView.findViewById(R.id.lv_goals);
         mListView.setGroupIndicator(null);
@@ -56,25 +74,95 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
         mListView.setOnItemLongClickListener(this);
     }
 
+
+    private void checkFloatingItemsStyle() {
+        TypedValue text = new TypedValue();
+        getActivity().getTheme().resolveAttribute(R.attr.myTextColor, text, true);
+        mMultiFloatingActionButton.setTextColor(text.data);
+        TypedValue background = new TypedValue();
+        getActivity().getTheme().resolveAttribute(R.attr.myBackground, background, true);
+        mMultiFloatingActionButton.setTagBackgroundColor(background.data);
+    }
+
+    /**
+     * 点击fab后添加目标
+     *
+     * @param goalName 目标名
+     */
+    private void addGoal(String goalName) {
+        new AsyncTask<Void, Void, Long>() {
+
+            @Override
+            protected Long doInBackground(Void... params) {
+                long timestamp = System.currentTimeMillis();
+                Goal goal = new Goal();
+                goal.setMobile(App.USER.getMobile());
+                goal.setId(Goal.getMaxId() + 1);
+                goal.setName(goalName);
+                goal.setUpdateTime(TimeUtil.longToDateTime(timestamp));
+                goal.setTime(timestamp);
+                return goal.save();
+            }
+
+            @Override
+            protected void onPostExecute(Long aVoid) {
+                super.onPostExecute(aVoid);
+                if (aVoid > -1) {
+                    update();
+                } else {
+                    showMessage("创建目标失败");
+                }
+            }
+        }.execute();
+    }
+
+    @Override
+    public void onFabItemClick(TagFabLayout view, int pos) {
+        switch (pos){
+            case 3:
+                //开始积累
+                Intent intent = new Intent(getActivity(), AccumulationActivity.class);
+                startActivity(intent);
+                break;
+            case 2:
+                openAddGoalDialog();
+                break;
+        }
+    }
+
+    private void openAddGoalDialog() {
+        @SuppressLint("InflateParams")
+        View v = getActivity().getLayoutInflater().inflate(R.layout.dialog_add_dialog, null);
+        EditText etGoalName = (EditText) v.findViewById(R.id.et_goal_name);
+        etGoalName.setHint(R.string.goal_name);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog dialog = builder.setView(v)
+                .setTitle(R.string.add_goal)
+                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(R.string.ensure, (DialogInterface dialogInterface, int i) -> {
+                    String goalName = etGoalName.getText().toString();
+                    addGoal(goalName);
+                }).create();
+        WindowManager m = getActivity().getWindowManager();
+        Display d = m.getDefaultDisplay();  //为获取屏幕宽、高
+        android.view.WindowManager.LayoutParams p = dialog.getWindow().getAttributes();  //获取对话框当前的参数值
+        p.height = (int) (d.getHeight() * 0.3);   //高度设置为屏幕的0.3
+        p.width = (int) (d.getWidth() * 0.5);    //宽度设置为屏幕的0.5
+        dialog.getWindow().setAttributes(p);     //设置生效
+        dialog.show();
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-        if (mGoals == null || mGoals.size() == 0) {
-            mGoals = Goal.findAll();
-            mAdapter.notifyDataSetChanged();
-        }
+        update();
     }
 
     @Override
     public boolean onChildClick(ExpandableListView parent, View v,
                                 int groupPosition, int childPosition, long id) {
-        Record record = mGoals.get(groupPosition).getRecords().get(childPosition);
-        Intent intent = new Intent(getActivity(), RecordActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("record", record);
-        intent.putExtras(bundle);
-        getActivity().startActivity(intent);
-        return false;
+        RecordActivity.open(getActivity(),mGoals.get(groupPosition).getRecords().get(childPosition));
+        return true;
     }
 
     @Override
@@ -94,11 +182,7 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
             builder.setItems(R.array.record_long_click, (dialog, which) -> {
                 switch (which) {
                     case 0:
-                        Intent intent = new Intent(getActivity(), RecordActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("record", record);
-                        intent.putExtras(bundle);
-                        getActivity().startActivity(intent);
+                        RecordActivity.open(getActivity(),record);
                         break;
                     case 1:
                         new AlertDialog.Builder(getActivity())
@@ -163,12 +247,15 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
     }
 
     private void addRecord(Goal group, String recordName) {
+        String start = TimeUtil.longToDateTime(System.currentTimeMillis());
         Record record = new Record();
         record.setId(Record.findMaxId() + 1);
         record.setName(recordName);
         record.setGoalId(group.getId());
-        record.setUpdateTime(TimeUtil.longToDateTime(System.currentTimeMillis()));
-        record.setCreateTime(TimeUtil.longToDateTime(System.currentTimeMillis()));
+        record.setUpdateTime(start);
+        record.setCreateTime(start);
+        record.setStartTime(start);
+        record.setEndTime(start);
         record.setTime(0L);
         record.setStar(0);
         record.save();
@@ -195,7 +282,7 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
         }
     }
 
-    class GoalAdapter extends BaseExpandableListAdapter {
+    private class GoalAdapter extends BaseExpandableListAdapter {
 
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded,
