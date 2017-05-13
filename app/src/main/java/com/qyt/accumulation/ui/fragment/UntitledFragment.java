@@ -34,10 +34,12 @@ public class UntitledFragment extends BaseFragment implements AdapterView.OnItem
     private ListView lv_records;
     private RecordAdapter mAdapter;
     private List<Record> records = new ArrayList<>();
+    private TextView tv_no_data;
 
     @Override
     protected void initViews(View contentView) {
         lv_records = (ListView) contentView.findViewById(R.id.lv_records);
+        tv_no_data = (TextView) contentView.findViewById(R.id.tv_no_data);
         records = Record.findAllUntitled();
         mAdapter = new RecordAdapter();
         lv_records.setAdapter(mAdapter);
@@ -47,8 +49,19 @@ public class UntitledFragment extends BaseFragment implements AdapterView.OnItem
     @Override
     public void onResume() {
         super.onResume();
+        update();
+    }
+
+    private void update() {
         records = Record.findAllUntitled();
         mAdapter.notifyDataSetChanged();
+        if(records==null||records.size()==0){
+            tv_no_data.setVisibility(View.VISIBLE);
+            lv_records.setVisibility(View.GONE);
+        }else{
+            tv_no_data.setVisibility(View.GONE);
+            lv_records.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -95,7 +108,7 @@ public class UntitledFragment extends BaseFragment implements AdapterView.OnItem
 
             public ViewHolder(View v) {
                 tv_name = (TextView) v.findViewById(R.id.tv_name);
-                tv_start_time = (TextView) v.findViewById(R.id.tv_start_time);
+                tv_start_time = (TextView) v.findViewById(R.id.tv_create_time);
             }
         }
     }

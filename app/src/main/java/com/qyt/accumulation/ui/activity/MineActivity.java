@@ -78,6 +78,7 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
                 Intent intent = new Intent(this, LoginActivity.class);
                 intent.putExtra("logout", true);
                 startActivity(intent);
+                SPUtil.putBoolean("autoLogin", false);
                 break;
         }
     }

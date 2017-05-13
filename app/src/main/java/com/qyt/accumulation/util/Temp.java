@@ -1,11 +1,12 @@
 package com.qyt.accumulation.util;
 
+import com.qyt.accumulation.entity.Goal;
+import com.qyt.accumulation.entity.Record;
+import com.qyt.accumulation.entity.User;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import com.qyt.accumulation.entity.Goal;
-import com.qyt.accumulation.entity.Record;
 
 /**
  * 临时数据
@@ -45,6 +46,62 @@ public class Temp {
             records.add(record);
         }
         return records;
+    }
+
+    public static void initDemoData() {
+        long userId = 1;
+        long goal1Id = 1;
+        long goal2Id = 2;
+        long goal3Id = 3;
+        User user = new User();
+        user.setName("Alice");
+        user.setPassword("123");
+        user.setMobile("13588888888");
+        user.setPhoto("/storage/emulated/0/Download/timg.jpg");
+
+        Goal goal1 = new Goal();
+        goal1.setId(goal1Id);
+        goal1.setName("红楼梦");
+        goal1.setUpdateTime("2017-04-30 15:07");
+        goal1.setMobile(user.getMobile());
+        goal1.setRecords(getRecords());
+        goal1.save();
+
+
+    }
+
+    public static List<Record> initHLMRecord() {
+
+        Record record = new Record();
+        record.setGoalId(1);
+        record.setName("序");
+        record.setStartTime("2017-04-01 10:02");
+        record.setEndTime("2017-04-01 13:24");
+        long et = TimeUtil.dateTimeToLong(record.getEndTime());
+        long st = TimeUtil.dateTimeToLong(record.getStartTime());
+        record.setTime(et - st);
+        record.setUpdateTime(record.getEndTime());
+        record.setNote("序，写的很棒！");
+        record.save();
+
+        Record record2 = new Record();
+        record2.setGoalId(1);
+        record2.setName("第一张");
+        record2.setStartTime("2017-04-02 09:21");
+        record2.setEndTime("2017-04-02 10:42");
+        long et2 = TimeUtil.dateTimeToLong(record2.getEndTime());
+        long st2 = TimeUtil.dateTimeToLong(record2.getStartTime());
+        record2.setTime(et2 - st2);
+        record2.setUpdateTime(record2.getEndTime());
+        record2.setNote("第一章内容跌宕起伏引人入胜");
+        record2.save();
+
+        return new ArrayList<Record>() {
+            {
+                add(record);
+                add(record2);
+            }
+        };
     }
 
 }

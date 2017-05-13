@@ -4,10 +4,27 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ExpandableListView
-        android:id="@+id/lv_goals"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <ExpandableListView
+            android:id="@+id/lv_goals"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_no_data"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@color/no_pic"
+            android:gravity="center"
+            android:text="暂无数据"
+            android:textColor="@color/white"
+            android:textSize="24sp" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/cloud"
@@ -17,4 +34,5 @@
         android:visibility="gone" />
 
     <include layout="@layout/floating_menu_button" />
+
 </android.support.design.widget.CoordinatorLayout>

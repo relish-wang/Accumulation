@@ -8,7 +8,6 @@ import com.qyt.accumulation.dao.BaseData;
 import com.qyt.accumulation.dao.DBHelper;
 import com.qyt.accumulation.util.TimeUtil;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -222,5 +221,18 @@ public class Record extends BaseData {
         cursor.close();
         db.close();
         return records;
+    }
+
+    /**
+     * 根据recordId删除Record
+     * @param id recordI
+     * @return the number of rows affected if a whereClause is passed in, 0
+     *         otherwise. To remove all rows and get a count pass "1" as the
+     *         whereClause.
+     */
+    public static int remove(long id) {
+        DBHelper helper = DBHelper.getInstance(App.CONTEXT);
+        SQLiteDatabase db = helper.getReadableDatabase();
+        return db.delete("record","id = ?",new String[]{id+""});
     }
 }

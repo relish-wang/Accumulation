@@ -12,12 +12,16 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatRatingBar;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.qyt.accumulation.R;
+import com.qyt.accumulation.adapter.GoalsAdapter;
 import com.qyt.accumulation.base.BaseActivity;
 import com.qyt.accumulation.entity.Goal;
 import com.qyt.accumulation.entity.Record;
@@ -25,11 +29,17 @@ import com.qyt.accumulation.util.TimeUtil;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
- * Created by wangxina on 2017/2/22.
+ * <pre>
+ *     author : 王鑫
+ *     e-mail : wangxin@souche.com
+ *     time   : 2017/2/22
+ *     desc   :
+ *     version: 1.0
+ * </pre>
  */
-
 public class RecordActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected int layoutId() {
@@ -57,10 +67,13 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
         }
     }
 
+    private boolean isTitled = false;
+
     @Override
     protected void initToolbar(Bundle savedInstanceState, Toolbar mToolbar) {
         Goal goal = mRecord.getParent();
-        String goalName = goal == null ? "默认" : goal.getName();
+        isTitled = goal == null;
+        String goalName = isTitled ? "未分类" : goal.getName();
         mToolbar.setTitle(goalName);
         mToolbar.setSubtitle(mRecord.getName());
     }
@@ -75,7 +88,6 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
-
         rl_start_time = findViewById(R.id.rl_start_time);
         rl_end_time = findViewById(R.id.rl_end_time);
         rl_effective = findViewById(R.id.rl_effective);
@@ -111,7 +123,7 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
                     et_info.setEnabled(false);
                     String text = et_info.getText().toString().trim();
                     mRecord.setNote(text);
-                    new AsyncTask<Void,Void,Long>(){
+                    new AsyncTask<Void, Void, Long>() {
 
                         @Override
                         protected Long doInBackground(Void... params) {
@@ -144,7 +156,7 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
                 editTime(sYear, sMonth, sDay, sHour, sMin, datetime -> {
                     mRecord.setStartTime(datetime);
                     mRecord.setUpdateTime(TimeUtil.longToDateTime(System.currentTimeMillis()));
-                    new AsyncTask<Void,Void,Long>(){
+                    new AsyncTask<Void, Void, Long>() {
 
                         @Override
                         protected Long doInBackground(Void... params) {
@@ -172,7 +184,7 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
                 int eMin = cEnd.get(Calendar.MINUTE);
                 editTime(eYear, eMonth, eDay, eHour, eMin, datetime -> {
                     mRecord.setEndTime(datetime);
-                    new AsyncTask<Void,Void,Long>(){
+                    new AsyncTask<Void, Void, Long>() {
 
                         @Override
                         protected Long doInBackground(Void... params) {
@@ -260,6 +272,75 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
         tv_start_time.setText(mRecord.getStartTime());
         tv_hard_time.setText(mRecord.getHardTime());
         tv_end_time.setText(mRecord.getEndTime());
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if(isTitled) {
+            getMenuInflater().inflate(R.menu.record, menu);
+            return true;
+        }else{
+            return super.onCreateOptionsMenu(menu);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_title_it:
+                onSaveIntoGoalClick(mRecord);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * 存入目标
+     *
+     * @param record 记录
+     */
+    private void onSaveIntoGoalClick(Record record) {
+        List<Goal> goal = Goal.findAll();
+        if (goal == null || goal.size() == 0) {
+            showMessage("暂无目标可存");
+            return;
+        }
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_goals, null);
+        List<Goal> goals = Goal.findAll();
+        ListView lv_goals = (ListView) view.findViewById(R.id.lv_goals);
+        GoalsAdapter adapter = new GoalsAdapter(goals);
+        lv_goals.setAdapter(adapter);
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("存入目标")
+                .setView(view)
+                .create();
+        lv_goals.setOnItemClickListener((parent, view1, position, id) -> {
+            new AsyncTask<Void, Void, Long>() {
+
+                @Override
+                protected Long doInBackground(Void... params) {
+                    long oldId = record.getId();
+                    record.setGoalId(goals.get(position).getId());
+                    record.setId(Record.findMaxId() + 1);
+                    record.setUpdateTime(TimeUtil.getNowTime());
+                    return record.save() + Record.remove(oldId);
+                }
+
+                @Override
+                protected void onPostExecute(Long aLong) {
+                    super.onPostExecute(aLong);
+                    if (aLong > 1) {
+                        Goal goal = Goal.findById(mRecord.getGoalId());
+                        mToolbar.setTitle(goal.getName());
+                        dialog.dismiss();
+                    } else {
+                        showMessage("保存失败！");
+                    }
+                }
+            }.execute();
+        });
+        dialog.show();
     }
 
     interface OnSelectedListener {
