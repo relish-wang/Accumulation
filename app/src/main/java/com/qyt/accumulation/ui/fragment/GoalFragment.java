@@ -1,11 +1,9 @@
 package com.qyt.accumulation.ui.fragment;
 
-import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.TypedValue;
 import android.view.Display;
@@ -13,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.AlphaAnimation;
 import android.widget.AdapterView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.EditText;
@@ -32,7 +29,6 @@ import com.qyt.accumulation.ui.activity.AccumulationActivity;
 import com.qyt.accumulation.ui.activity.RecordActivity;
 import com.qyt.accumulation.ui.view.fab.MultiFloatingActionButton;
 import com.qyt.accumulation.ui.view.fab.TagFabLayout;
-import com.qyt.accumulation.util.Temp;
 import com.qyt.accumulation.util.TimeUtil;
 
 import java.util.ArrayList;
@@ -56,6 +52,7 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
     private ExpandableListView mListView;
     private GoalAdapter mAdapter;
     private List<Goal> mGoals = new ArrayList<>();
+    TextView tv_no_data;
 
     @Override
     protected void initViews(View contentView) {
@@ -63,6 +60,8 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
         mMultiFloatingActionButton = (MultiFloatingActionButton) contentView.findViewById(R.id.floating_button);
         mMultiFloatingActionButton.setOnFabItemClickListener(this);
         checkFloatingItemsStyle();
+
+        tv_no_data = (TextView) contentView.findViewById(R.id.tv_no_data);
 
         mGoals = new ArrayList<>();
         mAdapter = new GoalAdapter();
@@ -72,8 +71,18 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
         mListView.setOnChildClickListener(this);
         mListView.setOnGroupClickListener(this);
         mListView.setOnItemLongClickListener(this);
+        checkDataShowOrHide();
     }
 
+    private void checkDataShowOrHide(){
+        if(mGoals==null||mGoals.size()==0){
+            tv_no_data.setVisibility(View.VISIBLE);
+            mListView.setVisibility(View.GONE);
+        }else{
+            tv_no_data.setVisibility(View.GONE);
+            mListView.setVisibility(View.VISIBLE);
+        }
+    }
 
     private void checkFloatingItemsStyle() {
         TypedValue text = new TypedValue();
@@ -265,6 +274,7 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
     public void update() {
         mGoals = Goal.findAll();
         mAdapter.notifyDataSetChanged();
+        checkDataShowOrHide();
     }
 
 

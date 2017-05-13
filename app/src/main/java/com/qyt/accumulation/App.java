@@ -10,8 +10,10 @@ import android.view.WindowManager;
 
 import com.firebase.client.Firebase;
 import com.orhanobut.logger.Logger;
+import com.qyt.accumulation.dao.DBHelper;
 import com.qyt.accumulation.entity.User;
 import com.qyt.accumulation.util.AppLog;
+import com.qyt.accumulation.util.Temp;
 
 import java.util.WeakHashMap;
 
@@ -35,6 +37,10 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        DBHelper.getInstance(this).getReadableDatabase();
+        Temp.initDemoData();
+
         Firebase.setAndroidContext(this);
         //日志打印工具
         Logger.init(TAG).methodCount(10) // 方法栈打印的个数，默认是 2

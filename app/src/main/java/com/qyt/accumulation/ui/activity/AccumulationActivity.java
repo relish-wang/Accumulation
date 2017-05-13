@@ -7,7 +7,6 @@ import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatRatingBar;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -42,7 +41,7 @@ public class AccumulationActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     protected void initToolbar(Bundle savedInstanceState, Toolbar mToolbar) {
-        mToolbar.setTitle("积累");
+        mToolbar.setTitle("开始积累");
     }
 
     private Handler handle = new Handler() {
@@ -212,7 +211,7 @@ public class AccumulationActivity extends BaseActivity implements View.OnClickLi
                     record.setName(name);
                     record.setStar((int) star);
                     record.setNote(note);
-                    new AsyncTask<Void,Void,Long>(){
+                    new AsyncTask<Void, Void, Long>() {
 
                         @Override
                         protected Long doInBackground(Void... params) {
@@ -222,9 +221,9 @@ public class AccumulationActivity extends BaseActivity implements View.OnClickLi
                         @Override
                         protected void onPostExecute(Long aLong) {
                             super.onPostExecute(aLong);
-                            if(aLong>0){
+                            if (aLong > 0) {
                                 finish();
-                            }else{
+                            } else {
                                 showMessage("保存失败！");
                             }
                         }
@@ -241,6 +240,11 @@ public class AccumulationActivity extends BaseActivity implements View.OnClickLi
      * @param record 记录
      */
     private void onSaveIntoGoalClick(Record record) {
+        List<Goal> goal = Goal.findAll();
+        if (goal == null || goal.size() == 0) {
+            showMessage("暂无目标可存");
+            return;
+        }
         View view = LayoutInflater.from(this).inflate(R.layout.dialog_goals, null);
         List<Goal> goals = Goal.findAll();
         ListView lv_goals = (ListView) view.findViewById(R.id.lv_goals);
@@ -251,7 +255,6 @@ public class AccumulationActivity extends BaseActivity implements View.OnClickLi
                 .setView(view)
                 .create();
         lv_goals.setOnItemClickListener((parent, view1, position, id) -> {
-            Log.d("Accumulation", "lv_goals clicked. position = " + position);
             new AsyncTask<Void, Void, Long>() {
 
                 @Override
@@ -292,6 +295,4 @@ public class AccumulationActivity extends BaseActivity implements View.OnClickLi
         tv_min.setText(String.format(Locale.CHINA, "%02d", m));
         tv_sec.setText(String.format(Locale.CHINA, "%02d", s));
     }
-
-
 }

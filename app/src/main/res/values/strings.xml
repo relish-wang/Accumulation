@@ -59,6 +59,7 @@
     <string name="phone_number_error">请输入完整电话号码</string>
     <string name="phone_number_empty">请输入您的电话号码</string>
     <string name="untitle">未分类</string>
+    <string name="title">归标</string>
 
     <array name="goal_long_click">
         <item>添加记录</item>

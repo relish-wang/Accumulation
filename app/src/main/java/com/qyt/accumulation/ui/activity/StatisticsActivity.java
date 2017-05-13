@@ -6,12 +6,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.TextView;
 
 import com.qyt.accumulation.R;
 import com.qyt.accumulation.base.BaseActivity;
 import com.qyt.accumulation.entity.Goal;
 import com.qyt.accumulation.ui.fragment.ChartFragment;
-import com.qyt.accumulation.util.Temp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,15 +29,17 @@ public class StatisticsActivity extends BaseActivity implements ViewPager.OnPage
 
     @Override
     protected void initToolbar(Bundle savedInstanceState, Toolbar mToolbar) {
-
+        mToolbar.setTitle("统计");
     }
 
     private ViewPager vp;
     private ArrayList<Fragment> mFragments;
     private List<Goal> mGoals;
+    private TextView tv_no_data;
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
+        tv_no_data = (TextView) findViewById(R.id.tv_no_data);
         vp = (ViewPager) findViewById(R.id.vp);
         mFragments = new ArrayList<>();
         mGoals = Goal.findAll();
@@ -46,10 +49,21 @@ public class StatisticsActivity extends BaseActivity implements ViewPager.OnPage
         FragmentsAdapter adapter = new FragmentsAdapter(getSupportFragmentManager());
         vp.setAdapter(adapter);
         vp.setOnPageChangeListener(this);
-        vp.setOffscreenPageLimit(Temp.getGoals().size());//保留n个界面
+        vp.setOffscreenPageLimit(mGoals.size());//保留n个界面
         selectPage(0);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(mGoals==null||mGoals.size()==0){
+            tv_no_data.setVisibility(View.VISIBLE);
+            vp.setVisibility(View.GONE);
+        }else{
+            tv_no_data.setVisibility(View.GONE);
+            vp.setVisibility(View.VISIBLE);
+        }
+    }
 
     private void selectPage(int index) {
         vp.setCurrentItem(index);

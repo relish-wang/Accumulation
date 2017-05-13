@@ -64,5 +64,7 @@ dependencies {
     compile 'com.orhanobut:logger:1.15'
     //gilde
     compile 'com.github.bumptech.glide:glide:3.7.0'
+    //圆形图片
+    compile 'de.hdodenhof:circleimageview:2.1.0'
 }
 apply plugin: 'com.google.gms.google-services'

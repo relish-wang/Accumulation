@@ -1,5 +1,5 @@
 package com.qyt.accumulation.ui.fragment;
-//123
+
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -85,7 +85,7 @@ public class ChartFragment extends BaseFragment {
         String[] day = App.CONTEXT.getResources().getStringArray(R.array.week);
         long[] values = {0, 0, 0, 0, 0, 0, 0};
         for (Record r : records) {
-            values[TimeUtil.dayForWeek(r.getCreateTime())] = r.getTime();
+            values[TimeUtil.dayForWeek(r.getStartTime())] = r.getTime()/1000/60;
         }
         for (int i = 0; i < 7; i++) {
             pillars.add(new Pillar(day[i], values[i]));
@@ -99,7 +99,7 @@ public class ChartFragment extends BaseFragment {
         long[] values = {0, 0, 0, 0, 0, 0, 0};
         List<Record> records = goal.getRecords();
         for (Record r : records) {
-            values[TimeUtil.dayForWeek(r.getCreateTime())] = r.getTime();
+            values[TimeUtil.dayForWeek(r.getStartTime())] = r.getTime()/1000/60;
         }
         for (int i = 0; i < 7; i++) {
             pillars.add(new Pillar(day[i], values[i]));
@@ -116,7 +116,7 @@ public class ChartFragment extends BaseFragment {
         @Override
         protected void convert(BaseViewHolder holder, Record record) {
             holder.setText(R.id.tvRecordName, record.getName());
-            holder.setText(R.id.tvHardTime, mGoal.getHardTime());
+            holder.setText(R.id.tvHardTime, record.getHardTime());
         }
     }
 }

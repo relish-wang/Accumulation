@@ -47,7 +47,7 @@ public class CTHelper {
             double t = pillars.get(i).getValue();
             max = Math.max(max, t);
         }
-        int result = (int) ((int) (max / 50) * 10);
+        int result = (int) ((float) (max / 50) * 10);
         return result < 10 ? 10 : result;
     }
 
