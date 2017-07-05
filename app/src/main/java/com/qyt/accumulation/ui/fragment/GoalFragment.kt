@@ -91,7 +91,7 @@ class GoalFragment(override val activity: Activity) : BaseFragment(), Expandable
                 val timestamp = System.currentTimeMillis()
                 val goal = Goal()
                 goal.mobile = App.USER!!.mobile
-                goal.id = Goal.getMaxId() + 1
+                goal.id = Goal.maxId + 1
                 goal.name = goalName
                 goal.updateTime = TimeUtil.longToDateTime(timestamp)
                 goal.setTime(timestamp)

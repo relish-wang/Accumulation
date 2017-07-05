@@ -316,7 +316,7 @@ class RecordActivity : BaseActivity(), View.OnClickListener {
                     if (aLong != null) {
                         if (aLong > 1) {
                             val goal = Goal.findById(mRecord!!.goalId)
-                            mToolbar?.title = goal.name
+                            mToolbar?.title = goal?.name
                             dialog.dismiss()
                         } else {
                             showMessage("保存失败！")

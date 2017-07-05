@@ -46,7 +46,7 @@ class Record : BaseData() {
         updateTime = createTime
     }
 
-    val parent: Goal
+    val parent: Goal?
         get() = Goal.findById(goalId)
 
     val hardTime: String
