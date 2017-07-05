@@ -35,7 +35,7 @@ public class Goal extends BaseData {
         if (records == null || records.size() == 0) {
             getRecords();
             if (records == null || records.size() == 0) {
-                AppLog.e("Goal", "getRecord(int)", "There is NO record in this goal.");
+                AppLog.INSTANCE.e("Goal", "getRecord(int)", "There is NO record in this goal.");
                 return null;
             } else {
                 for (Record record : records) {
@@ -50,7 +50,7 @@ public class Goal extends BaseData {
                 return record;
             }
         }
-        AppLog.e("Goal", "getRecord(int)", "RecordID[" + recordId + "] NOT found.");
+        AppLog.INSTANCE.e("Goal", "getRecord(int)", "RecordID[" + recordId + "] NOT found.");
         return null;
     }
 
@@ -80,7 +80,7 @@ public class Goal extends BaseData {
 
     public void setTime(Long time) {
         this.time = time;
-        this.updateTime = TimeUtil.longToDateTime(time);
+        this.updateTime = TimeUtil.INSTANCE.longToDateTime(time);
     }
 
     public String getUpdateTime() {
@@ -93,17 +93,17 @@ public class Goal extends BaseData {
 
     @SuppressWarnings("ConstantConditions")
     public List<Record> getRecords() {
-        DBHelper helper = DBHelper.getInstance(App.CONTEXT);
+        DBHelper helper = DBHelper.Companion.getInstance(App.Companion.getCONTEXT());
         SQLiteDatabase db = helper.getReadableDatabase();
         if (records == null || records.size() == 0) {
             List<Record> rs = new ArrayList<>();
             Cursor cursor = db.rawQuery(
-                    "select * from record where goalId = ?", new String[]{id + ""});
+                    "select * from record where goalId = ?", new String[]{super.getId() + ""});
             if (cursor != null && cursor.moveToFirst()) {
                 do {
                     Record r = new Record();
                     r.setId(cursor.getLong(cursor.getColumnIndex("id")));
-                    r.setGoalId(id);
+                    r.setGoalId(super.getId());
                     r.setName(cursor.getString(cursor.getColumnIndex("name")));
                     r.setStar(cursor.getInt(cursor.getColumnIndex("star")));
                     r.setNote(cursor.getString(cursor.getColumnIndex("note")));
@@ -160,7 +160,7 @@ public class Goal extends BaseData {
 
     @SuppressWarnings("ConstantConditions")
     public static List<Goal> findAll() {
-        DBHelper helper = DBHelper.getInstance(App.CONTEXT);
+        DBHelper helper = DBHelper.Companion.getInstance(App.Companion.getCONTEXT());
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor cursor = db.rawQuery("select * from goal", new String[]{});
         if (cursor == null) {
@@ -175,8 +175,8 @@ public class Goal extends BaseData {
                 goal.setName(cursor.getString(cursor.getColumnIndex("name")));
                 goal.setTime(cursor.getLong(cursor.getColumnIndex("time")));
 
-                List<Record> records = Record.findRecordsByGoalId(goal.getId());
-                goal.setRecords(records == null ? new ArrayList<>() : records);
+                List<Record> records = Record.Companion.findRecordsByGoalId(goal.getId());
+                goal.setRecords(records == null ? new ArrayList<Record>() : records);
                 goals.add(goal);
             } while (cursor.moveToNext());
         }
@@ -186,14 +186,14 @@ public class Goal extends BaseData {
     }
 
     public static void deleteItAndItsRecords(Goal group) {
-        DBHelper helper = DBHelper.getInstance(App.CONTEXT);
+        DBHelper helper = DBHelper.Companion.getInstance(App.Companion.getCONTEXT());
         SQLiteDatabase db = helper.getReadableDatabase();
         db.execSQL("delete from record where goalId = ?", new String[]{group.getId() + ""});
         db.execSQL("delete from goal where id = ?", new String[]{group.getId() + ""});
     }
 
     public static long getMaxId() {
-        DBHelper helper = DBHelper.getInstance(App.CONTEXT);
+        DBHelper helper = DBHelper.Companion.getInstance(App.Companion.getCONTEXT());
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor cursor = db.rawQuery("select max(id) from goal", new String[]{});
         long max = 1;
@@ -206,7 +206,7 @@ public class Goal extends BaseData {
     }
 
     public static Goal findById(long id) {
-        DBHelper helper = DBHelper.getInstance(App.CONTEXT);
+        DBHelper helper = DBHelper.Companion.getInstance(App.Companion.getCONTEXT());
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor cursor = db.rawQuery("select * from Goal where id = ?", new String[]{id + ""});
         Goal goal = null;
