@@ -5,11 +5,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
-
 import com.qyt.accumulation.R
 import com.qyt.accumulation.entity.Goal
-
-import java.util.ArrayList
+import java.util.*
 
 /**
  * <pre>
@@ -18,7 +16,7 @@ import java.util.ArrayList
  * time   : 2017/05/04
  * desc   :
  * version: 1.0
-</pre> *
+ * </pre>
  */
 class GoalsAdapter(goals: List<Goal>) : BaseAdapter() {
 

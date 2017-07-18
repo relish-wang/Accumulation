@@ -1,14 +1,9 @@
 package com.qyt.accumulation.entity
 
-import android.database.Cursor
-import android.database.sqlite.SQLiteDatabase
 import android.text.TextUtils
-
 import com.qyt.accumulation.App
 import com.qyt.accumulation.dao.BaseData
 import com.qyt.accumulation.dao.DBHelper
-
-import java.io.Serializable
 
 /**
  * 用户实体类

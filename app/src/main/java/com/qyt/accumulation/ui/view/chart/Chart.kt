@@ -82,7 +82,7 @@ class Chart : View {
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         Log.d(TAG, "#onMeasure")
         initSizes()
-        setMeasuredDimension(widthMeasureSpec, this.height)
+        setMeasuredDimension(widthMeasureSpec, this.viewHeight)
     }
 
     /**
@@ -96,15 +96,15 @@ class Chart : View {
                 CTHelper.TEXT_SIZE.toFloat()).toInt()
         +CTHelper.PADDING * 2
         +CTHelper.LINE_WIDTH
-        this.panelWidth = this.width - this.yAxisWidth
+        this.panelWidth = this.viewWidth - this.yAxisWidth
         this.xScaleWidth = CTHelper.getXScaleWidth(this.panelWidth)
         this.xAxisHeight = CTHelper.TEXT_HEIGHT + CTHelper.PADDING * 2
 
-        this.yScaleHeight = CTHelper.getYScaleHeight(this.height, this.xAxisHeight)
+        this.yScaleHeight = CTHelper.getYScaleHeight(viewHeight, this.xAxisHeight)
         this.yScaleValue = CTHelper.getYScaleValue(pillars)
 
-        Log.d(TAG, "#width" + width)
-        Log.d(TAG, "#height" + height)
+        Log.d(TAG, "#width" + viewHeight)
+        Log.d(TAG, "#height" + viewHeight)
         Log.d(TAG, "#yAxisWidth" + yAxisWidth)
         Log.d(TAG, "#panelWidth" + panelWidth)
         Log.d(TAG, "#xScaleWidth" + xScaleWidth)
@@ -120,7 +120,7 @@ class Chart : View {
         //画出y轴
         drawYAxis(canvas)
         // 画出X轴
-        canvas.drawLine(yAxisWidth.toFloat(), (this.height - this.xAxisHeight).toFloat(), this.width.toFloat(), (this.height - this.xAxisHeight).toFloat(), paint!!)
+        canvas.drawLine(yAxisWidth.toFloat(), (viewHeight - this.xAxisHeight).toFloat(), this.viewWidth.toFloat(), (viewHeight - this.xAxisHeight).toFloat(), paint!!)
         //绘制内容
         drawPanel(canvas)
     }
@@ -151,9 +151,7 @@ class Chart : View {
     private fun getOval(pillar: Pillar, index: Int): RectF {
 
         val l = yAxisWidth.toFloat() + xScaleWidth.toFloat() / 2 + index * xScaleWidth.toFloat() - CTHelper.SIDE.toFloat() / 2
-        val t = this.height.toFloat()
-        -pillar.getPillarHeight(this.height, yScaleValue, xAxisHeight).toFloat()
-        -CTHelper.LINE_WIDTH.toFloat() - this.xAxisHeight.toFloat() - CTHelper.SIDE.toFloat() / 2
+        val t = viewHeight.toFloat()-pillar.getPillarHeight(viewHeight, yScaleValue, xAxisHeight).toFloat()-CTHelper.LINE_WIDTH.toFloat() - this.xAxisHeight.toFloat() - CTHelper.SIDE.toFloat() / 2
         val r = l + CTHelper.SIDE
         val b = t + CTHelper.SIDE
 
@@ -182,25 +180,25 @@ class Chart : View {
     private fun drawYAxis(canvas: Canvas) {
 
         canvas.drawLine((yAxisWidth - CTHelper.LINE_WIDTH).toFloat(), (yScaleHeight / 2).toFloat(),
-                (yAxisWidth - CTHelper.LINE_WIDTH).toFloat(), (this.height - this.xAxisHeight).toFloat(), paint!!)
+                (yAxisWidth - CTHelper.LINE_WIDTH).toFloat(), (viewHeight - this.xAxisHeight).toFloat(), paint!!)
         canvas.drawText(
                 "0",
                 (yAxisWidth
                         - CTHelper.PADDING
                         - CTHelper.LINE_WIDTH
                         - CTHelper.getTextWidth("0",
-                        CTHelper.TEXT_SIZE.toFloat()).toInt()).toFloat(), (this.height
+                        CTHelper.TEXT_SIZE.toFloat()).toInt()).toFloat(), (viewHeight
                 - this.xAxisHeight - CTHelper.LINE_WIDTH + CTHelper.TEXT_HEIGHT / 2 - CTHelper.LINE_WIDTH).toFloat(),
                 paint!!)
         for (i in 1..5) {
-            val y = this.height - this.xAxisHeight
-            -CTHelper.LINE_WIDTH - yScaleHeight * i
+            Log.d(TAG, "i = "+i);
+            val y = viewHeight - this.xAxisHeight - CTHelper.LINE_WIDTH - yScaleHeight * i
             val text = (yScaleValue * i).toString()
 
             //网格线(横)
             paint!!.strokeWidth = 1f
             paint!!.color = Color.GRAY
-            canvas.drawLine((yAxisWidth - CTHelper.LINE_WIDTH).toFloat(), y.toFloat(), width.toFloat(), y.toFloat(), paint!!)
+            canvas.drawLine((yAxisWidth - CTHelper.LINE_WIDTH).toFloat(), y.toFloat(), viewWidth.toFloat(), y.toFloat(), paint!!)
             paint!!.strokeWidth = CTHelper.LINE_WIDTH.toFloat()
             paint!!.color = Color.BLACK
 
@@ -226,7 +224,7 @@ class Chart : View {
         for (i in ovals.indices) {
             paint!!.strokeWidth = 1f
             paint!!.color = Color.GRAY
-            canvas.drawLine(ovals[i].centerX(), (yScaleHeight / 2).toFloat(), ovals[i].centerX(), (this.height - CTHelper.LINE_WIDTH - xAxisHeight).toFloat(), paint!!)
+            canvas.drawLine(ovals[i].centerX(), (yScaleHeight / 2).toFloat(), ovals[i].centerX(), (viewHeight - CTHelper.LINE_WIDTH - xAxisHeight).toFloat(), paint!!)
             if (i < ovals.size - 1) {
                 paint!!.color = ContextCompat.getColor(context, R.color.colorAccent)
                 val w = paint!!.strokeWidth
@@ -241,7 +239,7 @@ class Chart : View {
             Log.d(TAG, "#pillar=" + pillar.toString())
             //日期显示位置
             val xDay = yAxisWidth + xScaleWidth / 2 + index * xScaleWidth - CTHelper.getTextWidth(pillar.day, CTHelper.TEXT_SIZE.toFloat()) / 2
-            val yDay = (this.height - this.xAxisHeight + CTHelper.TEXT_HEIGHT - CTHelper.LINE_WIDTH).toFloat()
+            val yDay = (viewHeight - this.xAxisHeight + CTHelper.TEXT_HEIGHT - CTHelper.LINE_WIDTH).toFloat()
             canvas.drawText(pillar.day, xDay, yDay, paint!!)
 
             /**

@@ -9,10 +9,8 @@ import android.util.DisplayMetrics
 import android.view.WindowManager
 
 import com.orhanobut.logger.Logger
-import com.qyt.accumulation.dao.DBHelper
 import com.qyt.accumulation.entity.User
 import com.qyt.accumulation.util.AppLog
-import com.qyt.accumulation.util.Temp
 
 import java.util.WeakHashMap
 
@@ -40,7 +38,7 @@ class App : Application() {
         val dm = DisplayMetrics()
         wm.defaultDisplay.getMetrics(dm)
         screenWidth = dm.widthPixels
-        screenHegiht = dm.heightPixels
+        screenHeight = dm.heightPixels
     }
 
     companion object {
@@ -50,7 +48,7 @@ class App : Application() {
         val GOOGLE_PLAY = "com.android.vending"
         private val TAG = "App"
         var screenWidth = 0
-        var screenHegiht = 0
+        var screenHeight = 0
 
         private var mActivities: WeakHashMap<String, Activity>? = null
 
