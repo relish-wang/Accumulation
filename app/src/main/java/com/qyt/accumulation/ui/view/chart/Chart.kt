@@ -183,15 +183,10 @@ class Chart : View {
                 (yAxisWidth - CTHelper.LINE_WIDTH).toFloat(), (viewHeight - this.xAxisHeight).toFloat(), paint!!)
         canvas.drawText(
                 "0",
-                (yAxisWidth
-                        - CTHelper.PADDING
-                        - CTHelper.LINE_WIDTH
-                        - CTHelper.getTextWidth("0",
-                        CTHelper.TEXT_SIZE.toFloat()).toInt()).toFloat(), (viewHeight
-                - this.xAxisHeight - CTHelper.LINE_WIDTH + CTHelper.TEXT_HEIGHT / 2 - CTHelper.LINE_WIDTH).toFloat(),
+                (yAxisWidth - CTHelper.PADDING - CTHelper.LINE_WIDTH - CTHelper.getTextWidth("0", CTHelper.TEXT_SIZE.toFloat()).toInt()).toFloat(),
+                (viewHeight - this.xAxisHeight - CTHelper.LINE_WIDTH + CTHelper.TEXT_HEIGHT / 2 - CTHelper.LINE_WIDTH).toFloat(),
                 paint!!)
         for (i in 1..5) {
-            Log.d(TAG, "i = "+i);
             val y = viewHeight - this.xAxisHeight - CTHelper.LINE_WIDTH - yScaleHeight * i
             val text = (yScaleValue * i).toString()
 
