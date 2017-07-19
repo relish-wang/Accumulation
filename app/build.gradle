@@ -1,19 +1,15 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
-        applicationId "com.qyt.accumulation"
+        applicationId "wang.relish.accumulation"
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        jackOptions {
-            enabled true
-        }
     }
     buildTypes {
         release {
@@ -23,10 +19,6 @@ android {
     }
     packagingOptions {
         exclude 'META-INF/LICENSE'
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 repositories {
@@ -40,11 +32,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     testCompile 'junit:junit:4.12'
-    //厉害了，我的Firebase
-    compile 'com.firebase:firebase-client-android:2.3.1'
-    compile 'com.google.firebase:firebase-core:9.8.0'
-    compile 'com.google.firebase:firebase-auth:9.8.0'
-    compile 'com.google.firebase:firebase-database:9.8.0'
     //兼容包
     compile 'com.android.support:support-v4:25.2.0'
     compile 'com.android.support:appcompat-v7:25.2.0'
@@ -67,4 +54,3 @@ dependencies {
     //圆形图片
     compile 'de.hdodenhof:circleimageview:2.1.0'
 }
-apply plugin: 'com.google.gms.google-services'

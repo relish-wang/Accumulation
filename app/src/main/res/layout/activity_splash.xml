@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_splash"
-    tools:context="com.qyt.accumulation.ui.activity.SplashActivity">
+    tools:context="wang.relish.accumulation.ui.activity.SplashActivity">
 
     <View
         android:id="@+id/background"

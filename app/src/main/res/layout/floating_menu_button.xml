@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.qyt.accumulation.ui.view.fab.MultiFloatingActionButton xmlns:android="http://schemas.android.com/apk/res/android"
+<wang.relish.accumulation.ui.view.fab.MultiFloatingActionButton xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/floating_button"
     android:layout_width="wrap_content"
@@ -9,7 +9,7 @@
     app:switchFabColor="@color/light_red"
     app:switchFabIcon="@drawable/ic_add">
 
-    <com.qyt.accumulation.ui.view.fab.TagFabLayout
+    <wang.relish.accumulation.ui.view.fab.TagFabLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:tagText="添加目标">
@@ -20,9 +20,9 @@
             android:src="@drawable/ic_add"
             app:backgroundTint="@color/green"
             app:fabSize="mini" />
-    </com.qyt.accumulation.ui.view.fab.TagFabLayout>
+    </wang.relish.accumulation.ui.view.fab.TagFabLayout>
 
-    <com.qyt.accumulation.ui.view.fab.TagFabLayout
+    <wang.relish.accumulation.ui.view.fab.TagFabLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:tagText="开始积累">
@@ -33,5 +33,5 @@
             android:src="@mipmap/icon_transparent"
             app:backgroundTint="@color/green"
             app:fabSize="mini" />
-    </com.qyt.accumulation.ui.view.fab.TagFabLayout>
-</com.qyt.accumulation.ui.view.fab.MultiFloatingActionButton>
+    </wang.relish.accumulation.ui.view.fab.TagFabLayout>
+</wang.relish.accumulation.ui.view.fab.MultiFloatingActionButton>
