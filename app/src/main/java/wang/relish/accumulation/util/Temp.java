@@ -66,8 +66,6 @@ public class Temp {
         goal1.setMobile(user.getMobile());
         goal1.setRecords(getRecords());
         goal1.save();
-
-
     }
 
     public static List<Record> initHLMRecord() {

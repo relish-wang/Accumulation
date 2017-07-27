@@ -1,14 +1,18 @@
 package wang.relish.accumulation;
 
 import android.content.Context;
+import android.media.MediaMetadataRetriever;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
+
+import junit.framework.Assert;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.Locale;
 
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
 
 /**
@@ -24,5 +28,19 @@ public class ExampleInstrumentedTest {
         Context appContext = InstrumentationRegistry.getTargetContext();
 
         assertEquals("cn.studyjams.s1.contest.accumulation", appContext.getPackageName());
+    }
+
+
+
+    @Test
+    public void test(){
+        A a = new A();
+        A b = new A();
+        MediaMetadataRetriever s;
+        Assert.assertEquals(a,equalTo(b));
+    }
+
+    class A{
+
     }
 }
