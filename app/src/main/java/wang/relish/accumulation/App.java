@@ -28,7 +28,7 @@ public class App extends Application {
     public static final String GOOGLE_PLAY = "com.android.vending";
     private static final String TAG = "App";
     public static int screenWidth = 0;
-    public static int screenHegiht = 0;
+    public static int screenHeight = 0;
 
     private static WeakHashMap<String, Activity> mActivities;
 
@@ -56,7 +56,7 @@ public class App extends Application {
         DisplayMetrics dm = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(dm);
         screenWidth = dm.widthPixels;
-        screenHegiht = dm.heightPixels;
+        screenHeight = dm.heightPixels;
     }
 
 
