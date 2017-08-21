@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.qyt.accumulation">
+    package="wang.relish.accumulation">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -59,19 +59,13 @@
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.qyt.accumulation.fileprovider"
+            android:authorities="wang.relish.accumulation.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
-        <receiver android:name=".receiver.MessageReceiver">
-            <intent-filter android:priority="1000">
-                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
-            </intent-filter>
-        </receiver>
     </application>
 
 </manifest>

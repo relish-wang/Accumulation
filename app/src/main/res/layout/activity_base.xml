@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/clRoot"
     android:fitsSystemWindows="true"
-    tools:context="com.qyt.accumulation.base.BaseActivity">
+    tools:context="wang.relish.accumulation.base.BaseActivity">
 
     <LinearLayout
         android:id="@+id/llRoot"
