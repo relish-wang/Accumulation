@@ -12,9 +12,9 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import wang.relish.accumulation.App;
 import wang.relish.accumulation.R;
 import wang.relish.accumulation.util.AppLog;
-import wang.relish.accumulation.util.GoActivity;
 
 
 /**
@@ -64,7 +64,8 @@ public abstract class BaseFragment extends Fragment implements BaseView {
 
     @Override
     public void goActivity(Class<?> clazz) {
-        new GoActivity.Builder(clazz).build().act();
+        Intent intent = new Intent(App.CONTEXT, clazz);
+        startActivity(intent);
     }
 
 
@@ -110,7 +111,7 @@ public abstract class BaseFragment extends Fragment implements BaseView {
 
     @Override
     public void goBrowser(String url) {
-        if(url==null){
+        if (url == null) {
             showMessage(R.string.url_is_null);
             return;
         }

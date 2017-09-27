@@ -26,7 +26,6 @@ import wang.relish.accumulation.R;
 import wang.relish.accumulation.ui.view.LoadingDialog;
 import wang.relish.accumulation.util.AppLog;
 import wang.relish.accumulation.util.BarUtil;
-import wang.relish.accumulation.util.GoActivity;
 
 /**
  * Activity基础类
@@ -219,7 +218,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
 
     @Override
     public void goActivity(Class<?> clazz) {
-        new GoActivity.Builder(clazz).build().act();
+        Intent intent = new Intent(App.CONTEXT, clazz);
+        startActivity(intent);
     }
 
     @Override
