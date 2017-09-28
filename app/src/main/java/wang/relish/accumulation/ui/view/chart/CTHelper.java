@@ -10,16 +10,16 @@ import java.util.List;
  * <p/>
  * Created by 鑫 on 2015/9/4.
  */
-public class CTHelper {
+class CTHelper {
 
-    public static final int PADDING = 5;
+    static final int PADDING = 5;
 
-    public static final int TEXT_SIZE = 16;
-    public static final int TEXT_HEIGHT = getFontHeight(TEXT_SIZE);
+    static final int TEXT_SIZE = 16;
+    static final int TEXT_HEIGHT = getFontHeight(TEXT_SIZE);
 
-    public static final int LINE_WIDTH = 4;
+    static final int LINE_WIDTH = 4;
 
-    public static final int SIDE = 10;
+    static final int SIDE = 10;
 
     /**
      * 获取字体的行高
@@ -39,7 +39,7 @@ public class CTHelper {
      *
      * @return
      */
-    public static int getYScaleValue(List<Pillar> pillars) {
+    static int getYScaleValue(List<Pillar> pillars) {
         if (pillars == null||pillars.size() == 0 )
             return 0;
         double max = pillars.get(0).getValue();
@@ -56,7 +56,7 @@ public class CTHelper {
      *
      * @return
      */
-    public static int getYScaleHeight(int height,int xAxisHeight) {
+    static int getYScaleHeight(int height, int xAxisHeight) {
         return (int) ((height - xAxisHeight) / 6);
     }
 
@@ -66,7 +66,7 @@ public class CTHelper {
      * @param panelWidth
      * @return
      */
-    public static int getXScaleWidth(int panelWidth) {
+    static int getXScaleWidth(int panelWidth) {
         return (int) ((float)panelWidth / 7);
     }
 
@@ -78,7 +78,7 @@ public class CTHelper {
      * @param size
      * @return
      */
-    public static float getTextWidth(String text, float size) {
+    static float getTextWidth(String text, float size) {
         TextPaint FontPaint = new TextPaint();
         FontPaint.setTextSize(size);
         return FontPaint.measureText(text);

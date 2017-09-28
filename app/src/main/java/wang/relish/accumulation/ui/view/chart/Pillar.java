@@ -17,18 +17,18 @@ public class Pillar {
      * @param xAxisHeight
      * @return
      */
-    public int getPillarHeight(int height ,int yScaleValue, int xAxisHeight) {
+    int getPillarHeight(int height, int yScaleValue, int xAxisHeight) {
         return (int) (((double) this.value / ((double) yScaleValue * 5)) * ((double) (CTHelper
                 .getYScaleHeight(height, xAxisHeight) * 5)));
     }
 
     // get set 有的 没的
-    public String getDay() {
+    String getDay() {
         return day;
     }
 
 
-    public double getValue() {
+    double getValue() {
         return value;
     }
 

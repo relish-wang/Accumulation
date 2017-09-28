@@ -12,6 +12,7 @@ import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import wang.relish.accumulation.App;
 import wang.relish.accumulation.R;
@@ -141,7 +142,7 @@ public class Chart extends View {
      * @return
      */
     private List<RectF> getOvals(List<Pillar> pillars) {
-        if(pillars==null)return null;
+        if (pillars == null) return null;
         List<RectF> ovals = new ArrayList<>();
         for (int i = 0; i < pillars.size(); i++) {
             ovals.add(getOval(pillars.get(i), i));
@@ -235,13 +236,13 @@ public class Chart extends View {
         // 绘制x轴坐标的日期
         int index = 0;
         List<RectF> ovals = getOvals(pillars);
-        if(ovals==null)return;
+        if (ovals == null) return;
         for (int i = 0; i < ovals.size(); i++) {
             paint.setStrokeWidth(1);
             paint.setColor(Color.GRAY);
             canvas.drawLine(ovals.get(i).centerX(), yScaleHeight / 2, ovals.get(i).centerX(), this.height - CTHelper.LINE_WIDTH - xAxisHeight, paint);
             if (i < ovals.size() - 1) {
-                paint.setColor(ContextCompat.getColor(getContext(),R.color.colorAccent));
+                paint.setColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
                 float w = paint.getStrokeWidth();
                 paint.setStrokeWidth(10);
                 canvas.drawLine(ovals.get(i).centerX(), ovals.get(i).centerY(), ovals.get(i + 1).centerX(), ovals.get(i + 1).centerY(), paint);
@@ -264,7 +265,7 @@ public class Chart extends View {
              */
             RectF oval = ovals.get(index);
 
-            String value = String.format("%.2f", pillar.getValue());
+            String value = String.format(Locale.ENGLISH, "%.2f", pillar.getValue());
             float textWidth = CTHelper.getTextWidth(value, CTHelper.TEXT_SIZE);
             canvas.drawText(value, oval.centerX() - textWidth / 2, oval.top - CTHelper.PADDING, paint);
 
