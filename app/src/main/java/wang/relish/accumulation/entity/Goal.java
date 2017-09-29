@@ -3,16 +3,15 @@ package wang.relish.accumulation.entity;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
 import wang.relish.accumulation.App;
 import wang.relish.accumulation.dao.BaseData;
 import wang.relish.accumulation.dao.DBHelper;
 import wang.relish.accumulation.util.AppLog;
 import wang.relish.accumulation.util.TimeUtil;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 /**
  * 目标
@@ -20,7 +19,6 @@ import java.util.Locale;
  */
 public class Goal extends BaseData {
 
-    private String mobile;
     private String name;
     private long time;
     private String updateTime;
@@ -52,14 +50,6 @@ public class Goal extends BaseData {
         }
         AppLog.e("Goal", "getRecord(int)", "RecordID[" + recordId + "] NOT found.");
         return null;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
     }
 
     public void setTime(long time) {
@@ -171,7 +161,6 @@ public class Goal extends BaseData {
             do {
                 Goal goal = new Goal();
                 goal.setId(cursor.getLong(cursor.getColumnIndex("id")));
-                goal.setMobile(cursor.getString(cursor.getColumnIndex("mobile")));
                 goal.setName(cursor.getString(cursor.getColumnIndex("name")));
                 goal.setTime(cursor.getLong(cursor.getColumnIndex("time")));
 
@@ -214,7 +203,6 @@ public class Goal extends BaseData {
             goal = new Goal();
             goal.setId(cursor.getLong(cursor.getColumnIndex("id")));
             goal.setName(cursor.getString(cursor.getColumnIndex("name")));
-            goal.setMobile(cursor.getString(cursor.getColumnIndex("mobile")));
             goal.setUpdateTime(cursor.getString(cursor.getColumnIndex("updateTime")));
             goal.setTime(cursor.getLong(cursor.getColumnIndex("time")));
             cursor.close();

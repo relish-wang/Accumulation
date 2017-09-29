@@ -27,10 +27,8 @@ import java.util.List;
 import wang.relish.accumulation.R;
 import wang.relish.accumulation.base.BaseActivity;
 import wang.relish.accumulation.base.IOnExchangeDataListener;
-import wang.relish.accumulation.entity.User;
 import wang.relish.accumulation.ui.fragment.GoalFragment;
 import wang.relish.accumulation.ui.fragment.UntitledFragment;
-import wang.relish.accumulation.util.SPUtil;
 
 public class MainActivity extends BaseActivity implements
         NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
@@ -65,16 +63,11 @@ public class MainActivity extends BaseActivity implements
     UntitledFragment untitledFgm;
 
     int mCurrentTab = 0;//默认为【目标】页
-    private User mUser;
     private IOnExchangeDataListener mListener;
 
     protected void initViews(Bundle savedInstanceState) {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        mUser = SPUtil.getUser();
-//        mDatabase = new Firebase("https://fire-weather.firebaseio.com/condition");
-
 
         mManager = getSupportFragmentManager();
         goalFgm = new GoalFragment();
@@ -102,13 +95,13 @@ public class MainActivity extends BaseActivity implements
 
         // 2016/11/13 设置个人信息
         Glide.with(this)
-                .load(mUser.getPhoto())
+                .load("https://avatars0.githubusercontent.com/u/20558748?v=4&s=400&u=37565788a39ab72cb6ab74298bd8fa13371041c3")
                 .centerCrop()
                 .placeholder(R.mipmap.icon)
                 .crossFade()
                 .into(ivHead);
-        tvName.setText(mUser.getName());
-        tvMobile.setText(mUser.getMobile());
+        tvName.setText("狗蛋");
+        tvMobile.setText("123xxxx1234");
 
         ivHead.setOnClickListener(this);
         tvName.setOnClickListener(this);
@@ -214,7 +207,6 @@ public class MainActivity extends BaseActivity implements
             case R.id.ivHead:
             case R.id.tvName:
             case R.id.tvMobile:
-                goActivity(MineActivity.class);
                 break;
         }
     }

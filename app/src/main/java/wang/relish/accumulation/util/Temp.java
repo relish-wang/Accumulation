@@ -1,12 +1,11 @@
 package wang.relish.accumulation.util;
 
-import wang.relish.accumulation.entity.Goal;
-import wang.relish.accumulation.entity.Record;
-import wang.relish.accumulation.entity.User;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import wang.relish.accumulation.entity.Goal;
+import wang.relish.accumulation.entity.Record;
 
 /**
  * 临时数据
@@ -53,17 +52,11 @@ public class Temp {
         long goal1Id = 1;
         long goal2Id = 2;
         long goal3Id = 3;
-        User user = new User();
-        user.setName("Alice");
-        user.setPassword("123");
-        user.setMobile("13588888888");
-        user.setPhoto("/storage/emulated/0/Download/timg.jpg");
 
         Goal goal1 = new Goal();
         goal1.setId(goal1Id);
         goal1.setName("红楼梦");
         goal1.setUpdateTime("2017-04-30 15:07");
-        goal1.setMobile(user.getMobile());
         goal1.setRecords(getRecords());
         goal1.save();
     }

@@ -6,11 +6,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import wang.relish.accumulation.R;
-import wang.relish.accumulation.entity.Goal;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import wang.relish.accumulation.R;
+import wang.relish.accumulation.entity.Goal;
 
 /**
  * <pre>
@@ -24,7 +24,7 @@ import java.util.List;
 public class GoalsAdapter extends BaseAdapter {
 
 
-    List<Goal> goals = new ArrayList<>();
+    private List<Goal> goals = new ArrayList<>();
 
     public GoalsAdapter(List<Goal> goals) {
         this.goals = goals;

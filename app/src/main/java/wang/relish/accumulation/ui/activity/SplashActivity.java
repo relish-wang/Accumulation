@@ -9,11 +9,9 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import wang.relish.accumulation.App;
 import wang.relish.accumulation.R;
 import wang.relish.accumulation.base.BaseActivity;
 import wang.relish.accumulation.util.BarUtil;
-import wang.relish.accumulation.util.SPUtil;
 
 public class SplashActivity extends BaseActivity {
 
@@ -49,23 +47,9 @@ public class SplashActivity extends BaseActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                boolean autoLogin = SPUtil.getBoolean("autoLogin", false);
-                if (autoLogin) {
-                    App.USER = SPUtil.getUser();
-                    if (App.USER != null && !App.USER.isEmpty()) {
-                        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
-                } else {
-                    Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
+                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
             }
 
             @Override

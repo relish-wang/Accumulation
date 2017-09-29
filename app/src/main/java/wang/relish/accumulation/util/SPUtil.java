@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import wang.relish.accumulation.App;
-import wang.relish.accumulation.entity.User;
 
 /**
  * SharedPreferences 工具类
@@ -20,28 +19,6 @@ public class SPUtil {
     static {
         settings = App.CONTEXT.getSharedPreferences("user", Context.MODE_PRIVATE);
     }
-
-    public static User getUser() {
-        User user = new User();
-        user.setName(getString("name",""));
-        user.setPassword(getString("password",""));
-        user.setPhoto(getString("photo", ""));
-        user.setMobile(getString("mobile", ""));
-        return user;
-    }
-
-
-    public static void saveUser(User user) {
-        if (user == null) {
-            AppLog.e(TAG, "saveUser", "coming param is null!!!");
-            return;
-        }
-        save("name", user.getName());
-        save("photo", user.getPhoto());
-        save("password", user.getPassword());
-        save("mobile", user.getMobile());
-    }
-
 
     private static void save(String key, Object value) {
         if (value instanceof String) {

@@ -106,7 +106,6 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
             protected Long doInBackground(Void... params) {
                 long timestamp = System.currentTimeMillis();
                 Goal goal = new Goal();
-                goal.setMobile(App.USER.getMobile());
                 goal.setId(Goal.getMaxId() + 1);
                 goal.setName(goalName);
                 goal.setUpdateTime(TimeUtil.longToDateTime(timestamp));

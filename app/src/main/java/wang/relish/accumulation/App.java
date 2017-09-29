@@ -13,7 +13,6 @@ import com.orhanobut.logger.Logger;
 import java.util.WeakHashMap;
 
 import wang.relish.accumulation.dao.DBHelper;
-import wang.relish.accumulation.entity.User;
 import wang.relish.accumulation.util.AppLog;
 import wang.relish.accumulation.util.Temp;
 
@@ -22,8 +21,6 @@ import wang.relish.accumulation.util.Temp;
  * Created by Relish on 2016/11/4.
  */
 public class App extends Application {
-
-    public static User USER;
 
     public static final String GOOGLE_PLAY = "com.android.vending";
     private static final String TAG = "App";

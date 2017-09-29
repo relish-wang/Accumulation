@@ -26,9 +26,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activity.LoginActivity"
-            android:windowSoftInputMode="stateHidden|stateUnchanged" />
-        <activity
             android:name=".ui.activity.MainActivity"
             android:windowSoftInputMode="stateHidden|stateUnchanged" />
         <activity
@@ -38,17 +35,7 @@
             android:name=".ui.activity.AboutActivity"
             android:windowSoftInputMode="stateHidden|stateUnchanged" />
         <activity
-            android:name=".ui.activity.MineActivity"
-            android:windowSoftInputMode="stateHidden|stateUnchanged" />
-        <activity
-            android:name=".ui.activity.ForgetPwdActivity"
-            android:windowSoftInputMode="stateHidden|stateUnchanged" />
-        <activity
             android:name=".ui.activity.RecordActivity"
-            android:windowSoftInputMode="stateHidden|stateUnchanged" />
-        <activity
-            android:name=".ui.activity.RegisterActivity"
-            android:launchMode="singleTop"
             android:windowSoftInputMode="stateHidden|stateUnchanged" />
         <activity
             android:name=".ui.activity.StatisticsActivity"

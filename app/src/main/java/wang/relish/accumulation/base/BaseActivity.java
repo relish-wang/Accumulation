@@ -29,7 +29,9 @@ import wang.relish.accumulation.util.BarUtil;
 
 /**
  * Activity基础类
- * Created by Relish on 2016/11/4.
+ *
+ * @author Relish
+ * @since 2016/11/4
  */
 public abstract class BaseActivity extends AppCompatActivity implements BaseView {
 
@@ -61,7 +63,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
 
     private LoadingDialog loadingDialog = null;
 
-    protected void parseIntent(Intent intent){
+    protected void parseIntent(Intent intent) {
 
     }
 
@@ -229,7 +231,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
 
     @Override
     public void goBrowser(String url) {
-        if(url==null){
+        if (url == null) {
             showMessage(R.string.url_is_null);
             return;
         }
@@ -244,12 +246,12 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
         startActivity(intent);
     }
 
-    public void showKeyboard(View view){
+    public void showKeyboard(View view) {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(view, InputMethodManager.SHOW_FORCED);
     }
 
-    public void hideKeyboard(View view){
+    public void hideKeyboard(View view) {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0); //强制隐藏键盘
     }
