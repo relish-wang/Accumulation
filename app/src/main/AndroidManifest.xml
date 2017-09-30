@@ -24,6 +24,11 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!-- 只有包含android.intent.action.MAIN 和
+            android.intent.category.LAUNCHER的Activity可以静态配置shortcuts -->
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
         </activity>
         <activity
             android:name=".ui.activity.LoginActivity"

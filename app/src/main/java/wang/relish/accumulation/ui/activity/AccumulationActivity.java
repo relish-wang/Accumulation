@@ -1,13 +1,16 @@
 package wang.relish.accumulation.ui.activity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatRatingBar;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -39,6 +42,19 @@ public class AccumulationActivity extends BaseActivity implements View.OnClickLi
     @Override
     protected int layoutId() {
         return R.layout.activity_accumulation;
+    }
+
+    @Override
+    protected void parseIntent(Intent intent) {
+        String action = intent.getAction();
+        if (TextUtils.equals(action, Intent.ACTION_VIEW)) {
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    start();
+                }
+            }, 1000);
+        }
     }
 
     @Override
