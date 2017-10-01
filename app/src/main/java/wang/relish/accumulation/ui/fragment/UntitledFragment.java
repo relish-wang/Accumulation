@@ -8,13 +8,13 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import wang.relish.accumulation.R;
 import wang.relish.accumulation.base.BaseFragment;
 import wang.relish.accumulation.entity.Record;
 import wang.relish.accumulation.ui.activity.RecordActivity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * <pre>
@@ -40,7 +40,7 @@ public class UntitledFragment extends BaseFragment implements AdapterView.OnItem
     protected void initViews(View contentView) {
         lv_records = (ListView) contentView.findViewById(R.id.lv_records);
         tv_no_data = (TextView) contentView.findViewById(R.id.tv_no_data);
-        records = Record.findAllUntitled();
+        records = new ArrayList<>();// TODO Record.findAllUntitled();
         mAdapter = new RecordAdapter();
         lv_records.setAdapter(mAdapter);
         lv_records.setOnItemClickListener(this);
@@ -53,7 +53,7 @@ public class UntitledFragment extends BaseFragment implements AdapterView.OnItem
     }
 
     private void update() {
-        records = Record.findAllUntitled();
+        records = new ArrayList<>();// TODO Record.findAllUntitled();
         mAdapter.notifyDataSetChanged();
         if(records==null||records.size()==0){
             tv_no_data.setVisibility(View.VISIBLE);

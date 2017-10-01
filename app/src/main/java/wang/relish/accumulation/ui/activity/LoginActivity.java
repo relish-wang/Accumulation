@@ -70,7 +70,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         tv_register.setOnClickListener(this);
 
         User user = SPUtil.getUser();
-        if (user != null && !user.isEmpty()) {
+        if (user != null /* TODO && !user.isEmpty()*/) {
             App.USER = user;
 
             etMobile.setText(App.USER.getMobile());
@@ -130,7 +130,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
             @Override
             protected User doInBackground(String... params) {
-                return User.login(params[0], params[1]);
+                return new User();// TODO User.login(params[0], params[1]);
             }
 
             @Override

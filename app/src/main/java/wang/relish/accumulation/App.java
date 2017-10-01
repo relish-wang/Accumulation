@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
@@ -12,8 +13,9 @@ import com.orhanobut.logger.Logger;
 
 import java.util.WeakHashMap;
 
-import wang.relish.accumulation.dao.DBHelper;
 import wang.relish.accumulation.entity.User;
+import wang.relish.accumulation.greendao.DaoMaster;
+import wang.relish.accumulation.greendao.DaoSession;
 import wang.relish.accumulation.util.AppLog;
 import wang.relish.accumulation.util.Temp;
 
@@ -34,11 +36,13 @@ public class App extends Application {
 
     public static App CONTEXT;
 
+    private static DaoSession sDaoSession;
+
     @Override
     public void onCreate() {
         super.onCreate();
 
-        DBHelper.getInstance(this).getReadableDatabase();
+//        DBHelper.getInstance(this).getReadableDatabase();
         Temp.initDemoData();
 
         //日志打印工具
@@ -57,6 +61,15 @@ public class App extends Application {
         wm.getDefaultDisplay().getMetrics(dm);
         screenWidth = dm.widthPixels;
         screenHeight = dm.heightPixels;
+
+        DaoMaster.DevOpenHelper devOpenHelper = new DaoMaster.DevOpenHelper(this, "accumulation.db");
+        SQLiteDatabase writableDatabase = devOpenHelper.getWritableDatabase();
+        DaoMaster daoMaster = new DaoMaster(writableDatabase);
+        sDaoSession = daoMaster.newSession();
+    }
+
+    public static DaoSession getDaosession() {
+        return sDaoSession;
     }
 
 

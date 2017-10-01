@@ -8,6 +8,10 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import wang.relish.accumulation.App;
 import wang.relish.accumulation.R;
 import wang.relish.accumulation.base.BaseFragment;
@@ -16,9 +20,6 @@ import wang.relish.accumulation.entity.Record;
 import wang.relish.accumulation.ui.view.chart.Chart;
 import wang.relish.accumulation.ui.view.chart.Pillar;
 import wang.relish.accumulation.util.TimeUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Relish on 2016/11/13.
@@ -59,13 +60,13 @@ public class ChartFragment extends BaseFragment {
         tvMinute = (TextView) contentView.findViewById(R.id.tvMinute);
 
         tvGoalName.setText(mGoal.getName());
-        tvHour.setText(String.valueOf(mGoal.getHardHour()));
-        tvMinute.setText(String.valueOf(mGoal.getHardMinute()));
+//TODO        tvHour.setText(String.valueOf(mGoal.getHardHour()));
+//TODO        tvMinute.setText(String.valueOf(mGoal.getHardMinute()));
 
         chart = (Chart) contentView.findViewById(R.id.chart);
         chart.setPillars(getPillars(mGoal));
         rvRecords = (RecyclerView) contentView.findViewById(R.id.rvRecords);
-        mRecords = mGoal == null ? new ArrayList<Record>() : mGoal.getRecords();
+        mRecords = new ArrayList<>();// TODO mGoal == null ? new ArrayList<Record>() : mGoal.getRecords();
         adapter = new ChildAdapter(R.layout.rv_item_record, mRecords);
         rvRecords.setAdapter(adapter);
         rvRecords.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -75,7 +76,7 @@ public class ChartFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         //测试数据
-        mRecords = mGoal.getRecords();
+        mRecords = new ArrayList<>();// TODO mGoal.getRecords();
         adapter.setNewData(mRecords);
         chart.setPillars(getPillarsTemp(mRecords));
     }
@@ -85,7 +86,7 @@ public class ChartFragment extends BaseFragment {
         String[] day = App.CONTEXT.getResources().getStringArray(R.array.week);
         long[] values = {0, 0, 0, 0, 0, 0, 0};
         for (Record r : records) {
-            values[TimeUtil.dayForWeek(r.getStartTime())] = r.getTime()/1000/60;
+            values[TimeUtil.dayForWeek(r.getStartTime())] = r.getTime() / 1000 / 60;
         }
         for (int i = 0; i < 7; i++) {
             pillars.add(new Pillar(day[i], values[i]));
@@ -97,9 +98,9 @@ public class ChartFragment extends BaseFragment {
         List<Pillar> pillars = new ArrayList<>();
         String[] day = App.CONTEXT.getResources().getStringArray(R.array.week);
         long[] values = {0, 0, 0, 0, 0, 0, 0};
-        List<Record> records = goal.getRecords();
+        List<Record> records = new ArrayList<>(); //TODO goal.getRecords();
         for (Record r : records) {
-            values[TimeUtil.dayForWeek(r.getStartTime())] = r.getTime()/1000/60;
+            values[TimeUtil.dayForWeek(r.getStartTime())] = r.getTime() / 1000 / 60;
         }
         for (int i = 0; i < 7; i++) {
             pillars.add(new Pillar(day[i], values[i]));
@@ -116,7 +117,7 @@ public class ChartFragment extends BaseFragment {
         @Override
         protected void convert(BaseViewHolder holder, Record record) {
             holder.setText(R.id.tvRecordName, record.getName());
-            holder.setText(R.id.tvHardTime, record.getHardTime());
+// TODO           holder.setText(R.id.tvHardTime, record.getHardTime());
         }
     }
 }

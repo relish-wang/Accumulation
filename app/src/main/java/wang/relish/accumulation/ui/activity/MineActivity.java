@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+
 import wang.relish.accumulation.App;
 import wang.relish.accumulation.R;
 import wang.relish.accumulation.base.BaseActivity;
@@ -40,9 +41,7 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void initViews(Bundle savedInstanceState) {
         mUser = SPUtil.getUser();
-        if (mUser.isEmpty()) {
-            finish();
-        }
+// TODO       if (mUser.isEmpty()) finish();
         ivHead = (ImageView) findViewById(R.id.iv_head);
         tvName = (TextView) findViewById(R.id.tv_name);
         tvMobile = (TextView) findViewById(R.id.tv_mobile);

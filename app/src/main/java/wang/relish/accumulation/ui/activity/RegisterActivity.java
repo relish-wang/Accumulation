@@ -378,8 +378,8 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
         @Override
         protected User doInBackground(User... params) {
-            params[0].save();
-            return User.findByMobile(params[0].getMobile());
+//            params[0].save();
+            return new User();// TODO User.findByMobile(params[0].getMobile());
         }
 
         @Override

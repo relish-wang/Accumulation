@@ -107,11 +107,11 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
                 long timestamp = System.currentTimeMillis();
                 Goal goal = new Goal();
                 goal.setMobile(App.USER.getMobile());
-                goal.setId(Goal.getMaxId() + 1);
+                goal.setId(1L);// TODO Goal.getMaxId() + 1);
                 goal.setName(goalName);
                 goal.setUpdateTime(TimeUtil.longToDateTime(timestamp));
                 goal.setTime(timestamp);
-                return goal.save();
+                return 1L;// TODO goal.save();
             }
 
             @Override
@@ -175,7 +175,7 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
     @Override
     public boolean onChildClick(ExpandableListView parent, View v,
                                 int groupPosition, int childPosition, long id) {
-        RecordActivity.open(getActivity(), mGoals.get(groupPosition).getRecords().get(childPosition));
+        RecordActivity.open(getActivity(), new Record());// TODO mGoals.get(groupPosition).getRecords().get(childPosition));
         return true;
     }
 
@@ -207,7 +207,7 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
                                     .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            Record.delete(record);
+                                            // TODO Record.delete(record);
                                             update();
                                         }
                                     })
@@ -254,7 +254,7 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
                                     .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            Goal.deleteItAndItsRecords(group);
+                                            // TODO Goal.deleteItAndItsRecords(group);
                                             update();
                                         }
                                     })
@@ -278,7 +278,7 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
     private void addRecord(Goal group, String recordName) {
         String start = TimeUtil.longToDateTime(System.currentTimeMillis());
         Record record = new Record();
-        record.setId(Record.findMaxId() + 1);
+        record.setId(1L);// TODO Record.findMaxId() + 1);
         record.setName(recordName);
         record.setGoalId(group.getId());
         record.setUpdateTime(start);
@@ -287,12 +287,12 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
         record.setEndTime(start);
         record.setTime(0L);
         record.setStar(0);
-        record.save();
+//TODO        record.save();
         update();
     }
 
     public void update() {
-        mGoals = Goal.findAll();
+        mGoals = new ArrayList<>();//TODO Goal.findAll();
         mAdapter.notifyDataSetChanged();
         checkDataShowOrHide();
     }
@@ -351,8 +351,8 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
             } else {
                 holder = (VHChild) convertView.getTag();
             }
-            convertView.setTag(R.id.tv_goal_name, mGoals.get(groupPosition).getRecords().get(childPosition));
-            Record record = mGoals.get(groupPosition).getRecords().get(childPosition);
+            convertView.setTag(R.id.tv_goal_name, new Record());// TODO mGoals.get(groupPosition).getRecords().get(childPosition));
+            Record record = new Record();// TODO mGoals.get(groupPosition).getRecords().get(childPosition);
             holder.tvRecordName = (TextView) convertView.findViewById(R.id.tv_record_name);
             holder.tvUpdateTime = (TextView) convertView.findViewById(R.id.tv_update_time);
 
@@ -382,8 +382,9 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
             if (mGoals != null) {
                 if (groupPosition < mGoals.size()) {
                     if (mGoals.get(groupPosition) != null) {
-                        if (mGoals.get(groupPosition).getRecords() != null) {
-                            return mGoals.get(groupPosition).getRecords().size();
+                        List<Record> records = new ArrayList<>();// TODO mGoals.get(groupPosition).getRecords();
+                        if (records != null) {
+                            return records.size();
                         } else {
                             return 0;
                         }
@@ -419,7 +420,7 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
                 if (groupPosition < mGoals.size()) {
                     Goal goal = mGoals.get(groupPosition);
                     if (goal != null) {
-                        List<Record> children = goal.getRecords();
+                        List<Record> children = new ArrayList<>();// TODO goal.getRecords();
                         if (children != null) {
                             if (childPosition < children.size()) {
                                 return children.get(childPosition);
@@ -467,7 +468,7 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
                 if (groupPosition < mGoals.size()) {
                     Goal goal = mGoals.get(groupPosition);
                     if (goal != null) {
-                        List<Record> children = goal.getRecords();
+                        List<Record> children = new ArrayList<>();// TODO goal.getRecords();
                         if (children != null) {
                             if (childPosition < children.size()) {
                                 Record record = children.get(childPosition);

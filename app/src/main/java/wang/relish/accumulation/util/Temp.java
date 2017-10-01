@@ -1,12 +1,12 @@
 package wang.relish.accumulation.util;
 
-import wang.relish.accumulation.entity.Goal;
-import wang.relish.accumulation.entity.Record;
-import wang.relish.accumulation.entity.User;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import wang.relish.accumulation.entity.Goal;
+import wang.relish.accumulation.entity.Record;
+import wang.relish.accumulation.entity.User;
 
 /**
  * 临时数据
@@ -22,7 +22,7 @@ public class Temp {
             Goal goal = new Goal();
 //            goal.setId(i + 1+"");
             goal.setName("Goal" + (i + 1));
-            goal.setRecords(getRecords());
+// TODO           goal.setRecords(getRecords());
             goals.add(goal);
         }
         return goals;
@@ -64,8 +64,8 @@ public class Temp {
         goal1.setName("红楼梦");
         goal1.setUpdateTime("2017-04-30 15:07");
         goal1.setMobile(user.getMobile());
-        goal1.setRecords(getRecords());
-        goal1.save();
+// TODO       goal1.setRecords(getRecords());
+// TODO       goal1.save();
     }
 
     public static List<Record> initHLMRecord() {
@@ -80,7 +80,7 @@ public class Temp {
         record.setTime(et - st);
         record.setUpdateTime(record.getEndTime());
         record.setNote("序，写的很棒！");
-        record.save();
+//TODO        record.save();
 
         final Record record2 = new Record();
         record2.setGoalId(1);
@@ -92,7 +92,7 @@ public class Temp {
         record2.setTime(et2 - st2);
         record2.setUpdateTime(record2.getEndTime());
         record2.setNote("第一章内容跌宕起伏引人入胜");
-        record2.save();
+//TODO        record2.save();
 
         return new ArrayList<Record>() {
             {

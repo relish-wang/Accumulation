@@ -1,12 +1,8 @@
 package wang.relish.accumulation.entity;
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.text.TextUtils;
-
-import wang.relish.accumulation.App;
-import wang.relish.accumulation.dao.BaseData;
-import wang.relish.accumulation.dao.DBHelper;
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 
 import java.io.Serializable;
 
@@ -14,15 +10,31 @@ import java.io.Serializable;
  * 用户实体类
  * Created by Relish on 2016/12/3.
  */
-public class User extends BaseData{
+@Entity
+public class User implements Serializable {
+
+    public static final long serialVersionUID = 536871016L;
 
     private String name;
     private String password;
+    @Id
     private String mobile;
     private String photo;
 
+    @Generated(hash = 574889579)
+    public User(String name, String password, String mobile, String photo) {
+        this.name = name;
+        this.password = password;
+        this.mobile = mobile;
+        this.photo = photo;
+    }
+
+    @Generated(hash = 586692638)
+    public User() {
+    }
+
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -30,7 +42,7 @@ public class User extends BaseData{
     }
 
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     public void setPassword(String password) {
@@ -38,7 +50,7 @@ public class User extends BaseData{
     }
 
     public String getMobile() {
-        return mobile;
+        return this.mobile;
     }
 
     public void setMobile(String mobile) {
@@ -46,58 +58,10 @@ public class User extends BaseData{
     }
 
     public String getPhoto() {
-        return photo;
+        return this.photo;
     }
 
     public void setPhoto(String photo) {
         this.photo = photo;
-    }
-
-    public boolean isEmpty() {
-        return TextUtils.isEmpty(name) &&
-                TextUtils.isEmpty(password) &&
-                TextUtils.isEmpty(mobile) &&
-                TextUtils.isEmpty(photo);
-    }
-
-    public static User login(String account, String password) {
-        DBHelper helper = DBHelper.getInstance(App.CONTEXT);
-        SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("select * from User where mobile = ? and password = ?",
-                new String[]{account, password});
-        User user = null;
-        if (cursor != null && cursor.moveToFirst()) {
-            user = new User();
-            user.setName(cursor.getString(cursor.getColumnIndex("name")));
-            user.setPassword(cursor.getString(cursor.getColumnIndex("password")));
-            user.setMobile(cursor.getString(cursor.getColumnIndex("mobile")));
-            user.setPhoto(cursor.getString(cursor.getColumnIndex("photo")));
-            db.close();
-            cursor.close();
-        }
-        if (db.isOpen()) {
-            db.close();
-        }
-        return user;
-    }
-
-    public static User findByMobile(String mobile) {
-        DBHelper helper = DBHelper.getInstance(App.CONTEXT);
-        SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("select * from user where mobile = ?", new String[]{mobile});
-        User user = null;
-        if (cursor != null && cursor.moveToFirst()) {
-            user = new User();
-            user.setName(cursor.getString(cursor.getColumnIndex("name")));
-            user.setPassword(cursor.getString(cursor.getColumnIndex("password")));
-            user.setMobile(cursor.getString(cursor.getColumnIndex("mobile")));
-            user.setPhoto(cursor.getString(cursor.getColumnIndex("photo")));
-            db.close();
-            cursor.close();
-        }
-        if (db.isOpen()) {
-            db.close();
-        }
-        return user;
     }
 }

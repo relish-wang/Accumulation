@@ -9,13 +9,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import wang.relish.accumulation.R;
 import wang.relish.accumulation.base.BaseActivity;
 import wang.relish.accumulation.entity.Goal;
 import wang.relish.accumulation.ui.fragment.ChartFragment;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 统计
@@ -42,7 +42,7 @@ public class StatisticsActivity extends BaseActivity implements ViewPager.OnPage
         tv_no_data = (TextView) findViewById(R.id.tv_no_data);
         vp = (ViewPager) findViewById(R.id.vp);
         mFragments = new ArrayList<>();
-        mGoals = Goal.findAll();
+        mGoals = new ArrayList<>();// TODO Goal.findAll();
         for (Goal goal : mGoals) {
             mFragments.add(ChartFragment.getInstance(goal));
         }

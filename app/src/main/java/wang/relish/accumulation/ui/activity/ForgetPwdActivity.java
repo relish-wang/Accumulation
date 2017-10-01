@@ -224,7 +224,7 @@ public class ForgetPwdActivity extends BaseActivity implements View.OnClickListe
         @Override
         protected Boolean doInBackground(String... params) {
             String mobile = params[0];
-            User user = User.findByMobile(mobile);
+            User user = new User();//TODO User.findByMobile(mobile);
             return user != null;
         }
 
@@ -244,9 +244,9 @@ public class ForgetPwdActivity extends BaseActivity implements View.OnClickListe
         @Override
         protected Void doInBackground(String... params) {
             String pwd = params[0];
-            User user = User.findByMobile(mMobile);
+            User user = new User();// TODO User.findByMobile(mMobile);
             user.setPassword(pwd);
-            user.save();
+//TODO            user.save();
             SPUtil.saveUser(user);
             return null;
         }

@@ -24,6 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -75,7 +76,7 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
 
     @Override
     protected void initToolbar(Bundle savedInstanceState, Toolbar mToolbar) {
-        Goal goal = mRecord.getParent();
+        Goal goal = new Goal();// TODO mRecord.getParent();
         isTitled = goal == null;
         String goalName = isTitled ? "未分类" : goal.getName();
         mToolbar.setTitle(goalName);
@@ -131,7 +132,7 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
 
                         @Override
                         protected Long doInBackground(Void... params) {
-                            return mRecord.save();
+                            return 1L;// TODO mRecord.save();
                         }
 
                         @Override
@@ -167,7 +168,7 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
 
                                     @Override
                                     protected Long doInBackground(Void... params) {
-                                        return mRecord.save();
+                                        return 1L;// TODO mRecord.save();
                                     }
 
                                     @Override
@@ -198,7 +199,7 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
 
                             @Override
                             protected Long doInBackground(Void... params) {
-                                return mRecord.save();
+                                return 1L;// TODO mRecord.save();
                             }
 
                             @Override
@@ -269,7 +270,7 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
 
                             @Override
                             protected Long doInBackground(Void... params) {
-                                return mRecord.save();
+                                return 1L;// TODO mRecord.save();
                             }
 
                             @Override
@@ -291,7 +292,7 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
 
     private void updateTimeTime() {
         tv_start_time.setText(mRecord.getStartTime());
-        tv_hard_time.setText(mRecord.getHardTime());
+        tv_hard_time.setText(""); // TODO mRecord.getHardTime());
         tv_end_time.setText(mRecord.getEndTime());
     }
 
@@ -322,13 +323,13 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
      * @param record 记录
      */
     private void onSaveIntoGoalClick(final Record record) {
-        List<Goal> goal = Goal.findAll();
+        List<Goal> goal = new ArrayList<>();// TODO Goal.findAll();
         if (goal == null || goal.size() == 0) {
             showMessage("暂无目标可存");
             return;
         }
         View view = LayoutInflater.from(this).inflate(R.layout.dialog_goals, null);
-        final List<Goal> goals = Goal.findAll();
+        final List<Goal> goals = new ArrayList<>();// TODO Goal.findAll();
         ListView lv_goals = (ListView) view.findViewById(R.id.lv_goals);
         GoalsAdapter adapter = new GoalsAdapter(goals);
         lv_goals.setAdapter(adapter);
@@ -345,16 +346,16 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
                     protected Long doInBackground(Void... params) {
                         long oldId = record.getId();
                         record.setGoalId(goals.get(position).getId());
-                        record.setId(Record.findMaxId() + 1);
+                        record.setId(1L);// TODO Record.findMaxId() + 1);
                         record.setUpdateTime(TimeUtil.getNowTime());
-                        return record.save() + Record.remove(oldId);
+                        return 1L;// TODO record.save() + Record.remove(oldId);
                     }
 
                     @Override
                     protected void onPostExecute(Long aLong) {
                         super.onPostExecute(aLong);
                         if (aLong > 1) {
-                            Goal goal = Goal.findById(mRecord.getGoalId());
+                            Goal goal = new Goal();// TODO Goal.findById(mRecord.getGoalId());
                             mToolbar.setTitle(goal.getName());
                             dialog.dismiss();
                         } else {

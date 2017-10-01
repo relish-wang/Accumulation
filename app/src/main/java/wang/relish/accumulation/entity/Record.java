@@ -1,22 +1,24 @@
 package wang.relish.accumulation.entity;
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 
-import wang.relish.accumulation.App;
-import wang.relish.accumulation.dao.BaseData;
-import wang.relish.accumulation.dao.DBHelper;
+import java.io.Serializable;
+
 import wang.relish.accumulation.util.TimeUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 记录
  * Created by Relish on 2016/11/10.
  */
-public class Record extends BaseData {
+@Entity
+public class Record implements Serializable {
 
+    public static final long serialVersionUID = 536871012L;
+
+    @Id
+    private long id;
     private long goalId;
     private String name;
     private Integer star;
@@ -28,7 +30,6 @@ public class Record extends BaseData {
     private String updateTime;
 
     public Record() {
-        id = findMaxId()+1;
         goalId = -1;//未分类
         name = "[未命名]";
         star = 1;
@@ -39,24 +40,32 @@ public class Record extends BaseData {
         updateTime = createTime;
     }
 
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
+    @Generated(hash = 84132456)
+    public Record(long id, long goalId, String name, Integer star, String note,
+                  Long time, String createTime, String startTime, String endTime,
+                  String updateTime) {
+        this.id = id;
+        this.goalId = goalId;
+        this.name = name;
+        this.star = star;
+        this.note = note;
+        this.time = time;
         this.createTime = createTime;
-    }
-
-    public String getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(String updateTime) {
+        this.startTime = startTime;
+        this.endTime = endTime;
         this.updateTime = updateTime;
     }
 
+    public long getId() {
+        return this.id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public long getGoalId() {
-        return goalId;
+        return this.goalId;
     }
 
     public void setGoalId(long goalId) {
@@ -64,7 +73,7 @@ public class Record extends BaseData {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -72,7 +81,7 @@ public class Record extends BaseData {
     }
 
     public Integer getStar() {
-        return star;
+        return this.star;
     }
 
     public void setStar(Integer star) {
@@ -80,7 +89,7 @@ public class Record extends BaseData {
     }
 
     public String getNote() {
-        return note;
+        return this.note;
     }
 
     public void setNote(String note) {
@@ -88,21 +97,23 @@ public class Record extends BaseData {
     }
 
     public Long getTime() {
-        if (time <= 0) {
-            long et = TimeUtil.dateTimeToLong(endTime);
-            long st = TimeUtil.dateTimeToLong(startTime);
-            return et - st;
-        }
-        return time;
+        return this.time;
     }
 
     public void setTime(Long time) {
         this.time = time;
     }
 
+    public String getCreateTime() {
+        return this.createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
 
     public String getStartTime() {
-        return startTime;
+        return this.startTime;
     }
 
     public void setStartTime(String startTime) {
@@ -110,129 +121,18 @@ public class Record extends BaseData {
     }
 
     public String getEndTime() {
-        return endTime;
+        return this.endTime;
     }
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 
-
-    @SuppressWarnings("ConstantConditions")
-    public static List<Record> findRecordsByGoalId(long goalId) {
-        DBHelper helper = DBHelper.getInstance(App.CONTEXT);
-        SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("select * from record where goalId = ?", new String[]{goalId + ""});
-        if (cursor == null) {
-            return new ArrayList<>();
-        }
-        List<Record> records = new ArrayList<>();
-        if (cursor.moveToFirst()) {
-            do {
-                Record record = new Record();
-                record.setId(cursor.getLong(cursor.getColumnIndex("id")));
-                record.setGoalId(cursor.getLong(cursor.getColumnIndex("goalId")));
-                record.setName(cursor.getString(cursor.getColumnIndex("name")));
-                record.setStar(cursor.getInt(cursor.getColumnIndex("star")));
-                record.setNote(cursor.getString(cursor.getColumnIndex("note")));
-                record.setTime(cursor.getLong(cursor.getColumnIndex("time")));
-                record.setUpdateTime(cursor.getString(cursor.getColumnIndex("updateTime")));
-                record.setCreateTime(cursor.getString(cursor.getColumnIndex("createTime")));
-                record.setStartTime(cursor.getString(cursor.getColumnIndex("startTime")));
-                record.setEndTime(cursor.getString(cursor.getColumnIndex("endTime")));
-                records.add(record);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        db.close();
-        return records;
+    public String getUpdateTime() {
+        return this.updateTime;
     }
 
-    public static long findMaxId() {
-        DBHelper helper = DBHelper.getInstance(App.CONTEXT);
-        SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("select max(id) from record", new String[]{});
-        int max = 0;
-        if (cursor != null && cursor.moveToFirst()) {
-            max = cursor.getInt(0);
-            cursor.close();
-            db.close();
-        }
-        return max;
-    }
-
-    public static void delete(Record record) {
-        DBHelper helper = DBHelper.getInstance(App.CONTEXT);
-        SQLiteDatabase db = helper.getReadableDatabase();
-        db.delete("record", "id = ?", new String[]{record.getId() + ""});
-        db.close();
-    }
-
-    public Goal getParent() {
-        return Goal.findById(goalId);
-    }
-
-    public String getHardTime() {
-        return TimeUtil.getHardTime(getTime());
-    }
-
-    @Override
-    public long save() {
-        return super.save();
-    }
-
-    public static long findMaxIdWhereGoalIdIs(int goalId) {
-        DBHelper helper = DBHelper.getInstance(App.CONTEXT);
-        SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("select max(id) from record where goalId = ?", new String[]{goalId + ""});
-        int max = 0;
-        if (cursor != null && cursor.moveToFirst()) {
-            max = cursor.getInt(0);
-            cursor.close();
-            db.close();
-        }
-        return max;
-    }
-
-    public static List<Record> findAllUntitled() {
-        DBHelper helper = DBHelper.getInstance(App.CONTEXT);
-        SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("select * from record where goalId = ?", new String[]{"0"});
-        if (cursor == null) {
-            return new ArrayList<>();
-        }
-        List<Record> records = new ArrayList<>();
-        if (cursor.moveToFirst()) {
-            do {
-                Record record = new Record();
-                record.setId(cursor.getLong(cursor.getColumnIndex("id")));
-                record.setGoalId(cursor.getLong(cursor.getColumnIndex("goalId")));
-                record.setName(cursor.getString(cursor.getColumnIndex("name")));
-                record.setStar(cursor.getInt(cursor.getColumnIndex("star")));
-                record.setNote(cursor.getString(cursor.getColumnIndex("note")));
-                record.setTime(cursor.getLong(cursor.getColumnIndex("time")));
-                record.setUpdateTime(cursor.getString(cursor.getColumnIndex("updateTime")));
-                record.setCreateTime(cursor.getString(cursor.getColumnIndex("createTime")));
-                record.setStartTime(cursor.getString(cursor.getColumnIndex("startTime")));
-                record.setEndTime(cursor.getString(cursor.getColumnIndex("endTime")));
-                records.add(record);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        db.close();
-        return records;
-    }
-
-    /**
-     * 根据recordId删除Record
-     * @param id recordI
-     * @return the number of rows affected if a whereClause is passed in, 0
-     *         otherwise. To remove all rows and get a count pass "1" as the
-     *         whereClause.
-     */
-    public static int remove(long id) {
-        DBHelper helper = DBHelper.getInstance(App.CONTEXT);
-        SQLiteDatabase db = helper.getReadableDatabase();
-        return db.delete("record","id = ?",new String[]{id+""});
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
     }
 }
