@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="start_accumulation"
+        android:enabled="true"
+        android:icon="@mipmap/icon"
+        android:shortcutLongLabel="@string/start_accumulation_long"
+        android:shortcutShortLabel="@string/start_accumulation"
+        android:shortcutDisabledMessage="@string/disabled_message">
+
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="wang.relish.accumulation"
+            android:targetClass="wang.relish.accumulation.ui.activity.AccumulationActivity" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+</shortcuts>
