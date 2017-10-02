@@ -44,7 +44,7 @@ public class UserDao extends AbstractDao<User, String> {
      * Creates the underlying database table.
      */
     public static void createTable(Database db, boolean ifNotExists) {
-        String constraint = ifNotExists ? "IF NOT EXISTS " : "";
+        String constraint = ifNotExists ? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"USER\" (" + //
                 "\"NAME\" TEXT," + // 0: name
                 "\"PASSWORD\" TEXT," + // 1: password
@@ -52,9 +52,7 @@ public class UserDao extends AbstractDao<User, String> {
                 "\"PHOTO\" TEXT);"); // 3: photo
     }
 
-    /**
-     * Drops the underlying database table.
-     */
+    /** Drops the underlying database table. */
     public static void dropTable(Database db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "\"USER\"";
         db.execSQL(sql);
@@ -63,22 +61,22 @@ public class UserDao extends AbstractDao<User, String> {
     @Override
     protected final void bindValues(DatabaseStatement stmt, User entity) {
         stmt.clearBindings();
-
+ 
         String name = entity.getName();
         if (name != null) {
             stmt.bindString(1, name);
         }
-
+ 
         String password = entity.getPassword();
         if (password != null) {
             stmt.bindString(2, password);
         }
-
+ 
         String mobile = entity.getMobile();
         if (mobile != null) {
             stmt.bindString(3, mobile);
         }
-
+ 
         String photo = entity.getPhoto();
         if (photo != null) {
             stmt.bindString(4, photo);
@@ -88,22 +86,22 @@ public class UserDao extends AbstractDao<User, String> {
     @Override
     protected final void bindValues(SQLiteStatement stmt, User entity) {
         stmt.clearBindings();
-
+ 
         String name = entity.getName();
         if (name != null) {
             stmt.bindString(1, name);
         }
-
+ 
         String password = entity.getPassword();
         if (password != null) {
             stmt.bindString(2, password);
         }
-
+ 
         String mobile = entity.getMobile();
         if (mobile != null) {
             stmt.bindString(3, mobile);
         }
-
+ 
         String photo = entity.getPhoto();
         if (photo != null) {
             stmt.bindString(4, photo);
@@ -113,7 +111,7 @@ public class UserDao extends AbstractDao<User, String> {
     @Override
     public String readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2);
-    }
+    }    
 
     @Override
     public User readEntity(Cursor cursor, int offset) {
@@ -125,20 +123,20 @@ public class UserDao extends AbstractDao<User, String> {
         );
         return entity;
     }
-
+     
     @Override
     public void readEntity(Cursor cursor, User entity, int offset) {
         entity.setName(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
         entity.setPassword(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setMobile(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setPhoto(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-    }
-
+     }
+    
     @Override
     protected final String updateKeyAfterInsert(User entity, long rowId) {
         return entity.getMobile();
     }
-
+    
     @Override
     public String getKey(User entity) {
         if (entity != null) {
@@ -157,5 +155,5 @@ public class UserDao extends AbstractDao<User, String> {
     protected final boolean isEntityUpdateable() {
         return true;
     }
-
+    
 }

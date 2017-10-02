@@ -24,16 +24,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import wang.relish.accumulation.App;
 import wang.relish.accumulation.R;
 import wang.relish.accumulation.adapter.GoalsAdapter;
 import wang.relish.accumulation.base.BaseActivity;
 import wang.relish.accumulation.entity.Goal;
 import wang.relish.accumulation.entity.Record;
+import wang.relish.accumulation.greendao.RecordDao;
 import wang.relish.accumulation.util.TimeUtil;
 
 /**
@@ -76,7 +77,7 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
 
     @Override
     protected void initToolbar(Bundle savedInstanceState, Toolbar mToolbar) {
-        Goal goal = new Goal();// TODO mRecord.getParent();
+        Goal goal = App.getParent(mRecord);
         isTitled = goal == null;
         String goalName = isTitled ? "未分类" : goal.getName();
         mToolbar.setTitle(goalName);
@@ -132,7 +133,7 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
 
                         @Override
                         protected Long doInBackground(Void... params) {
-                            return 1L;// TODO mRecord.save();
+                            return App.getDaosession().getRecordDao().insert(mRecord);
                         }
 
                         @Override
@@ -168,7 +169,7 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
 
                                     @Override
                                     protected Long doInBackground(Void... params) {
-                                        return 1L;// TODO mRecord.save();
+                                        return App.getDaosession().getRecordDao().insert(mRecord);
                                     }
 
                                     @Override
@@ -199,7 +200,7 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
 
                             @Override
                             protected Long doInBackground(Void... params) {
-                                return 1L;// TODO mRecord.save();
+                                return App.getDaosession().getRecordDao().insert(mRecord);
                             }
 
                             @Override
@@ -270,7 +271,7 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
 
                             @Override
                             protected Long doInBackground(Void... params) {
-                                return 1L;// TODO mRecord.save();
+                                return App.getDaosession().getRecordDao().insert(mRecord);
                             }
 
                             @Override
@@ -292,7 +293,7 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
 
     private void updateTimeTime() {
         tv_start_time.setText(mRecord.getStartTime());
-        tv_hard_time.setText(""); // TODO mRecord.getHardTime());
+        tv_hard_time.setText(App.getRecordHardTime(mRecord));
         tv_end_time.setText(mRecord.getEndTime());
     }
 
@@ -323,13 +324,12 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
      * @param record 记录
      */
     private void onSaveIntoGoalClick(final Record record) {
-        List<Goal> goal = new ArrayList<>();// TODO Goal.findAll();
-        if (goal == null || goal.size() == 0) {
+        final List<Goal> goals = App.getDaosession().getGoalDao().loadAll();
+        if (goals == null || goals.size() == 0) {
             showMessage("暂无目标可存");
             return;
         }
         View view = LayoutInflater.from(this).inflate(R.layout.dialog_goals, null);
-        final List<Goal> goals = new ArrayList<>();// TODO Goal.findAll();
         ListView lv_goals = (ListView) view.findViewById(R.id.lv_goals);
         GoalsAdapter adapter = new GoalsAdapter(goals);
         lv_goals.setAdapter(adapter);
@@ -346,16 +346,20 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
                     protected Long doInBackground(Void... params) {
                         long oldId = record.getId();
                         record.setGoalId(goals.get(position).getId());
-                        record.setId(1L);// TODO Record.findMaxId() + 1);
                         record.setUpdateTime(TimeUtil.getNowTime());
-                        return 1L;// TODO record.save() + Record.remove(oldId);
+                        RecordDao recordDao = App.getDaosession().getRecordDao();
+                        long insert = recordDao.insert(record);
+                        if (insert > 0) {
+                            recordDao.deleteByKey(oldId);//根据主键删除
+                        }
+                        return insert;
                     }
 
                     @Override
                     protected void onPostExecute(Long aLong) {
                         super.onPostExecute(aLong);
                         if (aLong > 1) {
-                            Goal goal = new Goal();// TODO Goal.findById(mRecord.getGoalId());
+                            Goal goal = App.getParent(record);
                             mToolbar.setTitle(goal.getName());
                             dialog.dismiss();
                         } else {

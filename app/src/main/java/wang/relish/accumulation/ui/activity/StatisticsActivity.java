@@ -12,6 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import wang.relish.accumulation.App;
 import wang.relish.accumulation.R;
 import wang.relish.accumulation.base.BaseActivity;
 import wang.relish.accumulation.entity.Goal;
@@ -42,7 +43,7 @@ public class StatisticsActivity extends BaseActivity implements ViewPager.OnPage
         tv_no_data = (TextView) findViewById(R.id.tv_no_data);
         vp = (ViewPager) findViewById(R.id.vp);
         mFragments = new ArrayList<>();
-        mGoals = new ArrayList<>();// TODO Goal.findAll();
+        mGoals = App.findAllGoals();
         for (Goal goal : mGoals) {
             mFragments.add(ChartFragment.getInstance(goal));
         }
@@ -56,10 +57,10 @@ public class StatisticsActivity extends BaseActivity implements ViewPager.OnPage
     @Override
     protected void onResume() {
         super.onResume();
-        if(mGoals==null||mGoals.size()==0){
+        if (mGoals == null || mGoals.size() == 0) {
             tv_no_data.setVisibility(View.VISIBLE);
             vp.setVisibility(View.GONE);
-        }else{
+        } else {
             tv_no_data.setVisibility(View.GONE);
             vp.setVisibility(View.VISIBLE);
         }

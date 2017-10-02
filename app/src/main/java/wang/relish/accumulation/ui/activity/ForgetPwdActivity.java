@@ -23,9 +23,11 @@ import android.widget.Toast;
 
 import java.util.Random;
 
+import wang.relish.accumulation.App;
 import wang.relish.accumulation.R;
 import wang.relish.accumulation.base.BaseActivity;
 import wang.relish.accumulation.entity.User;
+import wang.relish.accumulation.greendao.UserDao;
 import wang.relish.accumulation.util.PhoneUtils;
 import wang.relish.accumulation.util.SPUtil;
 
@@ -224,7 +226,8 @@ public class ForgetPwdActivity extends BaseActivity implements View.OnClickListe
         @Override
         protected Boolean doInBackground(String... params) {
             String mobile = params[0];
-            User user = new User();//TODO User.findByMobile(mobile);
+            UserDao userDao = App.getDaosession().getUserDao();
+            User user = userDao.queryBuilder().where(UserDao.Properties.Mobile.eq(mobile)).unique();
             return user != null;
         }
 
@@ -232,7 +235,7 @@ public class ForgetPwdActivity extends BaseActivity implements View.OnClickListe
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
             if (aBoolean) {
-                sendNotification("新消息", getString(R.string.send_verfiy_code_message, code));//// TODO: 2017/4/22
+                sendNotification("新消息", getString(R.string.send_verfiy_code_message, code));////TODO1: 2017/4/22
             } else {
                 showMessage("用户不存在！");
             }
@@ -244,9 +247,10 @@ public class ForgetPwdActivity extends BaseActivity implements View.OnClickListe
         @Override
         protected Void doInBackground(String... params) {
             String pwd = params[0];
-            User user = new User();// TODO User.findByMobile(mMobile);
+            UserDao userDao = App.getDaosession().getUserDao();
+            User user = userDao.queryBuilder().where(UserDao.Properties.Mobile.eq(mMobile)).unique();
             user.setPassword(pwd);
-//TODO            user.save();
+            userDao.save(user);
             SPUtil.saveUser(user);
             return null;
         }

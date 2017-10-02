@@ -45,6 +45,7 @@ import wang.relish.accumulation.App;
 import wang.relish.accumulation.R;
 import wang.relish.accumulation.base.BaseActivity;
 import wang.relish.accumulation.entity.User;
+import wang.relish.accumulation.greendao.UserDao;
 import wang.relish.accumulation.util.PhoneUtils;
 import wang.relish.accumulation.util.SPUtil;
 
@@ -378,8 +379,12 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
         @Override
         protected User doInBackground(User... params) {
-//            params[0].save();
-            return new User();// TODO User.findByMobile(params[0].getMobile());
+            UserDao userDao = App.getDaosession().getUserDao();
+            userDao.insert(params[0]);
+            return userDao
+                    .queryBuilder()
+                    .where(UserDao.Properties.Mobile.eq(params[0].getMobile()))
+                    .unique();
         }
 
         @Override

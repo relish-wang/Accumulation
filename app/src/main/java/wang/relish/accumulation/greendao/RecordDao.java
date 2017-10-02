@@ -50,7 +50,7 @@ public class RecordDao extends AbstractDao<Record, Long> {
      * Creates the underlying database table.
      */
     public static void createTable(Database db, boolean ifNotExists) {
-        String constraint = ifNotExists ? "IF NOT EXISTS " : "";
+        String constraint = ifNotExists ? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"RECORD\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY NOT NULL ," + // 0: id
                 "\"GOAL_ID\" INTEGER NOT NULL ," + // 1: goalId
@@ -64,9 +64,7 @@ public class RecordDao extends AbstractDao<Record, Long> {
                 "\"UPDATE_TIME\" TEXT);"); // 9: updateTime
     }
 
-    /**
-     * Drops the underlying database table.
-     */
+    /** Drops the underlying database table. */
     public static void dropTable(Database db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "\"RECORD\"";
         db.execSQL(sql);
@@ -77,42 +75,42 @@ public class RecordDao extends AbstractDao<Record, Long> {
         stmt.clearBindings();
         stmt.bindLong(1, entity.getId());
         stmt.bindLong(2, entity.getGoalId());
-
+ 
         String name = entity.getName();
         if (name != null) {
             stmt.bindString(3, name);
         }
-
+ 
         Integer star = entity.getStar();
         if (star != null) {
             stmt.bindLong(4, star);
         }
-
+ 
         String note = entity.getNote();
         if (note != null) {
             stmt.bindString(5, note);
         }
-
+ 
         Long time = entity.getTime();
         if (time != null) {
             stmt.bindLong(6, time);
         }
-
+ 
         String createTime = entity.getCreateTime();
         if (createTime != null) {
             stmt.bindString(7, createTime);
         }
-
+ 
         String startTime = entity.getStartTime();
         if (startTime != null) {
             stmt.bindString(8, startTime);
         }
-
+ 
         String endTime = entity.getEndTime();
         if (endTime != null) {
             stmt.bindString(9, endTime);
         }
-
+ 
         String updateTime = entity.getUpdateTime();
         if (updateTime != null) {
             stmt.bindString(10, updateTime);
@@ -124,42 +122,42 @@ public class RecordDao extends AbstractDao<Record, Long> {
         stmt.clearBindings();
         stmt.bindLong(1, entity.getId());
         stmt.bindLong(2, entity.getGoalId());
-
+ 
         String name = entity.getName();
         if (name != null) {
             stmt.bindString(3, name);
         }
-
+ 
         Integer star = entity.getStar();
         if (star != null) {
             stmt.bindLong(4, star);
         }
-
+ 
         String note = entity.getNote();
         if (note != null) {
             stmt.bindString(5, note);
         }
-
+ 
         Long time = entity.getTime();
         if (time != null) {
             stmt.bindLong(6, time);
         }
-
+ 
         String createTime = entity.getCreateTime();
         if (createTime != null) {
             stmt.bindString(7, createTime);
         }
-
+ 
         String startTime = entity.getStartTime();
         if (startTime != null) {
             stmt.bindString(8, startTime);
         }
-
+ 
         String endTime = entity.getEndTime();
         if (endTime != null) {
             stmt.bindString(9, endTime);
         }
-
+ 
         String updateTime = entity.getUpdateTime();
         if (updateTime != null) {
             stmt.bindString(10, updateTime);
@@ -169,7 +167,7 @@ public class RecordDao extends AbstractDao<Record, Long> {
     @Override
     public Long readKey(Cursor cursor, int offset) {
         return cursor.getLong(offset + 0);
-    }
+    }    
 
     @Override
     public Record readEntity(Cursor cursor, int offset) {
@@ -187,7 +185,7 @@ public class RecordDao extends AbstractDao<Record, Long> {
         );
         return entity;
     }
-
+     
     @Override
     public void readEntity(Cursor cursor, Record entity, int offset) {
         entity.setId(cursor.getLong(offset + 0));
@@ -200,14 +198,14 @@ public class RecordDao extends AbstractDao<Record, Long> {
         entity.setStartTime(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
         entity.setEndTime(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
         entity.setUpdateTime(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
-    }
-
+     }
+    
     @Override
     protected final Long updateKeyAfterInsert(Record entity, long rowId) {
         entity.setId(rowId);
         return rowId;
     }
-
+    
     @Override
     public Long getKey(Record entity) {
         if (entity != null) {
@@ -226,5 +224,5 @@ public class RecordDao extends AbstractDao<Record, Long> {
     protected final boolean isEntityUpdateable() {
         return true;
     }
-
+    
 }

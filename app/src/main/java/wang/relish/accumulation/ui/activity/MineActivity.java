@@ -41,7 +41,7 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void initViews(Bundle savedInstanceState) {
         mUser = SPUtil.getUser();
-// TODO       if (mUser.isEmpty()) finish();
+        if (App.isEmpty(mUser)) finish();
         ivHead = (ImageView) findViewById(R.id.iv_head);
         tvName = (TextView) findViewById(R.id.tv_name);
         tvMobile = (TextView) findViewById(R.id.tv_mobile);

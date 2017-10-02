@@ -45,7 +45,7 @@ public class GoalDao extends AbstractDao<Goal, Long> {
      * Creates the underlying database table.
      */
     public static void createTable(Database db, boolean ifNotExists) {
-        String constraint = ifNotExists ? "IF NOT EXISTS " : "";
+        String constraint = ifNotExists ? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"GOAL\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ," + // 0: id
                 "\"MOBILE\" TEXT NOT NULL ," + // 1: mobile
@@ -54,9 +54,7 @@ public class GoalDao extends AbstractDao<Goal, Long> {
                 "\"UPDATE_TIME\" TEXT NOT NULL );"); // 4: updateTime
     }
 
-    /**
-     * Drops the underlying database table.
-     */
+    /** Drops the underlying database table. */
     public static void dropTable(Database db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "\"GOAL\"";
         db.execSQL(sql);
@@ -67,7 +65,7 @@ public class GoalDao extends AbstractDao<Goal, Long> {
         stmt.clearBindings();
         stmt.bindLong(1, entity.getId());
         stmt.bindString(2, entity.getMobile());
-
+ 
         String name = entity.getName();
         if (name != null) {
             stmt.bindString(3, name);
@@ -81,7 +79,7 @@ public class GoalDao extends AbstractDao<Goal, Long> {
         stmt.clearBindings();
         stmt.bindLong(1, entity.getId());
         stmt.bindString(2, entity.getMobile());
-
+ 
         String name = entity.getName();
         if (name != null) {
             stmt.bindString(3, name);
@@ -93,7 +91,7 @@ public class GoalDao extends AbstractDao<Goal, Long> {
     @Override
     public Long readKey(Cursor cursor, int offset) {
         return cursor.getLong(offset + 0);
-    }
+    }    
 
     @Override
     public Goal readEntity(Cursor cursor, int offset) {
@@ -106,7 +104,7 @@ public class GoalDao extends AbstractDao<Goal, Long> {
         );
         return entity;
     }
-
+     
     @Override
     public void readEntity(Cursor cursor, Goal entity, int offset) {
         entity.setId(cursor.getLong(offset + 0));
@@ -114,14 +112,14 @@ public class GoalDao extends AbstractDao<Goal, Long> {
         entity.setName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setTime(cursor.getLong(offset + 3));
         entity.setUpdateTime(cursor.getString(offset + 4));
-    }
-
+     }
+    
     @Override
     protected final Long updateKeyAfterInsert(Goal entity, long rowId) {
         entity.setId(rowId);
         return rowId;
     }
-
+    
     @Override
     public Long getKey(Goal entity) {
         if (entity != null) {
@@ -140,5 +138,5 @@ public class GoalDao extends AbstractDao<Goal, Long> {
     protected final boolean isEntityUpdateable() {
         return true;
     }
-
+    
 }

@@ -52,7 +52,7 @@ public class SplashActivity extends BaseActivity {
                 boolean autoLogin = SPUtil.getBoolean("autoLogin", false);
                 if (autoLogin) {
                     App.USER = SPUtil.getUser();
-                    if (App.USER != null /* TODO && !App.USER.isEmpty()*/) {
+                    if (!App.isEmpty(App.USER)) {
                         Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();

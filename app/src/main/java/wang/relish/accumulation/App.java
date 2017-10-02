@@ -11,13 +11,18 @@ import android.view.WindowManager;
 
 import com.orhanobut.logger.Logger;
 
+import java.util.List;
 import java.util.WeakHashMap;
 
+import wang.relish.accumulation.entity.Goal;
+import wang.relish.accumulation.entity.Record;
 import wang.relish.accumulation.entity.User;
 import wang.relish.accumulation.greendao.DaoMaster;
 import wang.relish.accumulation.greendao.DaoSession;
+import wang.relish.accumulation.greendao.GoalDao;
 import wang.relish.accumulation.util.AppLog;
 import wang.relish.accumulation.util.Temp;
+import wang.relish.accumulation.util.TimeUtil;
 
 /**
  * App应用管理类
@@ -140,4 +145,23 @@ public class App extends Application {
         return null;
     }
 
+    public static boolean isEmpty(User u) {
+        return u == null || u.isEmpty();
+    }
+
+    public static Goal getParent(Record record) {
+        return sDaoSession
+                .getGoalDao()
+                .queryBuilder()
+                .where(GoalDao.Properties.Id.eq(record.getGoalId()))
+                .unique();
+    }
+
+    public static String getRecordHardTime(Record r) {
+        return TimeUtil.getHardTime(r.getTime());
+    }
+
+    public static List<Goal> findAllGoals() {
+        return sDaoSession.getGoalDao().loadAll();
+    }
 }

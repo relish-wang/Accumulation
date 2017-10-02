@@ -60,7 +60,7 @@ public class ChartFragment extends BaseFragment {
         tvMinute = (TextView) contentView.findViewById(R.id.tvMinute);
 
         tvGoalName.setText(mGoal.getName());
-//TODO        tvHour.setText(String.valueOf(mGoal.getHardHour()));
+//TODO tvHour.setText(String.valueOf(mGoal.getHardHour()));
 //TODO        tvMinute.setText(String.valueOf(mGoal.getHardMinute()));
 
         chart = (Chart) contentView.findViewById(R.id.chart);

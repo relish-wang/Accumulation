@@ -16,15 +16,16 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import wang.relish.accumulation.App;
 import wang.relish.accumulation.R;
 import wang.relish.accumulation.adapter.GoalsAdapter;
 import wang.relish.accumulation.base.BaseActivity;
 import wang.relish.accumulation.entity.Goal;
 import wang.relish.accumulation.entity.Record;
+import wang.relish.accumulation.greendao.RecordDao;
 import wang.relish.accumulation.util.TimeUtil;
 
 /**
@@ -173,7 +174,7 @@ public class AccumulationActivity extends BaseActivity implements View.OnClickLi
 
             @Override
             protected Long doInBackground(Void... params) {
-                return 1L;// TODO record.save();
+                return App.getDaosession().getRecordDao().insert(record);
             }
 
             @Override
@@ -206,7 +207,7 @@ public class AccumulationActivity extends BaseActivity implements View.OnClickLi
         ratingBar.setRating(record.getStar());
         tv_start_time.setText(record.getStartTime());
         tv_end_time.setText(record.getEndTime());
-        tv_hard_time.setText("");// TODO record.getHardTime());
+        tv_hard_time.setText(App.getRecordHardTime(record));
 
         new AlertDialog.Builder(this)
                 .setTitle("保存")
@@ -236,7 +237,7 @@ public class AccumulationActivity extends BaseActivity implements View.OnClickLi
 
                             @Override
                             protected Long doInBackground(Void... params) {
-                                return 1L; // TODO record.save();
+                                return App.getDaosession().insert(mRecord);
                             }
 
                             @Override
@@ -262,13 +263,12 @@ public class AccumulationActivity extends BaseActivity implements View.OnClickLi
      * @param record 记录
      */
     private void onSaveIntoGoalClick(final Record record) {
-        List<Goal> goal = new ArrayList<>();// TODO Goal.findAll();
-        if (goal == null || goal.size() == 0) {
+        final List<Goal> goals = App.findAllGoals();
+        if (goals == null || goals.size() == 0) {
             showMessage("暂无目标可存");
             return;
         }
         View view = LayoutInflater.from(this).inflate(R.layout.dialog_goals, null);
-        final List<Goal> goals = new ArrayList<>();// TODO Goal.findAll();
         ListView lv_goals = (ListView) view.findViewById(R.id.lv_goals);
         GoalsAdapter adapter = new GoalsAdapter(goals);
         lv_goals.setAdapter(adapter);
@@ -284,8 +284,12 @@ public class AccumulationActivity extends BaseActivity implements View.OnClickLi
                     @Override
                     protected Long doInBackground(Void... params) {
                         record.setGoalId(goals.get(position).getId());
-                        record.setId(1L);// TODO Record.findMaxId() + 1);
-                        return 1L;//record.save();
+                        RecordDao recordDao = App.getDaosession().getRecordDao();
+                        long insert = recordDao.insert(record);
+                        if (insert > 0) {
+                            recordDao.deleteByKey(record.getId());
+                        }
+                        return insert;
                     }
 
                     @Override

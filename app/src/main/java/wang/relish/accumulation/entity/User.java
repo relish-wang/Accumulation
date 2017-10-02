@@ -1,5 +1,7 @@
 package wang.relish.accumulation.entity;
 
+import android.text.TextUtils;
+
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
@@ -63,5 +65,12 @@ public class User implements Serializable {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public boolean isEmpty() {
+        return TextUtils.isEmpty(name) &&
+                TextUtils.isEmpty(password) &&
+                TextUtils.isEmpty(mobile) &&
+                TextUtils.isEmpty(photo);
     }
 }

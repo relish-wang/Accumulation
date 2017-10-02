@@ -16,6 +16,8 @@ import wang.relish.accumulation.App;
 import wang.relish.accumulation.R;
 import wang.relish.accumulation.base.BaseActivity;
 import wang.relish.accumulation.entity.User;
+import wang.relish.accumulation.greendao.DaoSession;
+import wang.relish.accumulation.greendao.UserDao;
 import wang.relish.accumulation.util.PhoneUtils;
 import wang.relish.accumulation.util.SPUtil;
 
@@ -70,7 +72,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         tv_register.setOnClickListener(this);
 
         User user = SPUtil.getUser();
-        if (user != null /* TODO && !user.isEmpty()*/) {
+        if (!App.isEmpty(user)) {
             App.USER = user;
 
             etMobile.setText(App.USER.getMobile());
@@ -97,7 +99,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 break;
             case R.id.tv_forget_pwd:
                 String mobile = etMobile.getText().toString().trim();
-                ForgetPwdActivity.open(this,mobile);
+                ForgetPwdActivity.open(this, mobile);
                 break;
             case R.id.tv_register:
                 Intent intent1 = new Intent(this, RegisterActivity.class);
@@ -130,7 +132,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
             @Override
             protected User doInBackground(String... params) {
-                return new User();// TODO User.login(params[0], params[1]);
+                DaoSession daosession = App.getDaosession();
+                UserDao userDao = daosession.getUserDao();
+                return userDao
+                        .queryBuilder()
+                        .where(
+                                UserDao.Properties.Mobile.eq(params[0]),
+                                UserDao.Properties.Password.eq(params[1]))
+                        .unique();
             }
 
             @Override
