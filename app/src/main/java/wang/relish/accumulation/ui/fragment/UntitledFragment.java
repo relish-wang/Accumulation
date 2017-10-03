@@ -40,7 +40,7 @@ public class UntitledFragment extends BaseFragment implements AdapterView.OnItem
     protected void initViews(View contentView) {
         lv_records = (ListView) contentView.findViewById(R.id.lv_records);
         tv_no_data = (TextView) contentView.findViewById(R.id.tv_no_data);
-        records = new ArrayList<>();// TODO Record.findAllUntitled();
+        records = Record.findAllUntitled();
         mAdapter = new RecordAdapter();
         lv_records.setAdapter(mAdapter);
         lv_records.setOnItemClickListener(this);
@@ -53,7 +53,7 @@ public class UntitledFragment extends BaseFragment implements AdapterView.OnItem
     }
 
     private void update() {
-        records = new ArrayList<>();// TODO Record.findAllUntitled();
+        records = Record.findAllUntitled();
         mAdapter.notifyDataSetChanged();
         if(records==null||records.size()==0){
             tv_no_data.setVisibility(View.VISIBLE);

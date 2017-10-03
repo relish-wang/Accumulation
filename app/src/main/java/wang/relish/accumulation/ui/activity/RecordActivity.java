@@ -129,21 +129,18 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
                     et_info.setEnabled(false);
                     String text = et_info.getText().toString().trim();
                     mRecord.setNote(text);
-                    new AsyncTask<Void, Void, Long>() {
+                    new AsyncTask<Void, Void, Void>() {
 
                         @Override
-                        protected Long doInBackground(Void... params) {
-                            return App.getDaosession().getRecordDao().insert(mRecord);
+                        protected Void doInBackground(Void... params) {
+                            App.getDaosession().getRecordDao().save(mRecord);
+                            return null;
                         }
 
                         @Override
-                        protected void onPostExecute(Long aLong) {
-                            super.onPostExecute(aLong);
-                            if (aLong > 0) {
-                                isEditing = false;
-                            } else {
-                                showMessage("修改失败");
-                            }
+                        protected void onPostExecute(Void aVoid) {
+                            super.onPostExecute(aVoid);
+                            isEditing = false;
                         }
                     }.execute();
                 } else {
@@ -165,21 +162,18 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
                             public void onSelected(String datetime) {
                                 mRecord.setStartTime(datetime);
                                 mRecord.setUpdateTime(TimeUtil.longToDateTime(System.currentTimeMillis()));
-                                new AsyncTask<Void, Void, Long>() {
+                                new AsyncTask<Void, Void, Void>() {
 
                                     @Override
-                                    protected Long doInBackground(Void... params) {
-                                        return App.getDaosession().getRecordDao().insert(mRecord);
+                                    protected Void doInBackground(Void... params) {
+                                        App.getDaosession().getRecordDao().update(mRecord);
+                                        return null;
                                     }
 
                                     @Override
-                                    protected void onPostExecute(Long aLong) {
-                                        super.onPostExecute(aLong);
-                                        if (aLong > 0) {
-                                            updateTimeTime();
-                                        } else {
-                                            showMessage("修改失败");
-                                        }
+                                    protected void onPostExecute(Void aVoid) {
+                                        super.onPostExecute(aVoid);
+                                        updateTimeTime();
                                     }
                                 }.execute();
                             }
@@ -196,21 +190,18 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
                     @Override
                     public void onSelected(String datetime) {
                         mRecord.setEndTime(datetime);
-                        new AsyncTask<Void, Void, Long>() {
+                        new AsyncTask<Void, Void, Void>() {
 
                             @Override
-                            protected Long doInBackground(Void... params) {
-                                return App.getDaosession().getRecordDao().insert(mRecord);
+                            protected Void doInBackground(Void... params) {
+                                App.getDaosession().getRecordDao().update(mRecord);
+                                return null;
                             }
 
                             @Override
-                            protected void onPostExecute(Long aLong) {
-                                super.onPostExecute(aLong);
-                                if (aLong > 0) {
-                                    updateTimeTime();
-                                } else {
-                                    showMessage("修改失败");
-                                }
+                            protected void onPostExecute(Void aVoid) {
+                                super.onPostExecute(aVoid);
+                                updateTimeTime();
                             }
                         }.execute();
                     }
@@ -267,21 +258,18 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
                     public void onClick(DialogInterface dialog, int which) {
                         float star = ratingBar.getRating();
                         mRecord.setStar((int) star);
-                        new AsyncTask<Void, Void, Long>() {
+                        new AsyncTask<Void, Void, Void>() {
 
                             @Override
-                            protected Long doInBackground(Void... params) {
-                                return App.getDaosession().getRecordDao().insert(mRecord);
+                            protected Void doInBackground(Void... params) {
+                                App.getDaosession().getRecordDao().save(mRecord);
+                                return null;
                             }
 
                             @Override
-                            protected void onPostExecute(Long aLong) {
-                                super.onPostExecute(aLong);
-                                if (aLong > 0) {
-                                    rating_bar.setRating(mRecord.getStar());
-                                } else {
-                                    showMessage("修改失败");
-                                }
+                            protected void onPostExecute(Void aVoid) {
+                                super.onPostExecute(aVoid);
+                                rating_bar.setRating(mRecord.getStar());
                             }
                         }.execute();
                     }
@@ -293,7 +281,7 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
 
     private void updateTimeTime() {
         tv_start_time.setText(mRecord.getStartTime());
-        tv_hard_time.setText(App.getRecordHardTime(mRecord));
+        tv_hard_time.setText(mRecord.getHardTime());
         tv_end_time.setText(mRecord.getEndTime());
     }
 
@@ -324,7 +312,7 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
      * @param record 记录
      */
     private void onSaveIntoGoalClick(final Record record) {
-        final List<Goal> goals = App.getDaosession().getGoalDao().loadAll();
+        final List<Goal> goals = App.findAllGoals();
         if (goals == null || goals.size() == 0) {
             showMessage("暂无目标可存");
             return;

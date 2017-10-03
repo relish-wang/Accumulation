@@ -60,13 +60,13 @@ public class ChartFragment extends BaseFragment {
         tvMinute = (TextView) contentView.findViewById(R.id.tvMinute);
 
         tvGoalName.setText(mGoal.getName());
-//TODO tvHour.setText(String.valueOf(mGoal.getHardHour()));
-//TODO        tvMinute.setText(String.valueOf(mGoal.getHardMinute()));
+        tvHour.setText(String.valueOf(mGoal.getHardHour()));
+        tvMinute.setText(String.valueOf(mGoal.getHardMinute()));
 
         chart = (Chart) contentView.findViewById(R.id.chart);
         chart.setPillars(getPillars(mGoal));
         rvRecords = (RecyclerView) contentView.findViewById(R.id.rvRecords);
-        mRecords = new ArrayList<>();// TODO mGoal == null ? new ArrayList<Record>() : mGoal.getRecords();
+        mRecords = mGoal == null ? new ArrayList<Record>() : mGoal.getRecords();
         adapter = new ChildAdapter(R.layout.rv_item_record, mRecords);
         rvRecords.setAdapter(adapter);
         rvRecords.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -75,8 +75,7 @@ public class ChartFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        //测试数据
-        mRecords = new ArrayList<>();// TODO mGoal.getRecords();
+        mRecords = mGoal.getRecords();
         adapter.setNewData(mRecords);
         chart.setPillars(getPillarsTemp(mRecords));
     }
@@ -98,7 +97,7 @@ public class ChartFragment extends BaseFragment {
         List<Pillar> pillars = new ArrayList<>();
         String[] day = App.CONTEXT.getResources().getStringArray(R.array.week);
         long[] values = {0, 0, 0, 0, 0, 0, 0};
-        List<Record> records = new ArrayList<>(); //TODO goal.getRecords();
+        List<Record> records = goal.getRecords();
         for (Record r : records) {
             values[TimeUtil.dayForWeek(r.getStartTime())] = r.getTime() / 1000 / 60;
         }
@@ -117,7 +116,7 @@ public class ChartFragment extends BaseFragment {
         @Override
         protected void convert(BaseViewHolder holder, Record record) {
             holder.setText(R.id.tvRecordName, record.getName());
-// TODO           holder.setText(R.id.tvHardTime, record.getHardTime());
+            holder.setText(R.id.tvHardTime, record.getHardTime());
         }
     }
 }

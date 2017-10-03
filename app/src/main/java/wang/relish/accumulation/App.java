@@ -21,8 +21,6 @@ import wang.relish.accumulation.greendao.DaoMaster;
 import wang.relish.accumulation.greendao.DaoSession;
 import wang.relish.accumulation.greendao.GoalDao;
 import wang.relish.accumulation.util.AppLog;
-import wang.relish.accumulation.util.Temp;
-import wang.relish.accumulation.util.TimeUtil;
 
 /**
  * App应用管理类
@@ -47,8 +45,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
-//        DBHelper.getInstance(this).getReadableDatabase();
-        Temp.initDemoData();
+//        Temp.initDemoData();
 
         //日志打印工具
         Logger.init(TAG).methodCount(10) // 方法栈打印的个数，默认是 2
@@ -155,10 +152,6 @@ public class App extends Application {
                 .queryBuilder()
                 .where(GoalDao.Properties.Id.eq(record.getGoalId()))
                 .unique();
-    }
-
-    public static String getRecordHardTime(Record r) {
-        return TimeUtil.getHardTime(r.getTime());
     }
 
     public static List<Goal> findAllGoals() {

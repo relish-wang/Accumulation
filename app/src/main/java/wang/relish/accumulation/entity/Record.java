@@ -5,7 +5,10 @@ import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 
 import java.io.Serializable;
+import java.util.List;
 
+import wang.relish.accumulation.App;
+import wang.relish.accumulation.greendao.RecordDao;
 import wang.relish.accumulation.util.TimeUtil;
 
 /**
@@ -17,8 +20,8 @@ public class Record implements Serializable {
 
     public static final long serialVersionUID = 536871012L;
 
-    @Id
-    private long id;
+    @Id(autoincrement = true)
+    private Long id;
     private long goalId;
     private String name;
     private Integer star;
@@ -40,8 +43,8 @@ public class Record implements Serializable {
         updateTime = createTime;
     }
 
-    @Generated(hash = 84132456)
-    public Record(long id, long goalId, String name, Integer star, String note,
+    @Generated(hash = 289830357)
+    public Record(Long id, long goalId, String name, Integer star, String note,
                   Long time, String createTime, String startTime, String endTime,
                   String updateTime) {
         this.id = id;
@@ -56,7 +59,7 @@ public class Record implements Serializable {
         this.updateTime = updateTime;
     }
 
-    public long getId() {
+    public Long getId() {
         return this.id;
     }
 
@@ -134,5 +137,28 @@ public class Record implements Serializable {
 
     public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getHardTime() {
+        if (time == 0) {
+            long lEndTime = TimeUtil.dateTimeToLong(endTime);
+            long lStartTime = TimeUtil.dateTimeToLong(startTime);
+            time = lEndTime - lStartTime;
+            App.getDaosession().getRecordDao().update(this);
+            return TimeUtil.getHardTime(lEndTime - lStartTime);
+        }
+        return TimeUtil.getHardTime(time);
+    }
+
+    public static List<Record> findAllUntitled() {
+        return App.getDaosession()
+                .getRecordDao()
+                .queryBuilder()
+                .where(RecordDao.Properties.GoalId.eq(0))
+                .list();
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

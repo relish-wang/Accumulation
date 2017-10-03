@@ -9,6 +9,11 @@ import org.greenrobot.greendao.annotation.NotNull;
 import org.greenrobot.greendao.annotation.Property;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Locale;
+
+import wang.relish.accumulation.App;
+import wang.relish.accumulation.greendao.RecordDao;
 
 /**
  * 目标
@@ -20,7 +25,7 @@ public class Goal implements Serializable {
     public static final long serialVersionUID = 536871008L;
 
     @Id(autoincrement = true)
-    private long id;
+    private Long id;
     @NotNull
     private String mobile;
     @Property(nameInDb = "name")
@@ -30,8 +35,8 @@ public class Goal implements Serializable {
     @NonNull
     private String updateTime;
 
-    @Generated(hash = 1367492882)
-    public Goal(long id, @NotNull String mobile, String name, long time,
+    @Generated(hash = 1773974608)
+    public Goal(Long id, @NotNull String mobile, String name, long time,
                 @NotNull String updateTime) {
         this.id = id;
         this.mobile = mobile;
@@ -44,7 +49,7 @@ public class Goal implements Serializable {
     public Goal() {
     }
 
-    public long getId() {
+    public Long getId() {
         return this.id;
     }
 
@@ -82,5 +87,48 @@ public class Goal implements Serializable {
 
     public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
+    }
+
+
+    public int getHardHour() {
+        Long time = getHardTimeLong();
+        time /= 1000;
+        return (int) (time / 3600);
+    }
+
+    public int getHardMinute() {
+        Long time = getHardTimeLong();
+        time /= 1000;
+        return (int) (time % 3600 / 60);
+    }
+
+    public String getHardTime() {
+        Long time = getHardTimeLong();
+        time /= 1000;
+        int hour = (int) (time / 3600);
+        int min = (int) (time % 3600 / 60);
+        int sec = (int) (time % 60);
+        return String.format(Locale.CHINA, "%02d:%02d:%02d", hour, min, sec);
+    }
+
+    public Long getHardTimeLong() {
+        Long time = 0L;
+        List<Record> records = getRecords();
+        for (Record record : records) {
+            time += record.getTime();
+        }
+        return time;
+    }
+
+    public List<Record> getRecords() {
+        return App.getDaosession()
+                .getRecordDao()
+                .queryBuilder()
+                .where(RecordDao.Properties.GoalId.eq(id))
+                .list();
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

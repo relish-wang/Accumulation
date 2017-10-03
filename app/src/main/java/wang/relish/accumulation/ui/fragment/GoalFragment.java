@@ -29,6 +29,9 @@ import wang.relish.accumulation.base.BaseFragment;
 import wang.relish.accumulation.base.IOnExchangeDataListener;
 import wang.relish.accumulation.entity.Goal;
 import wang.relish.accumulation.entity.Record;
+import wang.relish.accumulation.greendao.DaoSession;
+import wang.relish.accumulation.greendao.GoalDao;
+import wang.relish.accumulation.greendao.RecordDao;
 import wang.relish.accumulation.ui.activity.AccumulationActivity;
 import wang.relish.accumulation.ui.activity.RecordActivity;
 import wang.relish.accumulation.ui.view.fab.MultiFloatingActionButton;
@@ -107,11 +110,10 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
                 long timestamp = System.currentTimeMillis();
                 Goal goal = new Goal();
                 goal.setMobile(App.USER.getMobile());
-                goal.setId(1L);// TODO Goal.getMaxId() + 1);
                 goal.setName(goalName);
                 goal.setUpdateTime(TimeUtil.longToDateTime(timestamp));
                 goal.setTime(timestamp);
-                return 1L;// TODO goal.save();
+                return App.getDaosession().getGoalDao().insert(goal);
             }
 
             @Override
@@ -175,7 +177,7 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
     @Override
     public boolean onChildClick(ExpandableListView parent, View v,
                                 int groupPosition, int childPosition, long id) {
-        RecordActivity.open(getActivity(), new Record());// TODO mGoals.get(groupPosition).getRecords().get(childPosition));
+        RecordActivity.open(getActivity(), mGoals.get(groupPosition).getRecords().get(childPosition));
         return true;
     }
 
@@ -207,7 +209,7 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
                                     .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            // TODO Record.delete(record);
+                                            App.getDaosession().getRecordDao().delete(record);
                                             update();
                                         }
                                     })
@@ -254,7 +256,18 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
                                     .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            // TODO Goal.deleteItAndItsRecords(group);
+
+                                            final DaoSession daosession = App.getDaosession();
+                                            daosession.runInTx(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    GoalDao goalDao = daosession.getGoalDao();
+                                                    goalDao.delete(group);
+
+                                                    RecordDao recordDao = daosession.getRecordDao();
+                                                    recordDao.deleteInTx(group.getRecords());
+                                                }
+                                            });
                                             update();
                                         }
                                     })
@@ -278,7 +291,6 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
     private void addRecord(Goal group, String recordName) {
         String start = TimeUtil.longToDateTime(System.currentTimeMillis());
         Record record = new Record();
-        record.setId(1L);// TODO Record.findMaxId() + 1);
         record.setName(recordName);
         record.setGoalId(group.getId());
         record.setUpdateTime(start);
@@ -287,12 +299,12 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
         record.setEndTime(start);
         record.setTime(0L);
         record.setStar(0);
-//TODO        record.save();
+        App.getDaosession().getRecordDao().insert(record);
         update();
     }
 
     public void update() {
-        mGoals = new ArrayList<>();//TODO Goal.findAll();
+        mGoals = App.findAllGoals();
         mAdapter.notifyDataSetChanged();
         checkDataShowOrHide();
     }
@@ -351,8 +363,8 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
             } else {
                 holder = (VHChild) convertView.getTag();
             }
-            convertView.setTag(R.id.tv_goal_name, new Record());// TODO mGoals.get(groupPosition).getRecords().get(childPosition));
-            Record record = new Record();// TODO mGoals.get(groupPosition).getRecords().get(childPosition);
+            Record record = mGoals.get(groupPosition).getRecords().get(childPosition);
+            convertView.setTag(R.id.tv_goal_name, record);
             holder.tvRecordName = (TextView) convertView.findViewById(R.id.tv_record_name);
             holder.tvUpdateTime = (TextView) convertView.findViewById(R.id.tv_update_time);
 
@@ -382,7 +394,7 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
             if (mGoals != null) {
                 if (groupPosition < mGoals.size()) {
                     if (mGoals.get(groupPosition) != null) {
-                        List<Record> records = new ArrayList<>();// TODO mGoals.get(groupPosition).getRecords();
+                        List<Record> records = mGoals.get(groupPosition).getRecords();
                         if (records != null) {
                             return records.size();
                         } else {
@@ -420,7 +432,7 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
                 if (groupPosition < mGoals.size()) {
                     Goal goal = mGoals.get(groupPosition);
                     if (goal != null) {
-                        List<Record> children = new ArrayList<>();// TODO goal.getRecords();
+                        List<Record> children = goal.getRecords();
                         if (children != null) {
                             if (childPosition < children.size()) {
                                 return children.get(childPosition);
@@ -468,7 +480,7 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
                 if (groupPosition < mGoals.size()) {
                     Goal goal = mGoals.get(groupPosition);
                     if (goal != null) {
-                        List<Record> children = new ArrayList<>();// TODO goal.getRecords();
+                        List<Record> children = goal.getRecords();
                         if (children != null) {
                             if (childPosition < children.size()) {
                                 Record record = children.get(childPosition);

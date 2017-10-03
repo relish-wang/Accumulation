@@ -207,7 +207,7 @@ public class AccumulationActivity extends BaseActivity implements View.OnClickLi
         ratingBar.setRating(record.getStar());
         tv_start_time.setText(record.getStartTime());
         tv_end_time.setText(record.getEndTime());
-        tv_hard_time.setText(App.getRecordHardTime(record));
+        tv_hard_time.setText(record.getHardTime());
 
         new AlertDialog.Builder(this)
                 .setTitle("保存")

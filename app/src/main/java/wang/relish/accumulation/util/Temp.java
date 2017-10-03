@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import wang.relish.accumulation.App;
 import wang.relish.accumulation.entity.Goal;
 import wang.relish.accumulation.entity.Record;
 import wang.relish.accumulation.entity.User;
@@ -12,6 +13,7 @@ import wang.relish.accumulation.entity.User;
  * 临时数据
  * Created by Relish on 2016/11/10.
  */
+@Deprecated
 public class Temp {
 
     public static List<Goal> getGoals() {
@@ -22,7 +24,6 @@ public class Temp {
             Goal goal = new Goal();
 //            goal.setId(i + 1+"");
             goal.setName("Goal" + (i + 1));
-// TODO           goal.setRecords(getRecords());
             goals.add(goal);
         }
         return goals;
@@ -64,8 +65,7 @@ public class Temp {
         goal1.setName("红楼梦");
         goal1.setUpdateTime("2017-04-30 15:07");
         goal1.setMobile(user.getMobile());
-// TODO       goal1.setRecords(getRecords());
-// TODO       goal1.save();
+        App.getDaosession().getGoalDao().insert(goal1);
     }
 
     public static List<Record> initHLMRecord() {
@@ -80,7 +80,8 @@ public class Temp {
         record.setTime(et - st);
         record.setUpdateTime(record.getEndTime());
         record.setNote("序，写的很棒！");
-//TODO        record.save();
+        App.getDaosession().getRecordDao().insert(record);
+
 
         final Record record2 = new Record();
         record2.setGoalId(1);
@@ -92,7 +93,8 @@ public class Temp {
         record2.setTime(et2 - st2);
         record2.setUpdateTime(record2.getEndTime());
         record2.setNote("第一章内容跌宕起伏引人入胜");
-//TODO        record2.save();
+        App.getDaosession().getRecordDao().insert(record2);
+
 
         return new ArrayList<Record>() {
             {
