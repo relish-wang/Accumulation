@@ -370,7 +370,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 break;
             default:
         }
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
 
