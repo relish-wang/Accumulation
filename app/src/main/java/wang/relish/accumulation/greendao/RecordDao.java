@@ -73,7 +73,7 @@ public class RecordDao extends AbstractDao<Record, Long> {
     @Override
     protected final void bindValues(DatabaseStatement stmt, Record entity) {
         stmt.clearBindings();
-
+ 
         Long id = entity.getId();
         if (id != null) {
             stmt.bindLong(1, id);
@@ -124,7 +124,7 @@ public class RecordDao extends AbstractDao<Record, Long> {
     @Override
     protected final void bindValues(SQLiteStatement stmt, Record entity) {
         stmt.clearBindings();
-
+ 
         Long id = entity.getId();
         if (id != null) {
             stmt.bindLong(1, id);

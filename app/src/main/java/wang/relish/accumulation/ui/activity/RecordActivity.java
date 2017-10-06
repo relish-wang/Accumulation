@@ -34,6 +34,7 @@ import wang.relish.accumulation.adapter.GoalsAdapter;
 import wang.relish.accumulation.base.BaseActivity;
 import wang.relish.accumulation.entity.Goal;
 import wang.relish.accumulation.entity.Record;
+import wang.relish.accumulation.greendao.DaoSession;
 import wang.relish.accumulation.greendao.RecordDao;
 import wang.relish.accumulation.util.TimeUtil;
 
@@ -328,31 +329,31 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
         lv_goals.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view1, final int position, long id) {
-                new AsyncTask<Void, Void, Long>() {
+                new AsyncTask<Void, Void, Void>() {
 
                     @Override
-                    protected Long doInBackground(Void... params) {
-                        long oldId = record.getId();
+                    protected Void doInBackground(Void... params) {
+                        final long oldId = record.getId();
                         record.setGoalId(goals.get(position).getId());
                         record.setUpdateTime(TimeUtil.getNowTime());
-                        RecordDao recordDao = App.getDaosession().getRecordDao();
-                        long insert = recordDao.insert(record);
-                        if (insert > 0) {
-                            recordDao.deleteByKey(oldId);//根据主键删除
-                        }
-                        return insert;
+                        final DaoSession daosession = App.getDaosession();
+                        daosession.runInTx(new Runnable() {
+                            @Override
+                            public void run() {
+                                RecordDao recordDao = daosession.getRecordDao();
+                                recordDao.save(record);
+                                recordDao.deleteByKey(oldId);//根据主键删除
+                            }
+                        });
+                        return null;
                     }
 
                     @Override
-                    protected void onPostExecute(Long aLong) {
-                        super.onPostExecute(aLong);
-                        if (aLong > 1) {
-                            Goal goal = App.getParent(record);
-                            mToolbar.setTitle(goal.getName());
-                            dialog.dismiss();
-                        } else {
-                            showMessage("保存失败！");
-                        }
+                    protected void onPostExecute(Void aVoid) {
+                        super.onPostExecute(aVoid);
+                        Goal goal = App.getParent(record);
+                        mToolbar.setTitle(goal.getName());
+                        dialog.dismiss();
                     }
                 }.execute();
             }

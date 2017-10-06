@@ -25,6 +25,7 @@ import wang.relish.accumulation.adapter.GoalsAdapter;
 import wang.relish.accumulation.base.BaseActivity;
 import wang.relish.accumulation.entity.Goal;
 import wang.relish.accumulation.entity.Record;
+import wang.relish.accumulation.greendao.DaoSession;
 import wang.relish.accumulation.greendao.RecordDao;
 import wang.relish.accumulation.util.TimeUtil;
 
@@ -125,7 +126,7 @@ public class AccumulationActivity extends BaseActivity implements View.OnClickLi
     private Record generateTempRecord() {
         long currentTime = System.currentTimeMillis();
         long hardTime = currentTime - startTime;
-        long untitled = 1L;//Record.findMaxIdWhereGoalIdIs(0) + 1;
+        long untitled = Record.findMaxIdWhereGoalIdIs(0) + 1;
         String start = TimeUtil.longToDateTime(startTime);
         Record record = new Record();
         record.setGoalId(0);
@@ -170,22 +171,19 @@ public class AccumulationActivity extends BaseActivity implements View.OnClickLi
      * @param record 记录
      */
     private void onCancelClick(final Record record) {
-        new AsyncTask<Void, Void, Long>() {
+        new AsyncTask<Void, Void, Void>() {
 
             @Override
-            protected Long doInBackground(Void... params) {
-                return App.getDaosession().getRecordDao().insert(record);
+            protected Void doInBackground(Void... params) {
+                App.getDaosession().getRecordDao().save(record);
+                return null;
             }
 
             @Override
-            protected void onPostExecute(Long aLong) {
-                super.onPostExecute(aLong);
-                if (aLong > 0) {
-                    showMessage("此积累已保存至未分类中");
-                    finish();
-                } else {
-                    showMessage("保存失败！");
-                }
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                showMessage("此积累已保存至未分类中");
+                finish();
             }
         }.execute();
     }
@@ -233,23 +231,21 @@ public class AccumulationActivity extends BaseActivity implements View.OnClickLi
                         record.setName(name);
                         record.setStar((int) star);
                         record.setNote(note);
-                        new AsyncTask<Void, Void, Long>() {
+                        new AsyncTask<Void, Void, Void>() {
 
                             @Override
-                            protected Long doInBackground(Void... params) {
-                                return App.getDaosession().insert(mRecord);
+                            protected Void doInBackground(Void... params) {
+                                App.getDaosession().getRecordDao().save(mRecord);
+                                return null;
                             }
 
                             @Override
-                            protected void onPostExecute(Long aLong) {
-                                super.onPostExecute(aLong);
-                                if (aLong > 0) {
-                                    finish();
-                                } else {
-                                    showMessage("保存失败！");
-                                }
+                            protected void onPostExecute(Void aVoid) {
+                                super.onPostExecute(aVoid);
+                                finish();
                             }
                         }.execute();
+
                     }
                 })
                 .create()
@@ -279,27 +275,28 @@ public class AccumulationActivity extends BaseActivity implements View.OnClickLi
         lv_goals.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                new AsyncTask<Void, Void, Long>() {
+                new AsyncTask<Void, Void, Void>() {
 
                     @Override
-                    protected Long doInBackground(Void... params) {
+                    protected Void doInBackground(Void... params) {
                         record.setGoalId(goals.get(position).getId());
-                        RecordDao recordDao = App.getDaosession().getRecordDao();
-                        long insert = recordDao.insert(record);
-                        if (insert > 0) {
-                            recordDao.deleteByKey(record.getId());
-                        }
-                        return insert;
+
+                        final DaoSession daosession = App.getDaosession();
+                        daosession.runInTx(new Runnable() {
+                            @Override
+                            public void run() {
+                                RecordDao recordDao = daosession.getRecordDao();
+                                recordDao.saveInTx(record);
+                                recordDao.deleteByKey(record.getId());
+                            }
+                        });
+                        return null;
                     }
 
                     @Override
-                    protected void onPostExecute(Long aLong) {
-                        super.onPostExecute(aLong);
-                        if (aLong > 0) {
-                            finish();
-                        } else {
-                            showMessage("保存失败！");
-                        }
+                    protected void onPostExecute(Void aVoid) {
+                        super.onPostExecute(aVoid);
+                        finish();
                     }
                 }.execute();
             }

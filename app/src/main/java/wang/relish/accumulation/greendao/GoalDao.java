@@ -63,7 +63,7 @@ public class GoalDao extends AbstractDao<Goal, Long> {
     @Override
     protected final void bindValues(DatabaseStatement stmt, Goal entity) {
         stmt.clearBindings();
-
+ 
         Long id = entity.getId();
         if (id != null) {
             stmt.bindLong(1, id);
@@ -81,7 +81,7 @@ public class GoalDao extends AbstractDao<Goal, Long> {
     @Override
     protected final void bindValues(SQLiteStatement stmt, Goal entity) {
         stmt.clearBindings();
-
+ 
         Long id = entity.getId();
         if (id != null) {
             stmt.bindLong(1, id);

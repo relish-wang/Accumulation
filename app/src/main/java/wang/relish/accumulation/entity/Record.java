@@ -161,4 +161,14 @@ public class Record implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
+
+    public static long findMaxIdWhereGoalIdIs(int goalId) {
+        Record record = App.getDaosession()
+                .getRecordDao()
+                .queryBuilder()
+                .where(RecordDao.Properties.GoalId.eq(goalId))
+                .unique();
+        return record == null ? 0 : record.id;
+    }
 }
