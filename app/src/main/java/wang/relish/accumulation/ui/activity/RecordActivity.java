@@ -1,5 +1,6 @@
 package wang.relish.accumulation.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -318,7 +319,7 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
             showMessage("暂无目标可存");
             return;
         }
-        View view = LayoutInflater.from(this).inflate(R.layout.dialog_goals, null);
+        @SuppressLint("InflateParams") View view = LayoutInflater.from(this).inflate(R.layout.dialog_goals, null);
         ListView lv_goals = (ListView) view.findViewById(R.id.lv_goals);
         GoalsAdapter adapter = new GoalsAdapter(goals);
         lv_goals.setAdapter(adapter);
