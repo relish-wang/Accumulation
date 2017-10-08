@@ -129,7 +129,8 @@ public class AccumulationActivity extends BaseActivity implements View.OnClickLi
         long untitled = Record.findMaxIdWhereGoalIdIs(0) + 1;
         String start = TimeUtil.longToDateTime(startTime);
         Record record = new Record();
-        record.setGoalId(0);
+        record.setGoalId(1);//表示未分类的目标的id
+
         record.setId(untitled);
         record.setCreateTime(start);
         record.setStartTime(start);
@@ -231,21 +232,7 @@ public class AccumulationActivity extends BaseActivity implements View.OnClickLi
                         record.setName(name);
                         record.setStar((int) star);
                         record.setNote(note);
-                        new AsyncTask<Void, Void, Void>() {
-
-                            @Override
-                            protected Void doInBackground(Void... params) {
-                                App.getDaosession().getRecordDao().save(mRecord);
-                                return null;
-                            }
-
-                            @Override
-                            protected void onPostExecute(Void aVoid) {
-                                super.onPostExecute(aVoid);
-                                finish();
-                            }
-                        }.execute();
-
+                        onCancelClick(record);//直接保存
                     }
                 })
                 .create()
