@@ -163,12 +163,7 @@ public class Record implements Serializable {
     }
 
 
-    public static long findMaxIdWhereGoalIdIs(int goalId) {
-        Record record = App.getDaosession()
-                .getRecordDao()
-                .queryBuilder()
-                .where(RecordDao.Properties.GoalId.eq(goalId))
-                .unique();
-        return record == null ? 0 : record.id;
+    public static long getUntitledRecordsNumber() {
+        return App.getDaosession().getRecordDao().queryBuilder().where(RecordDao.Properties.GoalId.eq(0)).list().size();
     }
 }

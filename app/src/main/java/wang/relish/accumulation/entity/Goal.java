@@ -1,7 +1,5 @@
 package wang.relish.accumulation.entity;
 
-import android.support.annotation.NonNull;
-
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
@@ -31,12 +29,12 @@ public class Goal implements Serializable {
     @Property(nameInDb = "name")
     private String name;
     @NotNull
-    private long time;
-    @NonNull
+    private String time;
+    @NotNull
     private String updateTime;
 
-    @Generated(hash = 1773974608)
-    public Goal(Long id, @NotNull String mobile, String name, long time,
+    @Generated(hash = 29737640)
+    public Goal(Long id, @NotNull String mobile, String name, @NotNull String time,
                 @NotNull String updateTime) {
         this.id = id;
         this.mobile = mobile;
@@ -51,10 +49,6 @@ public class Goal implements Serializable {
 
     public Long getId() {
         return this.id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getMobile() {
@@ -73,11 +67,11 @@ public class Goal implements Serializable {
         this.name = name;
     }
 
-    public long getTime() {
+    public String getTime() {
         return this.time;
     }
 
-    public void setTime(long time) {
+    public void setTime(String time) {
         this.time = time;
     }
 

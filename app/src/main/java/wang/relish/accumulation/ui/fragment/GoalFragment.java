@@ -108,11 +108,13 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
             @Override
             protected Long doInBackground(Void... params) {
                 long timestamp = System.currentTimeMillis();
+                String time = TimeUtil.longToDateTime(timestamp);
+
                 Goal goal = new Goal();
                 goal.setMobile(App.USER.getMobile());
                 goal.setName(goalName);
-                goal.setUpdateTime(TimeUtil.longToDateTime(timestamp));
-                goal.setTime(timestamp);
+                goal.setUpdateTime(time);
+                goal.setTime(time);
                 return App.getDaosession().getGoalDao().insert(goal);
             }
 

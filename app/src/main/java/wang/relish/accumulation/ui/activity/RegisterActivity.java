@@ -411,11 +411,14 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 long insert = userDao.insert(user);
                 if (insert > 0) {
                     long timestamp = System.currentTimeMillis();
+                    String time = TimeUtil.longToDateTime(timestamp);
+
                     Goal goal = new Goal();
+                    goal.setId(0L);
                     goal.setMobile(user.getMobile());
                     goal.setName("未分类");
-                    goal.setUpdateTime(TimeUtil.longToDateTime(timestamp));
-                    goal.setTime(timestamp);
+                    goal.setUpdateTime(time);
+                    goal.setTime(time);
                     long saveGoal = daosession.getGoalDao().insert(goal);
                     if (saveGoal <= 0) {
                         callback.error();

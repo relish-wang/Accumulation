@@ -28,7 +28,7 @@ public class GoalDao extends AbstractDao<Goal, Long> {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Mobile = new Property(1, String.class, "mobile", false, "MOBILE");
         public final static Property Name = new Property(2, String.class, "name", false, "name");
-        public final static Property Time = new Property(3, long.class, "time", false, "TIME");
+        public final static Property Time = new Property(3, String.class, "time", false, "TIME");
         public final static Property UpdateTime = new Property(4, String.class, "updateTime", false, "UPDATE_TIME");
     }
 
@@ -50,7 +50,7 @@ public class GoalDao extends AbstractDao<Goal, Long> {
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
                 "\"MOBILE\" TEXT NOT NULL ," + // 1: mobile
                 "\"name\" TEXT," + // 2: name
-                "\"TIME\" INTEGER NOT NULL ," + // 3: time
+                "\"TIME\" TEXT NOT NULL ," + // 3: time
                 "\"UPDATE_TIME\" TEXT NOT NULL );"); // 4: updateTime
     }
 
@@ -74,7 +74,7 @@ public class GoalDao extends AbstractDao<Goal, Long> {
         if (name != null) {
             stmt.bindString(3, name);
         }
-        stmt.bindLong(4, entity.getTime());
+        stmt.bindString(4, entity.getTime());
         stmt.bindString(5, entity.getUpdateTime());
     }
 
@@ -92,7 +92,7 @@ public class GoalDao extends AbstractDao<Goal, Long> {
         if (name != null) {
             stmt.bindString(3, name);
         }
-        stmt.bindLong(4, entity.getTime());
+        stmt.bindString(4, entity.getTime());
         stmt.bindString(5, entity.getUpdateTime());
     }
 
@@ -107,7 +107,7 @@ public class GoalDao extends AbstractDao<Goal, Long> {
                 cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
                 cursor.getString(offset + 1), // mobile
                 cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // name
-                cursor.getLong(offset + 3), // time
+                cursor.getString(offset + 3), // time
                 cursor.getString(offset + 4) // updateTime
         );
         return entity;
@@ -118,7 +118,7 @@ public class GoalDao extends AbstractDao<Goal, Long> {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setMobile(cursor.getString(offset + 1));
         entity.setName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setTime(cursor.getLong(offset + 3));
+        entity.setTime(cursor.getString(offset + 3));
         entity.setUpdateTime(cursor.getString(offset + 4));
      }
     
