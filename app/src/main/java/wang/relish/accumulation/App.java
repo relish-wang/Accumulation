@@ -28,6 +28,8 @@ import wang.relish.accumulation.util.AppLog;
  */
 public class App extends Application {
 
+    public static final int UNTITLED_GOAL_ID = 0;
+
     public static User USER;
 
     public static final String GOOGLE_PLAY = "com.android.vending";

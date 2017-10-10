@@ -124,14 +124,14 @@ public class AccumulationActivity extends BaseActivity implements View.OnClickLi
     }
 
     private Record generateTempRecord() {
-        long untitledGoalId = 0;
+
 
         long currentTime = System.currentTimeMillis();
         long hardTime = currentTime - startTime;
         long untitledNumber = Record.getUntitledRecordsNumber() + 1;
         String start = TimeUtil.longToDateTime(startTime);
         Record record = new Record();
-        record.setGoalId(untitledGoalId);//表示未分类的目标的id
+        record.setGoalId(App.UNTITLED_GOAL_ID);//表示未分类的目标的id
 
         record.setCreateTime(start);
         record.setStartTime(start);

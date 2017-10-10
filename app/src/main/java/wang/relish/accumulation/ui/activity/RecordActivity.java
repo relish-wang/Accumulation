@@ -80,7 +80,7 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
     @Override
     protected void initToolbar(Bundle savedInstanceState, Toolbar mToolbar) {
         Goal goal = App.getParent(mRecord);
-        isTitled = goal == null;
+        isTitled = goal == null || goal.getId() == App.UNTITLED_GOAL_ID;
         String goalName = isTitled ? "未分类" : goal.getName();
         mToolbar.setTitle(goalName);
         mToolbar.setSubtitle(mRecord.getName());
