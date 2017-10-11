@@ -8,6 +8,10 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import wang.relish.accumulation.App;
 import wang.relish.accumulation.R;
 import wang.relish.accumulation.base.BaseFragment;
@@ -16,9 +20,6 @@ import wang.relish.accumulation.entity.Record;
 import wang.relish.accumulation.ui.view.chart.Chart;
 import wang.relish.accumulation.ui.view.chart.Pillar;
 import wang.relish.accumulation.util.TimeUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Relish on 2016/11/13.
@@ -74,7 +75,6 @@ public class ChartFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        //测试数据
         mRecords = mGoal.getRecords();
         adapter.setNewData(mRecords);
         chart.setPillars(getPillarsTemp(mRecords));
@@ -85,7 +85,7 @@ public class ChartFragment extends BaseFragment {
         String[] day = App.CONTEXT.getResources().getStringArray(R.array.week);
         long[] values = {0, 0, 0, 0, 0, 0, 0};
         for (Record r : records) {
-            values[TimeUtil.dayForWeek(r.getStartTime())] = r.getTime()/1000/60;
+            values[TimeUtil.dayForWeek(r.getStartTime())] = r.getTime() / 1000 / 60;
         }
         for (int i = 0; i < 7; i++) {
             pillars.add(new Pillar(day[i], values[i]));
@@ -99,7 +99,7 @@ public class ChartFragment extends BaseFragment {
         long[] values = {0, 0, 0, 0, 0, 0, 0};
         List<Record> records = goal.getRecords();
         for (Record r : records) {
-            values[TimeUtil.dayForWeek(r.getStartTime())] = r.getTime()/1000/60;
+            values[TimeUtil.dayForWeek(r.getStartTime())] = r.getTime() / 1000 / 60;
         }
         for (int i = 0; i < 7; i++) {
             pillars.add(new Pillar(day[i], values[i]));

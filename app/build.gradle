@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'org.greenrobot.greendao' // apply plugin
 
 android {
     compileSdkVersion 26
@@ -19,6 +20,12 @@ android {
     }
     packagingOptions {
         exclude 'META-INF/LICENSE'
+    }
+    /*针对greenDao的一些配置*/
+    greendao {
+        schemaVersion 5//数据库版本号
+        daoPackage 'wang.relish.accumulation.greendao' //自动生成的工具类的包名
+        targetGenDir 'src/main/java' //路径
     }
 }
 repositories {
@@ -53,4 +60,6 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
     //圆形图片
     compile 'de.hdodenhof:circleimageview:2.1.0'
+    // db
+    compile 'org.greenrobot:greendao:3.2.2' // add library
 }

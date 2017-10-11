@@ -11,7 +11,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.DocumentsContract;
@@ -44,9 +43,13 @@ import java.util.Random;
 import wang.relish.accumulation.App;
 import wang.relish.accumulation.R;
 import wang.relish.accumulation.base.BaseActivity;
+import wang.relish.accumulation.entity.Goal;
 import wang.relish.accumulation.entity.User;
+import wang.relish.accumulation.greendao.DaoSession;
+import wang.relish.accumulation.greendao.UserDao;
 import wang.relish.accumulation.util.PhoneUtils;
 import wang.relish.accumulation.util.SPUtil;
+import wang.relish.accumulation.util.TimeUtil;
 
 
 public class RegisterActivity extends BaseActivity implements View.OnClickListener {
@@ -361,47 +364,82 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                     showMessage("两次密码输入不一致");
                     return false;
                 }
-                User user = new User();
+                final User user = new User();
                 user.setName(name);
                 user.setPhoto(photo);
                 user.setMobile(mobile);
                 user.setPassword(pwd);
-                new RegisterTask().execute(user);
+
+                register(user, new Callback() {
+                    @Override
+                    public void success(User u) {
+                        if (u == null) {
+                            showMessage("注册失败，请重试");
+                            return;
+                        }
+                        SPUtil.putString("mobile", user.getMobile());
+                        new AlertDialog.Builder(RegisterActivity.this)
+                                .setTitle("注册成功")
+                                .setMessage("恭喜用户【" + user.getName() + "】注册成功！")
+                                .setPositiveButton("回到登录页", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        App.USER = user;
+                                        setResult(RESULT_OK);
+                                        finish();
+                                    }
+                                }).create().show();
+                    }
+
+                    @Override
+                    public void error() {
+                        showMessage("注册失败，请重试");
+                    }
+                });
                 break;
             default:
         }
         return true;
     }
 
+    private static void register(final User user, final Callback callback) {
+        final DaoSession daosession = App.getDaosession();
+        daosession.runInTx(new Runnable() {
+            @Override
+            public void run() {
+                UserDao userDao = daosession.getUserDao();
+                long insert = userDao.insert(user);
+                if (insert > 0) {
+                    long timestamp = System.currentTimeMillis();
+                    String time = TimeUtil.longToDateTime(timestamp);
 
-    private class RegisterTask extends AsyncTask<User, Void, User> {
-
-        @Override
-        protected User doInBackground(User... params) {
-            params[0].save();
-            return User.findByMobile(params[0].getMobile());
-        }
-
-        @Override
-        protected void onPostExecute(final User user) {
-            super.onPostExecute(user);
-            if (user != null) {
-                SPUtil.putString("mobile", user.getMobile());
-                new AlertDialog.Builder(RegisterActivity.this)
-                        .setTitle("注册成功")
-                        .setMessage("恭喜用户【" + user.getName() + "】注册成功！")
-                        .setPositiveButton("回到登录页", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                App.USER = user;
-                                setResult(RESULT_OK);
-                                finish();
-                            }
-                        }).create().show();
-            } else {
-                showMessage("注册失败，请重试");
+                    Goal goal = new Goal();
+                    goal.setId(0L);
+                    goal.setMobile(user.getMobile());
+                    goal.setName("未分类");
+                    goal.setUpdateTime(time);
+                    goal.setTime(time);
+                    long saveGoal = daosession.getGoalDao().insert(goal);
+                    if (saveGoal <= 0) {
+                        callback.error();
+                    } else {
+                        User u = userDao.queryBuilder()
+                                .where(UserDao.Properties.Mobile.eq(user.getMobile()))
+                                .unique();
+                        callback.success(u);
+                    }
+                } else {
+                    callback.error();
+                }
             }
-        }
+        });
+    }
+
+    interface Callback {
+
+        void success(User u);
+
+        void error();
     }
 
     /**

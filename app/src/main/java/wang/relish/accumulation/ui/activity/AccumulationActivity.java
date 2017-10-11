@@ -1,5 +1,6 @@
 package wang.relish.accumulation.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import java.util.List;
 import java.util.Locale;
 
+import wang.relish.accumulation.App;
 import wang.relish.accumulation.R;
 import wang.relish.accumulation.adapter.GoalsAdapter;
 import wang.relish.accumulation.base.BaseActivity;
@@ -137,16 +139,18 @@ public class AccumulationActivity extends BaseActivity implements View.OnClickLi
     }
 
     private Record generateTempRecord() {
+
+
         long currentTime = System.currentTimeMillis();
         long hardTime = currentTime - startTime;
-        long untitled = Record.findMaxIdWhereGoalIdIs(0) + 1;
+        long untitledNumber = Record.getUntitledRecordsNumber() + 1;
         String start = TimeUtil.longToDateTime(startTime);
         Record record = new Record();
-        record.setGoalId(0);
-        record.setId(untitled);
+        record.setGoalId(App.UNTITLED_GOAL_ID);//表示未分类的目标的id
+
         record.setCreateTime(start);
         record.setStartTime(start);
-        record.setName("未命名_" + untitled);
+        record.setName("未命名_" + untitledNumber);
         record.setStar(1);
         record.setUpdateTime(start);
         record.setTime(hardTime);
@@ -188,17 +192,17 @@ public class AccumulationActivity extends BaseActivity implements View.OnClickLi
 
             @Override
             protected Long doInBackground(Void... params) {
-                return record.save();
+                return App.getDaosession().getRecordDao().insert(record);
             }
 
             @Override
             protected void onPostExecute(Long aLong) {
                 super.onPostExecute(aLong);
-                if (aLong > 0) {
-                    showMessage("此积累已保存至未分类中");
-                    finish();
-                } else {
+                if (aLong == null || aLong <= 0) {
                     showMessage("保存失败！");
+                } else {
+                    showMessage("此积累已保存至未分类中。");
+                    finish();
                 }
             }
         }.execute();
@@ -210,6 +214,7 @@ public class AccumulationActivity extends BaseActivity implements View.OnClickLi
      * @param record 记录
      */
     private void onSaveClick(final Record record) {
+        @SuppressLint("InflateParams")
         View view = LayoutInflater.from(this).inflate(R.layout.dialog_add_record, null);
         final EditText et_name = (EditText) view.findViewById(R.id.et_record_name);
         final AppCompatRatingBar ratingBar = (AppCompatRatingBar) view.findViewById(R.id.rating_bar);
@@ -232,7 +237,7 @@ public class AccumulationActivity extends BaseActivity implements View.OnClickLi
                         String name = et_name.getText().toString().trim();
                         String note = et_info.getText().toString().trim();
                         float star = ratingBar.getRating();
-                        record.setName(name);
+                        if (!TextUtils.isEmpty(name)) record.setName(name);
                         record.setStar((int) star);
                         record.setNote(note);
                         onSaveIntoGoalClick(record);
@@ -244,26 +249,10 @@ public class AccumulationActivity extends BaseActivity implements View.OnClickLi
                         String name = et_name.getText().toString().trim();
                         String note = et_info.getText().toString().trim();
                         float star = ratingBar.getRating();
-                        record.setName(name);
+                        if (!TextUtils.isEmpty(name)) record.setName(name);
                         record.setStar((int) star);
                         record.setNote(note);
-                        new AsyncTask<Void, Void, Long>() {
-
-                            @Override
-                            protected Long doInBackground(Void... params) {
-                                return record.save();
-                            }
-
-                            @Override
-                            protected void onPostExecute(Long aLong) {
-                                super.onPostExecute(aLong);
-                                if (aLong > 0) {
-                                    finish();
-                                } else {
-                                    showMessage("保存失败！");
-                                }
-                            }
-                        }.execute();
+                        onCancelClick(record);//直接保存
                     }
                 })
                 .create()
@@ -276,14 +265,14 @@ public class AccumulationActivity extends BaseActivity implements View.OnClickLi
      *
      * @param record 记录
      */
-    private void onSaveIntoGoalClick(final Record record) {
-        List<Goal> goal = Goal.findAll();
-        if (goal == null || goal.size() == 0) {
+    private void
+    onSaveIntoGoalClick(final Record record) {
+        final List<Goal> goals = App.findAllGoalsWithoutUntitled();
+        if (goals == null || goals.size() == 0) {
             showMessage("暂无目标可存");
             return;
         }
         View view = LayoutInflater.from(this).inflate(R.layout.dialog_goals, null);
-        final List<Goal> goals = Goal.findAll();
         ListView lv_goals = (ListView) view.findViewById(R.id.lv_goals);
         GoalsAdapter adapter = new GoalsAdapter(goals);
         lv_goals.setAdapter(adapter);
@@ -294,22 +283,27 @@ public class AccumulationActivity extends BaseActivity implements View.OnClickLi
         lv_goals.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                final Goal goal = goals.get(position);
+                if (goal == null) {
+                    showMessage("保存失败！");
+                    return;
+                }
                 new AsyncTask<Void, Void, Long>() {
 
                     @Override
                     protected Long doInBackground(Void... params) {
-                        record.setGoalId(goals.get(position).getId());
-                        record.setId(Record.findMaxId() + 1);
-                        return record.save();
+                        record.setGoalId(goal.getId());
+                        return App.getDaosession().getRecordDao().insert(record);
                     }
 
                     @Override
                     protected void onPostExecute(Long aLong) {
                         super.onPostExecute(aLong);
-                        if (aLong > 0) {
-                            finish();
-                        } else {
+                        if (aLong == null || aLong <= 0) {
                             showMessage("保存失败！");
+                        } else {
+                            showMessage("此积累已保存至【" + goal.getName() + "】中。");
+                            finish();
                         }
                     }
                 }.execute();

@@ -8,13 +8,13 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import wang.relish.accumulation.R;
 import wang.relish.accumulation.base.BaseFragment;
 import wang.relish.accumulation.entity.Record;
 import wang.relish.accumulation.ui.activity.RecordActivity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * <pre>

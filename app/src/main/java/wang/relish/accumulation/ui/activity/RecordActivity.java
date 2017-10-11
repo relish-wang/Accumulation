@@ -1,5 +1,6 @@
 package wang.relish.accumulation.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -28,11 +29,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import wang.relish.accumulation.App;
 import wang.relish.accumulation.R;
 import wang.relish.accumulation.adapter.GoalsAdapter;
 import wang.relish.accumulation.base.BaseActivity;
 import wang.relish.accumulation.entity.Goal;
 import wang.relish.accumulation.entity.Record;
+import wang.relish.accumulation.greendao.DaoSession;
+import wang.relish.accumulation.greendao.RecordDao;
 import wang.relish.accumulation.util.TimeUtil;
 
 /**
@@ -75,8 +79,8 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
 
     @Override
     protected void initToolbar(Bundle savedInstanceState, Toolbar mToolbar) {
-        Goal goal = mRecord.getParent();
-        isTitled = goal == null;
+        Goal goal = App.getParent(mRecord);
+        isTitled = goal == null || goal.getId() == App.UNTITLED_GOAL_ID;
         String goalName = isTitled ? "未分类" : goal.getName();
         mToolbar.setTitle(goalName);
         mToolbar.setSubtitle(mRecord.getName());
@@ -127,21 +131,18 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
                     et_info.setEnabled(false);
                     String text = et_info.getText().toString().trim();
                     mRecord.setNote(text);
-                    new AsyncTask<Void, Void, Long>() {
+                    new AsyncTask<Void, Void, Void>() {
 
                         @Override
-                        protected Long doInBackground(Void... params) {
-                            return mRecord.save();
+                        protected Void doInBackground(Void... params) {
+                            App.getDaosession().getRecordDao().save(mRecord);
+                            return null;
                         }
 
                         @Override
-                        protected void onPostExecute(Long aLong) {
-                            super.onPostExecute(aLong);
-                            if (aLong > 0) {
-                                isEditing = false;
-                            } else {
-                                showMessage("修改失败");
-                            }
+                        protected void onPostExecute(Void aVoid) {
+                            super.onPostExecute(aVoid);
+                            isEditing = false;
                         }
                     }.execute();
                 } else {
@@ -163,21 +164,18 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
                             public void onSelected(String datetime) {
                                 mRecord.setStartTime(datetime);
                                 mRecord.setUpdateTime(TimeUtil.longToDateTime(System.currentTimeMillis()));
-                                new AsyncTask<Void, Void, Long>() {
+                                new AsyncTask<Void, Void, Void>() {
 
                                     @Override
-                                    protected Long doInBackground(Void... params) {
-                                        return mRecord.save();
+                                    protected Void doInBackground(Void... params) {
+                                        App.getDaosession().getRecordDao().update(mRecord);
+                                        return null;
                                     }
 
                                     @Override
-                                    protected void onPostExecute(Long aLong) {
-                                        super.onPostExecute(aLong);
-                                        if (aLong > 0) {
-                                            updateTimeTime();
-                                        } else {
-                                            showMessage("修改失败");
-                                        }
+                                    protected void onPostExecute(Void aVoid) {
+                                        super.onPostExecute(aVoid);
+                                        updateTimeTime();
                                     }
                                 }.execute();
                             }
@@ -194,21 +192,18 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
                     @Override
                     public void onSelected(String datetime) {
                         mRecord.setEndTime(datetime);
-                        new AsyncTask<Void, Void, Long>() {
+                        new AsyncTask<Void, Void, Void>() {
 
                             @Override
-                            protected Long doInBackground(Void... params) {
-                                return mRecord.save();
+                            protected Void doInBackground(Void... params) {
+                                App.getDaosession().getRecordDao().update(mRecord);
+                                return null;
                             }
 
                             @Override
-                            protected void onPostExecute(Long aLong) {
-                                super.onPostExecute(aLong);
-                                if (aLong > 0) {
-                                    updateTimeTime();
-                                } else {
-                                    showMessage("修改失败");
-                                }
+                            protected void onPostExecute(Void aVoid) {
+                                super.onPostExecute(aVoid);
+                                updateTimeTime();
                             }
                         }.execute();
                     }
@@ -265,21 +260,18 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
                     public void onClick(DialogInterface dialog, int which) {
                         float star = ratingBar.getRating();
                         mRecord.setStar((int) star);
-                        new AsyncTask<Void, Void, Long>() {
+                        new AsyncTask<Void, Void, Void>() {
 
                             @Override
-                            protected Long doInBackground(Void... params) {
-                                return mRecord.save();
+                            protected Void doInBackground(Void... params) {
+                                App.getDaosession().getRecordDao().save(mRecord);
+                                return null;
                             }
 
                             @Override
-                            protected void onPostExecute(Long aLong) {
-                                super.onPostExecute(aLong);
-                                if (aLong > 0) {
-                                    rating_bar.setRating(mRecord.getStar());
-                                } else {
-                                    showMessage("修改失败");
-                                }
+                            protected void onPostExecute(Void aVoid) {
+                                super.onPostExecute(aVoid);
+                                rating_bar.setRating(mRecord.getStar());
                             }
                         }.execute();
                     }
@@ -322,13 +314,12 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
      * @param record 记录
      */
     private void onSaveIntoGoalClick(final Record record) {
-        List<Goal> goal = Goal.findAll();
-        if (goal == null || goal.size() == 0) {
+        final List<Goal> goals = App.findAllGoalsWithoutUntitled();
+        if (goals == null || goals.size() == 0) {
             showMessage("暂无目标可存");
             return;
         }
-        View view = LayoutInflater.from(this).inflate(R.layout.dialog_goals, null);
-        final List<Goal> goals = Goal.findAll();
+        @SuppressLint("InflateParams") View view = LayoutInflater.from(this).inflate(R.layout.dialog_goals, null);
         ListView lv_goals = (ListView) view.findViewById(R.id.lv_goals);
         GoalsAdapter adapter = new GoalsAdapter(goals);
         lv_goals.setAdapter(adapter);
@@ -339,27 +330,31 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
         lv_goals.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view1, final int position, long id) {
-                new AsyncTask<Void, Void, Long>() {
+                new AsyncTask<Void, Void, Void>() {
 
                     @Override
-                    protected Long doInBackground(Void... params) {
-                        long oldId = record.getId();
+                    protected Void doInBackground(Void... params) {
+                        final long oldId = record.getId();
                         record.setGoalId(goals.get(position).getId());
-                        record.setId(Record.findMaxId() + 1);
                         record.setUpdateTime(TimeUtil.getNowTime());
-                        return record.save() + Record.remove(oldId);
+                        final DaoSession daosession = App.getDaosession();
+                        daosession.runInTx(new Runnable() {
+                            @Override
+                            public void run() {
+                                RecordDao recordDao = daosession.getRecordDao();
+                                recordDao.save(record);
+                                recordDao.deleteByKey(oldId);//根据主键删除
+                            }
+                        });
+                        return null;
                     }
 
                     @Override
-                    protected void onPostExecute(Long aLong) {
-                        super.onPostExecute(aLong);
-                        if (aLong > 1) {
-                            Goal goal = Goal.findById(mRecord.getGoalId());
-                            mToolbar.setTitle(goal.getName());
-                            dialog.dismiss();
-                        } else {
-                            showMessage("保存失败！");
-                        }
+                    protected void onPostExecute(Void aVoid) {
+                        super.onPostExecute(aVoid);
+                        Goal goal = App.getParent(record);
+                        mToolbar.setTitle(goal.getName());
+                        dialog.dismiss();
                     }
                 }.execute();
             }
