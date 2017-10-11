@@ -252,7 +252,7 @@ public class AccumulationActivity extends BaseActivity implements View.OnClickLi
      */
     private void
     onSaveIntoGoalClick(final Record record) {
-        final List<Goal> goals = App.findAllGoals();
+        final List<Goal> goals = App.findAllGoalsWithoutUntitled();
         if (goals == null || goals.size() == 0) {
             showMessage("暂无目标可存");
             return;

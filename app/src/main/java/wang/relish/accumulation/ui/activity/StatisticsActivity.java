@@ -43,7 +43,7 @@ public class StatisticsActivity extends BaseActivity implements ViewPager.OnPage
         tv_no_data = (TextView) findViewById(R.id.tv_no_data);
         vp = (ViewPager) findViewById(R.id.vp);
         mFragments = new ArrayList<>();
-        mGoals = App.findAllGoals();
+        mGoals = App.findAllGoalsWithoutUntitled();
         for (Goal goal : mGoals) {
             mFragments.add(ChartFragment.getInstance(goal));
         }

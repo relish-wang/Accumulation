@@ -156,7 +156,7 @@ public class App extends Application {
                 .unique();
     }
 
-    public static List<Goal> findAllGoals() {
-        return sDaoSession.getGoalDao().loadAll();
+    public static List<Goal> findAllGoalsWithoutUntitled() {
+        return sDaoSession.getGoalDao().queryBuilder().where(GoalDao.Properties.Id.gt(0)).list();
     }
 }

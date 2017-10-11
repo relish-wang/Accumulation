@@ -306,7 +306,7 @@ public class GoalFragment extends BaseFragment implements ExpandableListView.OnC
     }
 
     public void update() {
-        mGoals = App.findAllGoals();
+        mGoals = App.findAllGoalsWithoutUntitled();
         mAdapter.notifyDataSetChanged();
         checkDataShowOrHide();
     }

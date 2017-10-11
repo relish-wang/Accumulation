@@ -314,7 +314,7 @@ public class RecordActivity extends BaseActivity implements View.OnClickListener
      * @param record 记录
      */
     private void onSaveIntoGoalClick(final Record record) {
-        final List<Goal> goals = App.findAllGoals();
+        final List<Goal> goals = App.findAllGoalsWithoutUntitled();
         if (goals == null || goals.size() == 0) {
             showMessage("暂无目标可存");
             return;
