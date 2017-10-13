@@ -419,7 +419,13 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                     goal.setName("未分类");
                     goal.setUpdateTime(time);
                     goal.setTime(time);
-                    long saveGoal = daosession.getGoalDao().insert(goal);
+                    long saveGoal = 0;
+                    try {
+                        saveGoal = daosession.getGoalDao().insert(goal);
+                    } catch (Exception e) {
+                        callback.error();
+                        return;
+                    }
                     if (saveGoal <= 0) {
                         callback.error();
                     } else {
