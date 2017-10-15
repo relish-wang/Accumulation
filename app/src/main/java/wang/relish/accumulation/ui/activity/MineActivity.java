@@ -1,12 +1,17 @@
 package wang.relish.accumulation.ui.activity;
 
+import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -15,12 +20,14 @@ import wang.relish.accumulation.R;
 import wang.relish.accumulation.base.BaseActivity;
 import wang.relish.accumulation.entity.User;
 import wang.relish.accumulation.util.SPUtil;
+import wang.relish.accumulation.util.ThreadPool;
 
 /**
  * 个人中心
  * Created by Relish on 2016/11/13.
  */
 public class MineActivity extends BaseActivity implements View.OnClickListener {
+    public static final int REQUEST_CODE = 0x1001;
     @Override
     protected int layoutId() {
         return R.layout.activity_mine;
@@ -37,6 +44,7 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
     private TextView tvName;
     private TextView tvMobile;
     private TextView tvEmail;
+    private boolean isModified = false;
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
@@ -61,10 +69,24 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rl_head:
-
+                //TODO 修改头像
                 break;
             case R.id.rl_name:
-
+                @SuppressLint("InflateParams") View v = getLayoutInflater().inflate(
+                        R.layout.dialog_modify_profile, null);
+                final EditText etRecordName = v.findViewById(R.id.et_profile);
+                etRecordName.setHint(R.string.name);
+                new AlertDialog.Builder(getActivity())
+                        .setView(v)
+                        .setTitle(R.string.modify_name)
+                        .setNegativeButton(R.string.cancel, null)
+                        .setPositiveButton(R.string.ensure, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface d, int i) {
+                                String newName = etRecordName.getText().toString().trim();
+                                modifyName(newName);
+                            }
+                        }).create().show();
                 break;
             case R.id.rl_mobile:
 
@@ -82,9 +104,47 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    private void modifyName(final String newName) {
+        ThreadPool.DATABASE.execute(new Runnable() {
+            @Override
+            public void run() {
+                boolean isSuccess = false;
+                try {
+                    User user = mUser;
+                    user.setName(newName);
+                    App.getDaosession().getUserDao().updateInTx(user);
+                    mUser.setName(newName);
+                    SPUtil.saveUser(mUser);
+                    isSuccess = true;
+                    isModified = true;
+                } catch (Exception ignore) {
+                } finally {
+                    final boolean finalIsSuccess = isSuccess;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (finalIsSuccess) {
+                                tvName.setText(newName);
+                            } else {
+                                Toast.makeText(MineActivity.this, "名字修改失败",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+
     private String checkNull(String txt) {
         if (TextUtils.isEmpty(txt) || txt.equalsIgnoreCase("null"))
             return getString(R.string.unsetting);
         return txt;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isModified) setResult(RESULT_OK);
+        super.onBackPressed();
     }
 }
