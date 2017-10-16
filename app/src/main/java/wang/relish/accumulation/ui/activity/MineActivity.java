@@ -69,13 +69,15 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rl_head:
-                //TODO 修改头像
+                ImageActivity.open(this, mUser.getPhoto(), ImageActivity.REQUEST_CODE);
                 break;
-            case R.id.rl_name:
+            case R.id.rl_name: {
                 @SuppressLint("InflateParams") View v = getLayoutInflater().inflate(
                         R.layout.dialog_modify_profile, null);
-                final EditText etRecordName = v.findViewById(R.id.et_profile);
-                etRecordName.setHint(R.string.name);
+                final EditText etName = v.findViewById(R.id.et_profile);
+                String mUserName = mUser.getName();
+                String name = TextUtils.isEmpty(mUserName) ? "手机号" : mUserName;
+                etName.setHint(name);
                 new AlertDialog.Builder(getActivity())
                         .setView(v)
                         .setTitle(R.string.modify_name)
@@ -83,16 +85,18 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
                         .setPositiveButton(R.string.ensure, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d, int i) {
-                                String newName = etRecordName.getText().toString().trim();
+                                String newName = etName.getText().toString().trim();
                                 modifyName(newName);
                             }
                         }).create().show();
+            }
                 break;
-            case R.id.rl_mobile:
-
+            case R.id.rl_mobile: {
+                // TODO 需要短信验证
                 break;
+            }
             case R.id.rl_email:
-
+                //TODO 绑定邮箱
                 break;
             case R.id.btn_logout:
                 App.exitApp();
@@ -146,5 +150,23 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
     public void onBackPressed() {
         if (isModified) setResult(RESULT_OK);
         super.onBackPressed();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case ImageActivity.REQUEST_CODE:
+                if (resultCode == RESULT_OK) {
+                    String photo = data.getStringExtra("photo");
+                    mUser.setPhoto(photo);
+                    Glide.with(this)
+                            .load(mUser.getPhoto())
+                            .centerCrop()
+                            .placeholder(R.mipmap.icon)
+                            .crossFade()
+                            .into(ivHead);
+                }
+        }
     }
 }

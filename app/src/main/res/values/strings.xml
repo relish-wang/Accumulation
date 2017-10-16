@@ -64,6 +64,8 @@
     <string name="start_accumulation">积累</string>
     <string name="disabled_message">快捷方式已失效,可手动移除</string>
     <string name="modify_name">修改名字</string>
+    <string name="modify_mobile">修改手机号</string>
+    <string name="modify_head">更改头像</string>
 
     <array name="goal_long_click">
         <item>添加记录</item>
