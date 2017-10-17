@@ -66,6 +66,8 @@
     <string name="modify_name">修改名字</string>
     <string name="modify_mobile">修改手机号</string>
     <string name="modify_head">更改头像</string>
+    <string name="camera">相机</string>
+    <string name="album">相册</string>
 
     <array name="goal_long_click">
         <item>添加记录</item>

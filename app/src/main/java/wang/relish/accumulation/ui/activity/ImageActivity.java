@@ -3,10 +3,15 @@ package wang.relish.accumulation.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.PopupWindow;
 
 import com.bumptech.glide.Glide;
 
@@ -65,8 +70,40 @@ public class ImageActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_modify_head:
-                //打开相机
-                Toast.makeText(this, "打开相机", Toast.LENGTH_SHORT).show();
+                Window window = getWindow();
+                if (window == null) return false;
+                View decorView = window.getDecorView();
+                if (decorView == null) return false;
+
+                View popupView = LayoutInflater.from(this).inflate(R.layout.popup_photo, null);
+                final PopupWindow mPopupWindow = new PopupWindow(popupView,
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                View.OnClickListener listener = new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        switch (view.getId()) {
+                            case R.id.v_camera:
+                                //// TODO: 2017/10/17 拍照
+                                break;
+                            case R.id.v_album:
+                                //// TODO: 2017/10/17 相册
+                                break;
+                            case R.id.v_cancel:
+                                mPopupWindow.dismiss();
+                                break;
+                        }
+                    }
+                };
+                popupView.findViewById(R.id.v_camera).setOnClickListener(listener);
+                popupView.findViewById(R.id.v_album).setOnClickListener(listener);
+                popupView.findViewById(R.id.v_cancel).setOnClickListener(listener);
+
+                mPopupWindow.setTouchable(true);
+                mPopupWindow.setOutsideTouchable(true);
+                mPopupWindow.setAnimationStyle(R.style.PopupAnimation);
+                mPopupWindow.showAtLocation(decorView, Gravity.BOTTOM, 0, 0);
                 return true;
             default:
         }
