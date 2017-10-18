@@ -76,7 +76,7 @@ public class ImageActivity extends BaseActivity {
                 if (decorView == null) return false;
 
                 View popupView = LayoutInflater.from(this).inflate(R.layout.popup_photo, null);
-                final PopupWindow mPopupWindow = new PopupWindow(popupView,
+                final PopupWindow popupWindow = new PopupWindow(popupView,
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT, true);
                 View.OnClickListener listener = new View.OnClickListener() {
@@ -91,7 +91,7 @@ public class ImageActivity extends BaseActivity {
                                 //// TODO: 2017/10/17 相册
                                 break;
                             case R.id.v_cancel:
-                                mPopupWindow.dismiss();
+                                popupWindow.dismiss();
                                 break;
                         }
                     }
@@ -100,10 +100,10 @@ public class ImageActivity extends BaseActivity {
                 popupView.findViewById(R.id.v_album).setOnClickListener(listener);
                 popupView.findViewById(R.id.v_cancel).setOnClickListener(listener);
 
-                mPopupWindow.setTouchable(true);
-                mPopupWindow.setOutsideTouchable(true);
-                mPopupWindow.setAnimationStyle(R.style.PopupAnimation);
-                mPopupWindow.showAtLocation(decorView, Gravity.BOTTOM, 0, 0);
+                popupWindow.setTouchable(true);
+                popupWindow.setOutsideTouchable(true);
+                popupWindow.setAnimationStyle(R.style.PopupAnimation);
+                popupWindow.showAtLocation(decorView, Gravity.BOTTOM, 0, 0);
                 return true;
             default:
         }
