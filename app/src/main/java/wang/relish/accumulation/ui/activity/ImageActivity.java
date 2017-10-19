@@ -1,7 +1,12 @@
 package wang.relish.accumulation.ui.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -12,6 +17,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -25,6 +31,8 @@ import wang.relish.accumulation.base.BaseActivity;
 public class ImageActivity extends BaseActivity {
 
     public static final int REQUEST_CODE = 0x1002;
+    private static final int REQUEST_CAMERA_CODE = 0x101;
+    private static final int REQUEST_ALBUM_CODE = 0x102;
 
     public static void open(BaseActivity activity, String uri, int requestCode) {
         Intent intent = new Intent(activity, ImageActivity.class);
@@ -86,6 +94,11 @@ public class ImageActivity extends BaseActivity {
                         switch (view.getId()) {
                             case R.id.v_camera:
                                 //// TODO: 2017/10/17 拍照
+                                if (ContextCompat.checkSelfPermission(ImageActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                                    ActivityCompat.requestPermissions(ImageActivity.this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_CODE);
+                                } else {
+                                    takePhoto();
+                                }
                                 break;
                             case R.id.v_album:
                                 //// TODO: 2017/10/17 相册
@@ -114,5 +127,30 @@ public class ImageActivity extends BaseActivity {
     public void onBackPressed() {
         if (isModified) setResult(RESULT_OK);
         super.onBackPressed();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            switch (requestCode) {
+                case REQUEST_CAMERA_CODE:
+                    takePhoto();
+                    break;
+                case REQUEST_ALBUM_CODE:
+                    openAlbum();
+                    break;
+            }
+        } else {
+            showMessage(R.string.permission_denied_message);
+        }
+    }
+
+    private void openAlbum() {
+
+    }
+
+    private void takePhoto() {
+        Toast.makeText(this, "takephoto", Toast.LENGTH_SHORT).show();
     }
 }
