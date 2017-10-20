@@ -158,8 +158,7 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
         switch (requestCode) {
             case ImageActivity.REQUEST_CODE:
                 if (resultCode == RESULT_OK) {
-                    String photo = data.getStringExtra("photo");
-                    mUser.setPhoto(photo);
+                    mUser = App.USER;
                     Glide.with(this)
                             .load(mUser.getPhoto())
                             .centerCrop()
