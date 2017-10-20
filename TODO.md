@@ -1,5 +1,6 @@
 - 准备搭建后台（Linux(CentOS)+MySql+Node）,Node还没学任重道远。接下来可能先学RN顺带学习Node，为搭建后台做准备
-- ~~未分类记录(untitled records)~~017.10.11
+- 完善个人中心的设置功能
+- ~~未分类记录(untitled records)~~2017.10.11
     - 未分类记录详情页显示【手动分类按钮】
     - 未分类目标（untitled goal）不显示在主页
     - 归类时不显示"未分类目标"

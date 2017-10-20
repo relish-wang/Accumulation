@@ -1,19 +1,23 @@
 package wang.relish.accumulation.ui.activity;
 
 import android.Manifest;
+import android.content.ContentUris;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -33,6 +37,7 @@ import java.io.IOException;
 import wang.relish.accumulation.App;
 import wang.relish.accumulation.R;
 import wang.relish.accumulation.base.BaseActivity;
+import wang.relish.accumulation.util.SPUtil;
 import wang.relish.accumulation.util.ThreadPool;
 
 /**
@@ -54,14 +59,13 @@ public class ImageActivity extends BaseActivity {
         activity.startActivityForResult(intent, requestCode);
     }
 
-    private String mUri;
     private String photo;
     private ImageView iv;
     private boolean isModified = false;
 
     @Override
     protected void parseIntent(Intent intent) {
-        mUri = intent.getStringExtra("uri");
+        photo = intent.getStringExtra("uri");
     }
 
     @Override
@@ -79,7 +83,7 @@ public class ImageActivity extends BaseActivity {
     protected void initViews(Bundle savedInstanceState) {
         iv = (ImageView) findViewById(R.id.iv);
         Glide.with(this)
-                .load(mUri)
+                .load(photo)
                 .into(iv);
     }
 
@@ -115,7 +119,11 @@ public class ImageActivity extends BaseActivity {
                                 }
                                 break;
                             case R.id.v_album:
-                                //// TODO: 2017/10/17 相册
+                                if (ContextCompat.checkSelfPermission(ImageActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                    ActivityCompat.requestPermissions(ImageActivity.this, new String[]{Manifest.permission.CAMERA}, REQUEST_ALBUM_CODE);
+                                } else {
+                                    openAlbum();
+                                }
                                 break;
                             case R.id.v_cancel:
                                 break;
@@ -161,7 +169,9 @@ public class ImageActivity extends BaseActivity {
     }
 
     private void openAlbum() {
-
+        Intent intent = new Intent("android.intent.action.GET_CONTENT");
+        intent.setType("image/*");
+        startActivityForResult(intent, CHOOSE_PHOTO);
     }
 
     private void takePhoto() {
@@ -209,16 +219,9 @@ public class ImageActivity extends BaseActivity {
                             public void run() {
                                 iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
                                 iv.setImageBitmap(bitmap);
-                                isModified = true;
                             }
                         });
-                        ThreadPool.DATABASE.execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                App.USER.setPhoto(photo);
-                                App.getDaosession().getUserDao().updateInTx(App.USER);
-                            }
-                        });
+                        savePhoto();
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                         showMessage("储存空间不足！无法拍照！");
@@ -226,8 +229,81 @@ public class ImageActivity extends BaseActivity {
                 }
                 break;
             case CHOOSE_PHOTO:
-
+                if (resultCode == RESULT_OK) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        String imagePath = null;
+                        Uri uri = data.getData();
+                        if (DocumentsContract.isDocumentUri(this, uri)) {
+                            //如果是Document类型的uri，则通过document id处理
+                            String docId = DocumentsContract.getDocumentId(uri);
+                            if (TextUtils.equals("com.android.providers.media.documents",
+                                    uri.getAuthority())) {
+                                String id = docId.split(":")[1];//解析出数字格式的id
+                                String selection = MediaStore.Images.Media._ID + "=" + id;
+                                imagePath = getImagePath(
+                                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, selection);
+                            } else if (TextUtils.equals("com.android.providers.downloads.documents",
+                                    uri.getAuthority())) {
+                                Uri contentUri = ContentUris.withAppendedId(
+                                        Uri.parse("content://downloads/public_downloads"),
+                                        Long.valueOf(docId));
+                                imagePath = getImagePath(contentUri, null);
+                            }
+                        } else if ("content".equalsIgnoreCase(uri.getScheme())) {
+                            //如果是content类型的Uri，则使用普通方法处理
+                            imagePath = getImagePath(uri, null);
+                        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
+                            //如果是file类型的Uri，直接获取图片路径即可
+                            imagePath = uri.getPath();
+                        }
+                        photo = imagePath;
+                        savePhoto();
+                        initViews(null);//displayImage
+                    } else {
+                        Uri uri = data.getData();
+                        String imagePath = getImagePath(uri, null);
+                        photo = imagePath;
+                        initViews(null);//displayImage
+                        savePhoto();
+                    }
+                }
                 break;
         }
+    }
+
+    /**
+     * 通过Uri和selection来获取真实的图片路径
+     *
+     * @param uri       uri
+     * @param selection selection
+     * @return 真实图片路径
+     */
+    private String getImagePath(Uri uri, String selection) {
+        String path = null;
+        Cursor cursor = getContentResolver().query(uri, null, selection, null, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+            cursor.close();
+        }
+        return path;
+    }
+
+    public void savePhoto() {
+        showLoading(true);
+        isModified = true;
+        ThreadPool.DATABASE.execute(new Runnable() {
+            @Override
+            public void run() {
+                App.USER.setPhoto(photo);
+                SPUtil.saveUser(App.USER);
+                App.getDaosession().getUserDao().updateInTx(App.USER);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showLoading(false);
+                    }
+                });
+            }
+        });
     }
 }

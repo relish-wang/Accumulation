@@ -165,6 +165,7 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
                             .placeholder(R.mipmap.icon)
                             .crossFade()
                             .into(ivHead);
+                    isModified = true;
                 }
         }
     }
