@@ -37,6 +37,7 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
     private TextView tvName;
     private TextView tvMobile;
     private TextView tvEmail;
+    private View vSetting;
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
@@ -46,6 +47,7 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
         tvName = (TextView) findViewById(R.id.tv_name);
         tvMobile = (TextView) findViewById(R.id.tv_mobile);
         tvEmail = (TextView) findViewById(R.id.tv_email);
+        vSetting = findViewById(R.id.rl_setting);
 
         Glide.with(this)
                 .load(mUser.getPhoto())
@@ -55,6 +57,12 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
                 .into(ivHead);
         tvName.setText(checkNull(mUser.getName()));
         tvMobile.setText(checkNull(mUser.getMobile()));
+        vSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goActivity(SettingActivity.class);
+            }
+        });
     }
 
     @Override

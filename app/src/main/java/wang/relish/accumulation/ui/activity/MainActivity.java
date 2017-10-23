@@ -166,8 +166,6 @@ public class MainActivity extends BaseActivity implements
         } else if (id == R.id.nav_untitle) {
             openFragment(UNTITLED);
             toolbar.setTitle("未分类");
-        } else if (id == R.id.feedback) {
-            goActivity(SettingActivity.class);
         } else if (id == R.id.nav_about) {
             goActivity(AboutActivity.class);
         }
