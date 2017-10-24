@@ -402,12 +402,22 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         return super.onOptionsItemSelected(item);
     }
 
-    private static void register(final User user, final Callback callback) {
+    private void register(final User user, final Callback callback) {
         final DaoSession daosession = App.getDaosession();
         daosession.runInTx(new Runnable() {
             @Override
             public void run() {
                 UserDao userDao = daosession.getUserDao();
+                User user1 = userDao.queryBuilder().where(UserDao.Properties.Mobile.eq(user.getMobile())).unique();
+                if (user1 != null) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showMessage("该手机号已注册！");
+                        }
+                    });
+                    return;
+                }
                 long insert = userDao.insert(user);
                 if (insert > 0) {
                     long timestamp = System.currentTimeMillis();

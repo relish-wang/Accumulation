@@ -212,12 +212,11 @@ public class ImageActivity extends BaseActivity {
                 if (resultCode == RESULT_OK) {
                     //将拍摄的照片显示出来
                     try {
-                        photo = uri.getPath();
+                        photo = uri.toString();
                         final Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri));
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
                                 iv.setImageBitmap(bitmap);
                             }
                         });
