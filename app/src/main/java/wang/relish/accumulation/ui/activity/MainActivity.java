@@ -68,11 +68,16 @@ public class MainActivity extends BaseActivity implements
     private User mUser;
     private IOnExchangeDataListener mListener;
 
+
+    private ImageView ivHead;
+    private TextView tvName;
+    private TextView tvMobile;
+
     protected void initViews(Bundle savedInstanceState) {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mUser = SPUtil.getUser();
+
 //        mDatabase = new Firebase("https://fire-weather.firebaseio.com/condition");
 
 
@@ -96,11 +101,18 @@ public class MainActivity extends BaseActivity implements
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setClickable(true);
         View v = navigationView.getHeaderView(0);
-        ImageView ivHead = (ImageView) v.findViewById(R.id.ivHead);
-        TextView tvName = (TextView) v.findViewById(R.id.tvName);
-        TextView tvMobile = (TextView) v.findViewById(R.id.tvMobile);
+        ivHead = v.findViewById(R.id.ivHead);
+        tvName = v.findViewById(R.id.tvName);
+        tvMobile = v.findViewById(R.id.tvMobile);
+        setupProfile();
 
+        openFragment(GOAL);//默认打开【目标页】
+        toolbar.setTitle("目标");
+    }
+
+    private void setupProfile() {
         // 2016/11/13 设置个人信息
+        mUser = SPUtil.getUser();
         Glide.with(this)
                 .load(mUser.getPhoto())
                 .centerCrop()
@@ -113,9 +125,6 @@ public class MainActivity extends BaseActivity implements
         ivHead.setOnClickListener(this);
         tvName.setOnClickListener(this);
         tvMobile.setOnClickListener(this);
-
-        openFragment(GOAL);//默认打开【目标页】
-        toolbar.setTitle("目标");
     }
 
     @Override
@@ -212,7 +221,20 @@ public class MainActivity extends BaseActivity implements
             case R.id.ivHead:
             case R.id.tvName:
             case R.id.tvMobile:
-                goActivity(MineActivity.class);
+                Intent intent = new Intent(this, MineActivity.class);
+                startActivityForResult(intent, MineActivity.REQUEST_CODE);
+                break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case MineActivity.REQUEST_CODE:
+                if (resultCode == RESULT_OK) {
+                    setupProfile();
+                }
                 break;
         }
     }

@@ -237,12 +237,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 if (resultCode == RESULT_OK) {
                     //将拍摄的照片显示出来
                     try {
-                        photo = uri.getPath();
+                        photo = uri.toString();
                         final Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri));
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                iv_head.setScaleType(ImageView.ScaleType.CENTER_CROP);
                                 iv_head.setImageBitmap(bitmap);
                                 iv_camera.setVisibility(View.GONE);
                             }
@@ -392,8 +391,8 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                     }
 
                     @Override
-                    public void error() {
-                        showMessage("注册失败，请重试");
+                    public void error(String message) {
+                        showMessage(message);
                     }
                 });
                 break;
@@ -402,12 +401,22 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         return super.onOptionsItemSelected(item);
     }
 
-    private static void register(final User user, final Callback callback) {
+    private void register(final User user, final Callback callback) {
         final DaoSession daosession = App.getDaosession();
         daosession.runInTx(new Runnable() {
             @Override
             public void run() {
                 UserDao userDao = daosession.getUserDao();
+                User user1 = userDao.queryBuilder().where(UserDao.Properties.Mobile.eq(user.getMobile())).unique();
+                if (user1 != null) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showMessage("该手机号已注册！");
+                        }
+                    });
+                    return;
+                }
                 long insert = userDao.insert(user);
                 if (insert > 0) {
                     long timestamp = System.currentTimeMillis();
@@ -423,11 +432,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                     try {
                         saveGoal = daosession.getGoalDao().insert(goal);
                     } catch (Exception e) {
-                        callback.error();
+                        callback.error(e.getMessage());
                         return;
                     }
-                    if (saveGoal <= 0) {
-                        callback.error();
+                    if (saveGoal < 0) {
+                        callback.error("插入失败");
                     } else {
                         User u = userDao.queryBuilder()
                                 .where(UserDao.Properties.Mobile.eq(user.getMobile()))
@@ -435,7 +444,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                         callback.success(u);
                     }
                 } else {
-                    callback.error();
+                    callback.error("插入失败");
                 }
             }
         });
@@ -445,7 +454,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
         void success(User u);
 
-        void error();
+        void error(String message);
     }
 
     /**

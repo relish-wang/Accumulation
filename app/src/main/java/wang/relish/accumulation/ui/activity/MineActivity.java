@@ -69,16 +69,34 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rl_head:
-
+                ImageActivity.open(this, mUser.getPhoto(), ImageActivity.REQUEST_CODE);
                 break;
-            case R.id.rl_name:
-
+            case R.id.rl_name: {
+                @SuppressLint("InflateParams") View v = getLayoutInflater().inflate(
+                        R.layout.dialog_modify_profile, null);
+                final EditText etName = v.findViewById(R.id.et_profile);
+                String mUserName = mUser.getName();
+                String name = TextUtils.isEmpty(mUserName) ? "手机号" : mUserName;
+                etName.setHint(name);
+                new AlertDialog.Builder(getActivity())
+                        .setView(v)
+                        .setTitle(R.string.modify_name)
+                        .setNegativeButton(R.string.cancel, null)
+                        .setPositiveButton(R.string.ensure, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface d, int i) {
+                                String newName = etName.getText().toString().trim();
+                                modifyName(newName);
+                            }
+                        }).create().show();
+            }
                 break;
-            case R.id.rl_mobile:
-
+            case R.id.rl_mobile: {
+                // TODO 需要短信验证
                 break;
+            }
             case R.id.rl_email:
-
+                //TODO 绑定邮箱
                 break;
             case R.id.btn_logout:
                 App.exitApp();
@@ -90,9 +108,65 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    private void modifyName(final String newName) {
+        ThreadPool.DATABASE.execute(new Runnable() {
+            @Override
+            public void run() {
+                boolean isSuccess = false;
+                try {
+                    User user = mUser;
+                    user.setName(newName);
+                    App.getDaosession().getUserDao().updateInTx(user);
+                    mUser.setName(newName);
+                    SPUtil.saveUser(mUser);
+                    isSuccess = true;
+                    isModified = true;
+                } catch (Exception ignore) {
+                } finally {
+                    final boolean finalIsSuccess = isSuccess;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (finalIsSuccess) {
+                                tvName.setText(newName);
+                            } else {
+                                Toast.makeText(MineActivity.this, "名字修改失败",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+
     private String checkNull(String txt) {
         if (TextUtils.isEmpty(txt) || txt.equalsIgnoreCase("null"))
             return getString(R.string.unsetting);
         return txt;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isModified) setResult(RESULT_OK);
+        super.onBackPressed();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case ImageActivity.REQUEST_CODE:
+                if (resultCode == RESULT_OK) {
+                    mUser = App.USER;
+                    Glide.with(this)
+                            .load(mUser.getPhoto())
+                            .centerCrop()
+                            .placeholder(R.mipmap.icon)
+                            .crossFade()
+                            .into(ivHead);
+                    isModified = true;
+                }
+        }
     }
 }
