@@ -97,6 +97,7 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
             }
             case R.id.rl_email:
                 //TODO 绑定邮箱
+                // 发送验证邮件等
                 break;
             case R.id.btn_logout:
                 App.exitApp();
