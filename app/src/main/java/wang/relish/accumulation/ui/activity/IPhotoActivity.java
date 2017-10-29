@@ -37,7 +37,6 @@ import wang.relish.accumulation.base.BaseActivity;
  */
 public abstract class IPhotoActivity extends BaseActivity {
 
-    public static final int REQUEST_CODE = 0x1002;
     private static final int REQUEST_CAMERA_CODE = 0x101;
     private static final int REQUEST_ALBUM_CODE = 0x102;
     private static final int TAKE_PHOTO = 0x201;
@@ -46,13 +45,10 @@ public abstract class IPhotoActivity extends BaseActivity {
     private Uri uri;
     private String photo;
 
-    private OnBitmapFetchedListener mListener;
+    private OnPhotoGenerateListener mListener;
 
-    public void setListener(OnBitmapFetchedListener mListener) {
-        this.mListener = mListener;
-    }
-
-    protected void setPhoto() {
+    protected void setPhoto(OnPhotoGenerateListener listener) {
+        mListener = listener;
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
@@ -150,7 +146,7 @@ public abstract class IPhotoActivity extends BaseActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if (mListener != null) mListener.onBitmapFetch(bitmap, photo);
+                                if (mListener != null) mListener.onPhotoGenerate(bitmap, photo);
                             }
                         });
                     } catch (FileNotFoundException e) {
@@ -234,13 +230,13 @@ public abstract class IPhotoActivity extends BaseActivity {
     private void displayImage(String imagePath) {
         if (!TextUtils.isEmpty(imagePath)) {
             Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-            if (mListener != null) mListener.onBitmapFetch(bitmap, photo);
+            if (mListener != null) mListener.onPhotoGenerate(bitmap, photo);
         } else {
             Toast.makeText(this, "显示图片失败", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public interface OnBitmapFetchedListener {
-        void onBitmapFetch(Bitmap bitmap, String photo);
+    public interface OnPhotoGenerateListener {
+        void onPhotoGenerate(Bitmap bitmap, String photo);
     }
 }
