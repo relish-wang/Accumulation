@@ -3,24 +3,17 @@ package wang.relish.accumulation.ui.activity;
 import android.Manifest;
 import android.app.Notification;
 import android.app.PendingIntent;
-import android.content.ContentUris;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -35,14 +28,10 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Random;
 
 import wang.relish.accumulation.App;
 import wang.relish.accumulation.R;
-import wang.relish.accumulation.base.BaseActivity;
 import wang.relish.accumulation.entity.Goal;
 import wang.relish.accumulation.entity.User;
 import wang.relish.accumulation.greendao.DaoSession;
@@ -52,7 +41,7 @@ import wang.relish.accumulation.util.SPUtil;
 import wang.relish.accumulation.util.TimeUtil;
 
 
-public class RegisterActivity extends BaseActivity implements View.OnClickListener {
+public class RegisterActivity extends IPhotoActivity implements View.OnClickListener {
 
     private static final String PHOTO = "photo";
     private static final String NAME = "name";
@@ -71,8 +60,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         mToolbar.setTitle(R.string.register);
     }
 
-    public static final int TAKE_PHOTO = 1;
-    public static final int CHOOSE_PHOTO = 2;
     RelativeLayout rl_head;
     ImageView iv_head, iv_camera;
     EditText et_name, et_mobile, et_code, et_pwd, et_repeat_pwd;
@@ -124,14 +111,14 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_head:
-                if (ContextCompat.checkSelfPermission(this,
-                        Manifest.permission.READ_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this,
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-                } else {
-                    setHeadPhoto();
-                }
+                setPhoto(new OnPhotoGenerateListener() {
+                    @Override
+                    public void onPhotoGenerate(Bitmap bitmap, String photo) {
+                        RegisterActivity.this.photo = photo;
+                        iv_head.setImageBitmap(bitmap);
+                        iv_camera.setVisibility(View.GONE);
+                    }
+                });
                 break;
             case R.id.btn_get_verify_code:
                 if (!TextUtils.isEmpty(et_mobile.getText().toString().trim())) {
@@ -177,130 +164,12 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
     private static Uri uri;
 
-    private void setHeadPhoto() {
-        new AlertDialog.Builder(this)
-                .setItems(R.array.set_head_click, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface d, int which) {
-                        switch (which) {
-                            case 0:
-                                takePhoto();
-                                break;
-                            case 1:
-                                openAlbum();
-                                break;
-                            case 2:
-                                d.dismiss();
-                                break;
-                        }
-                    }
-                })
-                .create()
-                .show();
-
-    }
-
-    private void openAlbum() {
-        Intent intent = new Intent("android.intent.action.GET_CONTENT");
-        intent.setType("image/*");
-        startActivityForResult(intent, CHOOSE_PHOTO);
-    }
-
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    private void takePhoto() {
-        File outputImage = new File(getExternalCacheDir(), "output_image.jpg");
-        try {
-            if (outputImage.exists()) {
-                outputImage.delete();
-            }
-            outputImage.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            uri = FileProvider.getUriForFile(this,
-                    "wang.relish.accumulation.fileprovider", outputImage);
-        } else {
-            uri = Uri.fromFile(outputImage);
-        }
-        //启动相机程序
-        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-        startActivityForResult(intent, TAKE_PHOTO);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case TAKE_PHOTO:
-                if (resultCode == RESULT_OK) {
-                    //将拍摄的照片显示出来
-                    try {
-                        photo = uri.toString();
-                        final Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri));
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                iv_head.setImageBitmap(bitmap);
-                                iv_camera.setVisibility(View.GONE);
-                            }
-                        });
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                }
-                break;
-            case CHOOSE_PHOTO:
-                if (resultCode == RESULT_OK) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        String imagePath = null;
-                        Uri uri = data.getData();
-                        if (DocumentsContract.isDocumentUri(this, uri)) {
-                            //如果是Document类型的uri，则通过document id处理
-                            String docId = DocumentsContract.getDocumentId(uri);
-                            if (TextUtils.equals("com.android.providers.media.documents",
-                                    uri.getAuthority())) {
-                                String id = docId.split(":")[1];//解析出数字格式的id
-                                String selection = MediaStore.Images.Media._ID + "=" + id;
-                                imagePath = getImagePath(
-                                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, selection);
-                            } else if (TextUtils.equals("com.android.providers.downloads.documents",
-                                    uri.getAuthority())) {
-                                Uri contentUri = ContentUris.withAppendedId(
-                                        Uri.parse("content://downloads/public_downloads"),
-                                        Long.valueOf(docId));
-                                imagePath = getImagePath(contentUri, null);
-                            }
-                        } else if ("content".equalsIgnoreCase(uri.getScheme())) {
-                            //如果是content类型的Uri，则使用普通方法处理
-                            imagePath = getImagePath(uri, null);
-                        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
-                            //如果是file类型的Uri，直接获取图片路径即可
-                            imagePath = uri.getPath();
-                        }
-                        photo = imagePath;
-                        displayImage(imagePath);
-                    } else {
-                        Uri uri = data.getData();
-                        String imagePath = getImagePath(uri, null);
-                        photo = imagePath;
-                        displayImage(imagePath);
-                    }
-                }
-                break;
-        }
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             switch (requestCode) {
-                case 1:
-                    openAlbum();
-                    break;
                 case 2:
                     sendSms();
                     break;
@@ -456,35 +325,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
         void error(String message);
     }
-
-    /**
-     * 通过Uri和selection来获取真实的图片路径
-     *
-     * @param uri       uri
-     * @param selection selection
-     * @return 真实图片路径
-     */
-    private String getImagePath(Uri uri, String selection) {
-        String path = null;
-        Cursor cursor = getContentResolver().query(uri, null, selection, null, null);
-        if (cursor != null && cursor.moveToFirst()) {
-            path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-            cursor.close();
-        }
-        return path;
-    }
-
-    private void displayImage(String imagePath) {
-        if (!TextUtils.isEmpty(imagePath)) {
-            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-            iv_head.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            iv_head.setImageBitmap(bitmap);
-            iv_camera.setVisibility(View.GONE);
-        } else {
-            Toast.makeText(this, "设置头像失败，请重试", Toast.LENGTH_SHORT).show();
-        }
-    }
-
 
     protected void sendNotification(final String title, final String message) {
         new Thread(new Runnable() {
