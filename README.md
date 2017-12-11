@@ -1,2 +1,2 @@
 # Accumulation
-Make effort visible.——Accumulation
+Make efforts visible.——Accumulation
