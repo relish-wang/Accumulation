@@ -1,2 +1,2 @@
 # Accumulation
-让努力看得见。——积累
+Make effort visible.——Accumulation
