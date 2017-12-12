@@ -14,6 +14,7 @@ import java.util.*
 
 /**
  * App应用管理类
+ *
  * Created by Relish on 2016/11/4.
  */
 class App : Application() {
