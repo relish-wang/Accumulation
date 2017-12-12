@@ -154,6 +154,45 @@
 
         <include layout="@layout/include_line" />
 
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="16dp" />
+
+        <include layout="@layout/include_line" />
+
+        <RelativeLayout
+            android:id="@+id/rl_setting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/simple_click_selector"
+            android:onClick="onClick">
+
+            <TextView
+                style="@style/ContentText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_margin="16dp"
+                android:text="@string/setting"
+                tools:ignore="RelativeOverlap" />
+
+            <TextView
+                android:id="@+id/tv_setting"
+                style="@style/ContentText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="16dp"
+                android:textColor="@color/content_hint_color"
+                tools:ignore="RelativeOverlap" />
+
+        </RelativeLayout>
+
+        <include layout="@layout/include_line" />
+
         <Button
             android:id="@+id/btn_logout"
             android:layout_width="match_parent"

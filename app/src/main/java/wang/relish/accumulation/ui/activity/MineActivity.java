@@ -1,17 +1,12 @@
 package wang.relish.accumulation.ui.activity;
 
-import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -20,14 +15,12 @@ import wang.relish.accumulation.R;
 import wang.relish.accumulation.base.BaseActivity;
 import wang.relish.accumulation.entity.User;
 import wang.relish.accumulation.util.SPUtil;
-import wang.relish.accumulation.util.ThreadPool;
 
 /**
  * 个人中心
  * Created by Relish on 2016/11/13.
  */
 public class MineActivity extends BaseActivity implements View.OnClickListener {
-    public static final int REQUEST_CODE = 0x1001;
     @Override
     protected int layoutId() {
         return R.layout.activity_mine;
@@ -44,7 +37,7 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
     private TextView tvName;
     private TextView tvMobile;
     private TextView tvEmail;
-    private boolean isModified = false;
+    private View vSetting;
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
@@ -54,6 +47,7 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
         tvName = (TextView) findViewById(R.id.tv_name);
         tvMobile = (TextView) findViewById(R.id.tv_mobile);
         tvEmail = (TextView) findViewById(R.id.tv_email);
+        vSetting = findViewById(R.id.rl_setting);
 
         Glide.with(this)
                 .load(mUser.getPhoto())
@@ -63,6 +57,12 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
                 .into(ivHead);
         tvName.setText(checkNull(mUser.getName()));
         tvMobile.setText(checkNull(mUser.getMobile()));
+        vSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goActivity(SettingActivity.class);
+            }
+        });
     }
 
     @Override
