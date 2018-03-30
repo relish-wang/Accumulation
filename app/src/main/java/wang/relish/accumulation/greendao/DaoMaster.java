@@ -6,9 +6,9 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.util.Log;
 
 import org.greenrobot.greendao.AbstractDaoMaster;
+import org.greenrobot.greendao.database.StandardDatabase;
 import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.database.DatabaseOpenHelper;
-import org.greenrobot.greendao.database.StandardDatabase;
 import org.greenrobot.greendao.identityscope.IdentityScopeType;
 
 
@@ -19,20 +19,18 @@ import org.greenrobot.greendao.identityscope.IdentityScopeType;
 public class DaoMaster extends AbstractDaoMaster {
     public static final int SCHEMA_VERSION = 5;
 
-    /**
-     * Creates underlying database table using DAOs.
-     */
+    /** Creates underlying database table using DAOs. */
     public static void createAllTables(Database db, boolean ifNotExists) {
-        GoalDao.createTable(db, ifNotExists);
-        RecordDao.createTable(db, ifNotExists);
         UserDao.createTable(db, ifNotExists);
+        RecordDao.createTable(db, ifNotExists);
+        GoalDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
     public static void dropAllTables(Database db, boolean ifExists) {
-        GoalDao.dropTable(db, ifExists);
-        RecordDao.dropTable(db, ifExists);
         UserDao.dropTable(db, ifExists);
+        RecordDao.dropTable(db, ifExists);
+        GoalDao.dropTable(db, ifExists);
     }
 
     /**
@@ -51,9 +49,9 @@ public class DaoMaster extends AbstractDaoMaster {
 
     public DaoMaster(Database db) {
         super(db, SCHEMA_VERSION);
-        registerDaoClass(GoalDao.class);
-        registerDaoClass(RecordDao.class);
         registerDaoClass(UserDao.class);
+        registerDaoClass(RecordDao.class);
+        registerDaoClass(GoalDao.class);
     }
 
     public DaoSession newSession() {

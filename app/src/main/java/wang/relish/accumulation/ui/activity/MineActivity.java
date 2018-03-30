@@ -1,12 +1,17 @@
 package wang.relish.accumulation.ui.activity;
 
+import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -15,6 +20,7 @@ import wang.relish.accumulation.R;
 import wang.relish.accumulation.base.BaseActivity;
 import wang.relish.accumulation.entity.User;
 import wang.relish.accumulation.util.SPUtil;
+import wang.relish.accumulation.util.ThreadPool;
 
 /**
  * 个人中心
@@ -31,6 +37,8 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
         mToolbar.setTitle(R.string.mine);
     }
 
+    public static final int  REQUEST_CODE = 0x928;
+    boolean isModified = false;
     private User mUser;
 
     private ImageView ivHead;
