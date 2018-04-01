@@ -65,6 +65,8 @@
             android:name=".ui.activity.ImageActivity"
             android:windowSoftInputMode="stateHidden|stateUnchanged" />
 
+        <activity android:name=".ui.activity.search.TestActivity" />
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="wang.relish.accumulation.fileprovider"

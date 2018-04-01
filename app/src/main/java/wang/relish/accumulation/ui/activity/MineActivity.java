@@ -4,9 +4,13 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -32,9 +36,37 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
         return R.layout.activity_mine;
     }
 
+    static Handler handler = new Handler();
+
+    int what = 0x123;
+
     @Override
     protected void initToolbar(Bundle savedInstanceState, Toolbar mToolbar) {
         mToolbar.setTitle(R.string.mine);
+
+
+        new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                handler.removeMessages(what);
+
+                Message message = Message.obtain();
+
+                handler.sendMessageDelayed(message, 1000);
+            }
+        };
+
     }
 
     public static final int  REQUEST_CODE = 0x928;
