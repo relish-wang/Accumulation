@@ -3,6 +3,7 @@ package wang.relish.accumulation.ui.activity.search;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -81,7 +82,7 @@ public class SearchActivity extends Activity {
         call = RetrofitManager.getRetrofit().create(SearchService.class).listRepos(message);
         call.enqueue(new Callback<List<String>>() {
             @Override
-            public void onResponse(Call<List<String>> call, Response<List<String>> response) {
+            public void onResponse(@NonNull Call<List<String>> call, @NonNull Response<List<String>> response) {
                 List<String> body = response.body();
                 if (body == null) return;
                 mList.clear();
@@ -90,7 +91,7 @@ public class SearchActivity extends Activity {
             }
 
             @Override
-            public void onFailure(Call<List<String>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<String>> call, @NonNull Throwable t) {
                 Toast.makeText(SearchActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
 
             }
