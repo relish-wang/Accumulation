@@ -18,7 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".ui.activity.SplashActivity">
+        <activity android:name=".ui.activity.search.SearchActivity">
+            <!-- SplashActivity -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -65,7 +66,6 @@
             android:name=".ui.activity.ImageActivity"
             android:windowSoftInputMode="stateHidden|stateUnchanged" />
 
-        <activity android:name=".ui.activity.search.TestActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
